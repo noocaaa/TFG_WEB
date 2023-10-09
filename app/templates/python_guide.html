@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}
+Guía de Python
+{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" type="text/css" href="../static/css/libraryStyles.css">
+{% endblock %}
+
+{% block main_content %}
+<main>
+    <h2>Guía de Python</h2>
+
+    <section>
+        <h3>Introducción a Python</h3>
+        <p>
+            Python es un lenguaje de programación de alto nivel conocido por su simplicidad y legibilidad. Se utiliza en una variedad de aplicaciones, desde desarrollo web hasta inteligencia artificial.
+        </p>
+    </section>
+
+    <section>
+        <h3>Operaciones Básicas</h3>
+        <p>
+            Al igual que en C++, Python también nos permite hacer operaciones matemáticas básicas.
+        </p>
+        <ul>
+            <li><strong>suma = a + b</strong> - Suma los valores de "a" y "b".</li>
+            <li><strong>resta = a - b</strong> - Resta "b" de "a".</li>
+        </ul>
+        <p>Ejemplo:</p>
+        <pre><code>
+a = 5
+b = 3
+resultado = a + b  # El resultado es 8
+        </code></pre>
+    </section>
+
+    <section>
+        <h3>Tomando Decisiones con Condicionales</h3>
+        <p>
+            Python, al igual que C++, tiene estructuras condicionales para tomar decisiones en el código.
+        </p>
+        <ul>
+            <li><strong>if condición:</strong> - Si la condición es verdadera, realiza las instrucciones siguientes.</li>
+            <li><strong>elif otra_condición:</strong> - Si la condición anterior no se cumple, pero esta sí, realiza estas instrucciones.</li>
+            <li><strong>else:</strong> - Si ninguna de las condiciones anteriores se cumple, realiza estas instrucciones.</li>
+        </ul>
+        <p>Ejemplo:</p>
+        <pre><code>
+edad = 12
+if edad >= 18:
+    print("Eres un adulto.")
+else:
+    print("Aún eres joven.")
+# Esto imprimirá "Aún eres joven."
+        </code></pre>
+    </section>
+
+    <section>
+        <h3>Repetir Instrucciones con Bucles</h3>
+        <p>
+            Python tiene estructuras de bucle que nos permiten repetir instrucciones.
+        </p>
+        <ul>
+            <li><strong>for elemento in lista:</strong> - Repite las instrucciones para cada "elemento" en "lista".</li>
+            <li><strong>while condición:</strong> - Continúa repitiendo las instrucciones mientras la condición sea verdadera.</li>
+        </ul>
+        <p>Ejemplos:</p>
+        <pre><code>
+# Bucle for
+for i in range(1, 6):
+    print(f"Número: {i}")
+# Esto imprimirá los números del 1 al 5.
+
+# Bucle while
+contador = 1
+while contador <= 3:
+    print(f"Repetición: {contador}")
+    contador += 1
+# Esto imprimirá "Repetición: 1", "Repetición: 2" y "Repetición: 3".
+        </code></pre>
+    </section>
+
+    <section>
+        <h3>Trabajando con Listas y Diccionarios</h3>
+        <p>
+            Python ofrece estructuras de datos flexibles como listas y diccionarios.
+        </p>
+        <ul>
+            <li><strong>lista = [1, 2, 3]</strong> - Una lista es una colección ordenada de elementos.</li>
+            <li><strong>diccionario = {"clave": "valor"}</strong> - Un diccionario es una colección de pares clave-valor.</li>
+        </ul>
+        <p>Ejemplos:</p>
+        <pre><code>
+frutas = ["manzana", "plátano", "cereza"]
+print(frutas[0])  # Esto imprimirá "manzana"
+
+persona = {
+    "nombre": "Juan",
+    "edad": 30,
+    "ciudad": "Madrid"
+}
+print(persona["nombre"])  # Esto imprimirá "Juan"
+        </code></pre>
+    </section>
+
+</main>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+    
+    
+    
+    

@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}
+Guía de C++
+{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" type="text/css" href="../static/css/libraryStyles.css">
+{% endblock %}
+
+{% block main_content %}
+<main>
+    <h2>Guía de C++</h2>
+
+    <section>
+        <h3>Introducción a C++</h3>
+        <p>
+            Al igual que con Logo, donde le decimos a una tortuga qué hacer, en C++ le decimos a la computadora cómo hacer las cosas, ¡pero de una forma un poco diferente!
+        </p>
+    </section>
+
+    <section>
+        <h3>Operaciones Básicas</h3>
+        <p>
+            En C++ podemos hacer operaciones matemáticas. Aquí tienes algunas instrucciones básicas:
+        </p>
+        <ul>
+            <li><strong>int suma = a + b;</strong> - Suma los valores de "a" y "b".</li>
+            <li><strong>int resta = a - b;</strong> - Resta "b" de "a".</li>
+        </ul>
+        <p>Ejemplo:</p>
+        <pre><code>
+int a = 5;<br>
+int b = 3;<br>
+int resultado = a + b; // El resultado es 8
+        </code></pre>
+    </section>
+
+    <section>
+        <h3>Tomando Decisiones</h3>
+        <p>
+            Al igual que en Logo, donde la tortuga decide si moverse o girar, en C++ podemos decidir qué hacer con "if".
+        </p>
+        <ul>
+            <li><strong>if (condición) { instrucciones }</strong> - Si la condición es verdadera, realiza las instrucciones dentro de las llaves.</li>
+        </ul>
+        <p>Ejemplo:</p>
+        <pre><code>
+int numero = 10;<br>
+if (numero > 5) {<br>
+    // Esta parte se ejecutará porque 10 es mayor que 5.<br>
+}
+        </code></pre>
+    </section>
+
+    <section>
+        <h3>Repetir Instrucciones</h3>
+        <p>
+            ¿Y si queremos hacer algo muchas veces? ¡Usamos bucles!
+        </p>
+        <ul>
+            <li><strong>for (inicio; condición; actualización) { instrucciones }</strong> - Repite las instrucciones mientras la condición sea verdadera.</li>
+        </ul>
+        <p>Ejemplo:</p>
+        <pre><code>
+for (int i = 0; i < 5; i++) {<br>
+    // Esta parte se ejecutará 5 veces.<br>
+}
+        </code></pre>
+    </section>
+
+    <section>
+        <h3>Creando Funciones</h3>
+        <p>
+            Las funciones en C++ son como mini-programas que podemos usar una y otra vez.
+        </p>
+        <pre><code>
+void saludo() {<br>
+    cout << "¡Hola, Mundo!";<br>
+}<br><br>
+// Ahora podemos usar nuestra función "saludo" para mostrar el mensaje.<br>
+saludo();  // Esto imprimirá "¡Hola, Mundo!" en la pantalla.
+        </code></pre>
+        <p>
+            ¡Y eso es solo el comienzo de lo que podemos hacer con C++!
+        </p>
+    </section>
+
+
+    <section>
+        <h3>Tomando Decisiones con Condicionales</h3>
+        <p>
+            En C++, podemos tomar decisiones en nuestro código usando condicionales. Imagina que le dices a la computadora: "Si algo es cierto, entonces haz esto; de lo contrario, haz eso otro".
+        </p>
+        <ul>
+            <li><strong>if (condición) { instrucciones }</strong> - Si la condición es verdadera, realiza las instrucciones dentro de las llaves.</li>
+            <li><strong>else { instrucciones }</strong> - Si la condición del "if" anterior no es verdadera, realiza estas instrucciones.</li>
+        </ul>
+        <p>Ejemplo:</p>
+        <pre><code>
+int edad = 12;
+if (edad >= 18) {
+    cout << "Eres un adulto.";
+} else {
+    cout << "Aún eres joven.";
+}
+// Esto imprimirá "Aún eres joven." en la pantalla.
+        </code></pre>
+    </section>
+
+    <section>
+        <h3>Repetir Instrucciones con Bucles</h3>
+        <p>
+            Los bucles nos permiten repetir instrucciones varias veces. Así es como le decimos a la computadora que haga algo muchas veces sin tener que escribirlo una y otra vez.
+        </p>
+        <ul>
+            <li><strong>for (inicio; condición; actualización) { instrucciones }</strong> - Repite las instrucciones mientras la condición sea verdadera.</li>
+            <li><strong>while (condición) { instrucciones }</strong> - Continúa repitiendo las instrucciones mientras la condición sea verdadera.</li>
+        </ul>
+        <p>Ejemplos:</p>
+        <pre><code>
+// Bucle for
+for (int i = 1; i <= 5; i++) {
+    cout << "Número: " << i << endl;
+}
+// Esto imprimirá los números del 1 al 5 en la pantalla.
+
+// Bucle while
+int contador = 1;
+while (contador <= 3) {
+    cout << "Repetición: " << contador << endl;
+    contador++;
+}
+// Esto imprimirá "Repetición: 1", "Repetición: 2" y "Repetición: 3".
+        </code></pre>
+    </section>
+
+</main>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+

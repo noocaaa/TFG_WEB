@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}
+Guía CSS
+{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" type="text/css" href="../static/css/libraryStyles.css">
+{% endblock %}
+
+{% block main_content %}
+<main>
+    <h2>Guía de CSS</h2>
+
+    <section>
+        <h3>¿Qué es CSS?</h3>
+        <p>
+            CSS (Hojas de Estilo en Cascada) es el lenguaje que usamos para dar estilo a nuestras páginas web. Con CSS, podemos cambiar colores, fuentes, espacios y más, ¡haciendo que nuestras páginas se vean geniales!
+        </p>
+    </section>
+
+    <section>
+        <h3>Selectores y Propiedades</h3>
+        <p>
+            En CSS, usamos "selectores" para elegir qué parte de nuestra página queremos estilizar. Luego, usamos "propiedades" para decidir cómo queremos que se vea.
+        </p>
+        <p>Ejemplo:</p>
+        <pre><code>
+p {
+    color: rojo;
+    font-size: 16px;
+}
+        </code></pre>
+        <p>El código anterior cambiará el color del texto de todos los párrafos a rojo y establecerá su tamaño de fuente a 16 píxeles.</p>
+    </section>
+
+    <section>
+        <h3>Colores</h3>
+        <p>
+            Hay muchas formas de definir colores en CSS. Puedes usar nombres de colores, códigos hexadecimales, RGB y más.
+        </p>
+        <p>Ejemplos:</p>
+        <pre><code>
+/* Usando nombre de color */
+h1 {
+    color: blue;
+}
+
+/* Usando código hexadecimal */
+h2 {
+    color: #FF5733;
+}
+
+/* Usando RGB */
+h3 {
+    color: rgb(255, 0, 0);
+}
+        </code></pre>
+        <p>Los códigos anteriores dan color azul al texto de los encabezados h1, naranja a los h2 y rojo a los h3.</p>
+    </section>
+
+    <section>
+        <h3>Fuentes y Texto</h3>
+        <p>
+            Con CSS, podemos cambiar la fuente, el tamaño, el espaciado y otras propiedades del texto.
+        </p>
+        <p>Ejemplos:</p>
+        <pre><code>
+/* Cambiar la fuente y tamaño */
+p {
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+}
+
+/* Estilo y decoración del texto */
+a {
+    text-decoration: none;
+    font-weight: bold;
+}
+        </code></pre>
+        <p>El primer ejemplo hace que el texto de los párrafos use la fuente Arial (o sans-serif si Arial no está disponible) y tenga un tamaño de 14 píxeles. El segundo ejemplo hace que los enlaces no tengan subrayado y sean negritas.</p>
+    </section>
+
+    <section>
+        <h3>Posicionamiento y Espaciado</h3>
+        <p>
+            CSS nos permite controlar el posicionamiento de los elementos en la página y el espacio entre ellos.
+        </p>
+        <p>Ejemplos:</p>
+        <pre><code>
+/* Margen y padding */
+div {
+    margin: 10px;
+    padding: 20px;
+}
+
+/* Posicionamiento absoluto */
+.caja {
+    position: absolute;
+    top: 50px;
+    left: 100px;
+}
+        </code></pre>
+        <p>El primer ejemplo añade un margen de 10 píxeles alrededor de los div y un relleno de 20 píxeles dentro de ellos. El segundo ejemplo posiciona el elemento con la clase "caja" 50 píxeles desde la parte superior y 100 píxeles desde la izquierda de su contenedor.</p>
+    </section>
+
+</main>
+{% endblock %}
+    
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+

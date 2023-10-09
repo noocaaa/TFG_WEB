@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}
+Guía de Java
+{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" type="text/css" href="../static/css/libraryStyles.css">
+{% endblock %}
+
+{% block main_content %}
+<main>
+    <h2>Guía de Java</h2>
+
+    <section>
+        <h3>Introducción a Java</h3>
+        <p>
+            Java es un lenguaje de programación orientado a objetos ampliamente utilizado, conocido por su portabilidad y robustez. Se usa desde aplicaciones móviles hasta sistemas empresariales.
+        </p>
+    </section>
+
+    <section>
+        <h3>Operaciones Básicas</h3>
+        <p>
+            Java, al igual que C++ y Python, nos permite realizar operaciones matemáticas básicas.
+        </p>
+        <ul>
+            <li><strong>int suma = a + b;</strong> - Suma los valores de "a" y "b".</li>
+            <li><strong>int resta = a - b;</strong> - Resta "b" de "a".</li>
+        </ul>
+        <p>Ejemplo:</p>
+        <pre><code>
+int a = 5;
+int b = 3;
+int resultado = a + b;  // El resultado es 8
+        </code></pre>
+    </section>
+
+    <section>
+        <h3>Tomando Decisiones con Condicionales</h3>
+        <p>
+            Java ofrece estructuras condicionales para tomar decisiones en el código.
+        </p>
+        <ul>
+            <li><strong>if (condición) { instrucciones }</strong> - Si la condición es verdadera, realiza las instrucciones dentro de las llaves.</li>
+            <li><strong>else { instrucciones }</strong> - Si la condición del "if" anterior no es verdadera, realiza estas instrucciones.</li>
+        </ul>
+        <p>Ejemplo:</p>
+        <pre><code>
+int edad = 12;
+if (edad >= 18) {
+    System.out.println("Eres un adulto.");
+} else {
+    System.out.println("Aún eres joven.");
+}
+// Esto imprimirá "Aún eres joven."
+        </code></pre>
+    </section>
+
+    <section>
+        <h3>Repetir Instrucciones con Bucles</h3>
+        <p>
+            Java tiene estructuras de bucle que nos permiten repetir instrucciones.
+        </p>
+        <ul>
+            <li><strong>for (inicio; condición; actualización) { instrucciones }</strong> - Repite las instrucciones mientras la condición sea verdadera.</li>
+            <li><strong>while (condición) { instrucciones }</strong> - Continúa repitiendo las instrucciones mientras la condición sea verdadera.</li>
+        </ul>
+        <p>Ejemplos:</p>
+        <pre><code>
+// Bucle for
+for (int i = 1; i <= 5; i++) {
+    System.out.println("Número: " + i);
+}
+// Esto imprimirá los números del 1 al 5.
+
+// Bucle while
+int contador = 1;
+while (contador <= 3) {
+    System.out.println("Repetición: " + contador);
+    contador++;
+}
+// Esto imprimirá "Repetición: 1", "Repetición: 2" y "Repetición: 3".
+        </code></pre>
+    </section>
+
+    <section>
+        <h3>Trabajando con Arreglos y Colecciones</h3>
+        <p>
+            Java ofrece estructuras de datos como arreglos y colecciones para trabajar con grupos de objetos.
+        </p>
+        <ul>
+            <li><strong>int[] numeros = new int[3];</strong> - Declara un arreglo de enteros.</li>
+            <li><strong>ArrayList<String> lista = new ArrayList<String>();</strong> - Declara una lista de cadenas.</li>
+        </ul>
+        <p>Ejemplos:</p>
+        <pre><code>
+int[] numeros = {1, 2, 3};
+System.out.println(numeros[0]);  // Esto imprimirá "1"
+
+ArrayList<String> nombres = new ArrayList<String>();
+nombres.add("Juan");
+nombres.add("Ana");
+System.out.println(nombres.get(0));  // Esto imprimirá "Juan"
+        </code></pre>
+    </section>
+
+</main>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+
+

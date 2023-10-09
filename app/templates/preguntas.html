@@ -1,0 +1,418 @@
+{% extends "base.html" %}
+
+{% block title %}
+Preguntas
+{% endblock %}
+
+{% block head_extra %}
+<style type="text/css">
+    body {
+        margin: 0;
+        height: 100vh;
+        font-family: 'Open Sans', sans-serif;
+        background-color: #E1E9EE; /* Color azul claro */
+    }
+
+    .top-nav, .side-nav {
+        background-color: #72B4A4; /* Color turquesa */
+        box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.1);
+        border-radius: 20px;
+    }
+
+    .top-nav {
+        position: fixed;
+        top: 0px;
+        left: 10px;
+        right: 10px;
+        height: 120px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 30px;
+        font-size: 1.5rem;
+    }
+
+    .logo {
+        height: 140px;
+    }
+
+    .user-profile {
+        display: flex;
+        align-items: center;
+    }
+
+    .user-image {
+        width: 80px;
+        height: 80px;
+        border-radius: 30%;
+        margin-right: 15px;
+    }
+
+    .user-name, .user-config {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 10px;
+        margin-bottom: 0px;
+    }
+
+    .user-config {
+        font-size: 0.7em;
+        color: #FF7F50; /* Color coral */
+    }
+
+    .side-nav {
+        position: fixed;
+        top: 140px;
+        left: 20px;
+        width: 210px;
+        padding: 20px;
+    }
+
+    .side-nav ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .side-nav ul li {
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: #F9D3BA; /* Color melocotón claro */
+    }
+
+    .side-nav ul li:hover {
+        background-color: #FFB085; /* Color melocotón oscuro */
+    }
+
+    .side-nav ul li a {
+        text-decoration: none;
+        color: #364547; /* Color gris oscuro */
+        font-size: 1.2rem;
+    }
+
+    main {
+        margin-left: 100px;
+        padding: 20px;
+        padding-top: 80px; /* Incrementa esto de 150px a 160px */
+    }
+
+    @media only screen and (max-width: 768px) {
+        .top-nav {
+            flex-direction: column;
+            height: auto;
+            padding: 15px;
+            top: 0;
+            left: 10px;
+            right: 10px;
+        }
+
+        .user-profile {
+            flex-direction: column;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .side-nav {
+            position: relative;
+            top: 0;
+            width: 100%;
+            padding: 10px;
+            display: flex;
+            overflow-x: auto;
+        }
+
+        .side-nav ul {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+        main {
+            margin: 0;
+            padding: 15px;
+            padding-top: 140px; /* Incrementa esto de 150px a 160px */
+        }
+    }
+
+    #avatarModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    #avatarModal .avatars {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    #avatarModal img {
+        width: 120px;
+        height: 120px;
+        cursor: pointer;
+    }
+
+    .user-details {
+        display: block;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    @media only screen and (max-width: 500px) {
+        .user-details {
+            align-items: center;
+            text-align: center;
+        }
+    }
+
+    /* Diseño del formulario de preguntas */
+    form {
+        margin: 30px 10px;
+        padding: 20px 30px;
+        background-color: #FFF;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 100px;
+    }
+
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid #72B4A4;
+        margin-bottom: 20px;
+        resize: vertical;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    input[type="file"] {
+        margin-bottom: 20px;
+        display: block;
+    }
+
+    input[type="submit"] {
+        background-color: #72B4A4;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 10px;
+        cursor: pointer;
+        color: #FFF;
+        font-weight: bold;
+        transition: background-color 0.3s, transform 0.3s;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #62a394;
+        transform: scale(1.05);
+    }
+
+    .user-details {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 5px; /* Reducir margen derecho */
+        margin-bottom: 0px;
+    }
+
+    .logout-btn {
+        background-color: #FF7F50; /* Color coral */
+        color: #fff;
+        padding: 5px 10px; /* Ajustar padding */
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 1rem;
+        box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.1);
+        margin-left: 10px; /* Añadir margen izquierdo */
+    }
+
+    .logout-btn:hover {
+        background-color: #E76645; /* Un tono más oscuro de coral para el hover */
+    }
+
+    .notifications {
+        position: fixed;
+        top: 150px;
+        right: 20px;
+        width: 300px;
+        background-color: #FFF;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        z-index: 1000;  /* para asegurar que se muestre por encima de otros elementos */
+    }
+
+    .notification-item {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+        background-color: #FFEB3B;  /* color amarillo de fondo */
+    }
+
+    .notification-item:last-child {
+        border-bottom: none;
+    }
+
+
+    /* Listado de preguntas */
+    .questions-dropdown {
+        margin-top: 20px;
+        background-color: #FFF;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+    }
+
+    #toggleQuestions {
+        background-color: #72B4A4;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    #toggleQuestions:hover {
+        background-color: #62a394;
+    }
+
+    .questions-content .question-item {
+        padding: 10px;
+        border: 4px solid #ddd;
+        background-color: #f9f9f9;
+        margin-bottom: 30px;
+    }
+
+    .questions-content .question-item:last-child {
+        border-bottom: none;
+    }
+
+    .question-image {
+        max-width: 100px;  
+        max-height: 100px;
+        border-radius: 5px;
+        margin-top: 10px;
+        cursor: pointer; 
+    }
+
+    /* Estilos ajustados para el formulario y listado de preguntas */
+    form, .questions-dropdown {
+        margin: 30px auto;
+        padding: 20px 30px;
+        background-color: #FFF;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 80%;
+        width: 100%;
+    }
+
+    /* Estilo ajustado para el botón de "Mis Preguntas" */
+    #toggleQuestions {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Estilo para el contenido de preguntas */
+    .questions-content {
+        margin-top: 20px;
+        border-top: 1px solid #ddd;
+    }
+
+    .question-item {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        background-color: #f9f9f9;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .question-image {
+        max-width: 100px;
+        max-height: 100px;
+        border-radius: 5px;
+        margin-top: 10px;
+        cursor: pointer;
+        align-self: center;
+    }
+
+    /* Estilo para el enlace de la imagen adjunta */
+    a {
+        color: #72B4A4;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    a:hover {
+        color: #62a394;
+    }
+
+</style>
+{% endblock %}
+
+{% block main_content %}
+<main>
+    <!-- Formulario de Preguntas -->
+    <form action="{{ url_for('student.submit_question') }}" method="POST" enctype="multipart/form-data">
+        <h2>Escribe tu pregunta</h2>
+        
+        <textarea name="question_text" required rows="5" placeholder="Escribe aquí tu pregunta..."></textarea>
+        
+        <label for="attachment">Adjunta imágenes o código (opcional):</label>
+        <input type="file" name="attachment" accept=".jpg, .jpeg, .png, .txt, .py .html .css .cpp .zip">
+        
+        <input type="submit" value="Enviar pregunta">
+    </form>
+    
+    <!-- Dropdown de Preguntas -->
+    <div class="questions-dropdown">
+        <button id="toggleQuestions">Mis Preguntas</button>
+        <div class="questions-content">
+            {% for question in student_questions|reverse %}
+                <div class="question-item">
+                    <p><strong>Pregunta:</strong> {{ question.question_text }}</p>
+                    {% if question.answer_text %}
+                        <p><strong>Respuesta:</strong> {{ question.answer_text }}</p>
+                    {% endif %}
+                    {% if question.attachment_name %}
+                        <a href="{{ url_for('teacher.asked_questions', filename=question.attachment_name) }}" target="_blank">Ver imagen adjunta</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Ocultar el contenido al inicio
+        $(".questions-content").hide();
+
+        // Toggle del contenido al hacer clic en el botón
+        $("#toggleQuestions").click(function() {
+            $(".questions-content").slideToggle();
+        });
+    });
+</script>
+{% endblock %}

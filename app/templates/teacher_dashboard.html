@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard del Profesor</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f9f9f9;
+            font-family: Arial, sans-serif;
+        }
+
+        .sidebar {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px 0;
+            overflow-y: auto;
+            border-right: 1px solid #bdc3c7;
+            min-height: 100vh;  /* Asegura que la barra lateral ocupe al menos la altura de la ventana */
+        }
+
+        .sidebar a {
+            color: #ecf0f1;
+            display: block;
+            padding: 10px 20px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #34495e;
+            text-decoration: none;
+        }
+
+        .content {
+            padding: 20px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+
+        .container-fluid > .row {
+            display: flex;  /* Establece el contenedor como un contenedor flex */
+            flex-direction: row;  /* Asegura que los hijos estén en fila */
+            min-height: 100vh;  /* Ocupa al menos la altura de la ventana */
+        }
+
+        .sidebar, 
+        .col-md-9 {
+            flex-grow: 1;  /* Ambas columnas crecerán al mismo ritmo */
+        }
+
+        @media (max-width: 992px) { /* Cuando la pantalla sea menor a 992px */
+            .sidebar {
+                position: relative;
+                height: auto;
+                min-height: 0;
+            }
+            
+            .container-fluid > .row {
+                flex-direction: column;  /* En pantallas pequeñas, los elementos estarán en columna */
+            }
+        }
+
+        .sub-nav-link {
+            margin-left: 20px;
+        }
+        
+        .corrections-section {
+            padding: 20px;
+            background-color: #FFF;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .corrections-section table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .corrections-section th, .corrections-section td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 sidebar">
+                <h3 class="text-center mb-4">Panel del Profesor</h3>
+                <a href="#" class="d-block mb-2 nav-link active" onclick="showSection('controlSection')" id="controlLink">Control</a>
+                <a href="#" class="d-block mb-2 nav-link" onclick="showSection('correctionSection')" id="correctionLink">Correciones</a>
+                <a href="#" class="d-block mb-2 nav-link" onclick="showSection('statisticsSection')" id="statisticsLink">Estadísticas</a>
+                <a href="#" class="d-block mb-2 nav-link" onclick="showSection('settingsSection')" id="settingsLink">Configuración</a>
+                <a href="{{ url_for('control.login') }}" class="btn btn-danger mt-5">Salir</a>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <h2 class="my-4">Bienvenido, {{ username }}</h2>
+
+                {% if error %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+                {% endif %}
+
+                <div class="content">
+                    <!-- Control -->
+                    <div id="controlSection">
+                        <h4>Control</h4>
+                        <p>Desde aquí puedes consultar la información sobre los alumnos, sus ejercicios y las dudas.</p>
+
+                        <!-- Enlaces a otros .html -->
+                        <a href="{{ url_for('teacher.user_list') }}" class="d-block mb-2 sub-nav-link" id="userListLink">Lista de Usuarios</a>
+                        <a href="{{ url_for('teacher.exercise_list') }}" class="d-block mb-2 sub-nav-link" id="exerciseListLink">Ejercicios</a>
+                    </div>
+
+
+                    <!-- Correciones -->
+
+                    <div id="correctionSection" style="display: none;">
+                        <h4>Correciones</h4>
+                        <p>Visualiza los ejercicios realizados por los estudiantes que debes corregir.</p>                   
+                    </div>
+
+                    <!-- Estadísticas -->
+                
+                    <div id="statisticsSection" style="display: none;">
+                        <h4>Estadísticas</h4>
+                        <p>Visualiza las estadísticas relacionadas con el rendimiento de los estudiantes y el contenido del curso.</p>                   
+                    </div>
+
+                    <!-- Configuración -->
+                    <div id="settingsSection" style="display: none;">
+                        <h4>Configuración</h4>
+                        <form action="{{ url_for('teacher.change_password') }}" method="post" onsubmit="return validateForm()">
+                            <div class="form-group">
+                                <label for="currentPassword">Contraseña actual:</label>
+                                <input type="password" class="form-control" id="currentPassword" placeholder="Contraseña actual" name="currentPassword">
+                                <small class="text-danger" id="currentPasswordError"></small>
+                            </div>
+                            <div class="form-group">
+                                <label for="newPassword">Nueva contraseña:</label>
+                                <input type="password" class="form-control" id="newPassword" placeholder="Nueva contraseña" name="newPassword">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirmar nueva contraseña:</label>
+                                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirmar nueva contraseña" name="confirmPassword">
+                                <small class="text-danger" id="confirmPasswordError"></small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        </form>
+                    </div>
+                    
+                </div>
+
+                <!-- Preguntas no resueltas -->
+                <div id="questionsSection" class="content">
+                    <h4>Preguntas NO resueltas</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Fecha</th>
+                                <th>Pregunta</th>
+                                <th>Acción</th> <!-- Nueva columna -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for question in questions %}
+                                <tr>
+                                    <td>{{ question.student.first_name }} {{ question.student.last_name }}</td>
+                                    <td>{{ question.asked_date.strftime('%d/%m/%Y %H:%M') }}</td>
+                                    <td>{{ question.question_text }}</td>
+                                    <td><a href="{{ url_for('teacher.answer_question', question_id=question.id) }}" class="btn btn-primary">Responder</a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>                        
+                    </table>
+                </div>
+
+                <!-- Datos a tener en cuenta-->
+                <div id="questionsSectiona" class="content">
+                    <h4>CUIDADO con los siguientes estudiantes</h4>
+                    
+                    <!-- Tabla de estudiantes -->
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nombre del Estudiante</th>
+                                <th>Última Conexión (Fecha y Hora)</th>
+                                <th>Correo de Contacto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in alert_students %}
+                                <tr>
+                                    <td>{{ student.first_name }} {{ student.last_name }}</td>
+                                    <td>
+                                        {% if student.last_seen %}
+                                            {{ student.last_seen.strftime('%d-%m-%Y %H:%M:%S') }}
+                                        {% else %}
+                                            Desconocido
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ student.email }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Lista de ejercicios realizados en menos de 30 segundos -->
+                <div id="statisticsOne" class="content" style="display: none;">
+                    <h4>Ejercicios realizados en menos de 30 segundos:</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID del Estudiante</th>
+                                <th>ID del Ejercicio</th>
+                                <th>Estado</th>
+                                <th>Fecha y hora de Inicio</th>
+                                <th>Fecha y hora de Fin</th>
+                                <th>Tiempo Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for exercise in fast_exercises %}
+                                <tr>
+                                    <td>{{ exercise.student_id }}</td>
+                                    <td>{{ exercise.exercise_id }}</td>
+                                    <td>{{ exercise.status }}</td>
+                                    <td>{{ exercise.start_date }}</td>
+                                    <td>{{ exercise.completion_date }}</td>
+                                    <td>{{ exercise.time_spent }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Lista de usuarios que han fallado más de dos veces un ejercicio -->
+                <div id="statisticsTwo" class="content" style="display: none;">
+                    <h4>Usuarios que han fallado más de dos veces un ejercicio:</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID del Estudiante</th>
+                                <th>ID del Ejercicio</th>
+                                <th>Veces Falladas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for exercise in failed_exercises %}
+                                <tr>
+                                    <td>{{ exercise.student_id }}</td>
+                                    <td>{{ exercise.exercise_id }}</td>
+                                    <td>{{ exercise.fail_count }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Lista de usuarios que suelen equivocarse mucho -->
+                <div id="statisticsThree" class="content" style="display: none;">
+                    <h4>Usuarios que suelen equivocarse mucho:</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID del Estudiante</th>
+                                <th>Número de Fallos Totales</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in frequent_failures %}
+                                <tr>
+                                    <td>{{ student.student_id }}</td>
+                                    <td>{{ student.fail_count }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                 <!-- Gráfica con el número de ejercicios realizados cada día por todos los usuarios -->
+                <div id="statisticsFour" class="content" style="display: none;">
+                    <h4>Número de ejercicios realizados por día:</h4>
+                    <canvas id="exerciseChart"></canvas>
+                </div>
+
+                <!-- Lista con ejercicios a corregir--> 
+                <div id="corrections-section" class="corrections-section" class="content" style="display: none;">
+                    <h4>Ejercicios Pendientes de Revisión</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID Estudiante</th>
+                                <th>ID Ejercicio</th>
+                                <th>Fecha de Completado</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for exercise in exercises_to_review %}
+                                <tr>
+                                    <td>{{ exercise.student_id }}</td>
+                                    <td>{{ exercise.exercise_id }}</td>
+                                    <td>{{ exercise.completion_date }}</td>
+                                    <td><a href="{{ url_for('teacher.review_exercise', exercise_id=exercise.id) }}">Revisar</a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>                    
+                </div>
+                
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        function showSection(sectionId) {
+            // Ocultar todas las secciones
+            document.getElementById('controlSection').style.display = 'none';
+            document.getElementById('statisticsSection').style.display = 'none';
+            document.getElementById('settingsSection').style.display = 'none';
+            document.getElementById('questionsSection').style.display = 'none';
+            document.getElementById('questionsSectiona').style.display = 'none';
+            document.getElementById('statisticsOne').style.display = 'none';
+            document.getElementById('statisticsTwo').style.display = 'none';
+            document.getElementById('statisticsThree').style.display = 'none';
+            document.getElementById('statisticsFour').style.display = 'none';
+            document.getElementById('correctionSection').style.display = 'none';
+            document.getElementById('corrections-section').style.display = 'none';
+
+            // Quitar la clase 'active' de todos los enlaces
+            document.getElementById('controlLink').classList.remove('active');
+            document.getElementById('statisticsLink').classList.remove('active');
+            document.getElementById('settingsLink').classList.remove('active');
+            document.getElementById('correctionLink').classList.remove('active');
+
+            // Mostrar la sección seleccionada
+            document.getElementById(sectionId).style.display = 'block';
+
+            // Añadir la clase 'active' al enlace seleccionado
+            switch (sectionId) {
+                case 'controlSection':
+                    document.getElementById('controlLink').classList.add('active');
+                    document.getElementById('questionsSection').style.display = 'block';
+                    document.getElementById('questionsSectiona').style.display = 'block';
+                    break;
+
+                case 'correctionSection':
+                    document.getElementById('correctionLink').classList.add('active');
+                    document.getElementById('correctionSection').style.display = 'block';
+                    document.getElementById('corrections-section').style.display = 'block';
+                    break;
+
+                case 'statisticsSection':
+                    document.getElementById('statisticsLink').classList.add('active');
+                    document.getElementById('statisticsOne').style.display = 'block';
+                    document.getElementById('statisticsTwo').style.display = 'block';
+                    document.getElementById('statisticsThree').style.display = 'block';
+                    document.getElementById('statisticsFour').style.display = 'block';
+                    break;
+
+                case 'settingsSection':
+                    document.getElementById('settingsLink').classList.add('active');
+                    break;
+            }
+        }
+
+        function showSubSection(subSectionId) {
+            // Ocultar todas las sub-secciones
+            document.getElementById('userList').style.display = 'none';
+            document.getElementById('exerciseList').style.display = 'none';
+            document.getElementById('questionBatch').style.display = 'none';
+
+            // Quitar la clase 'active' de todos los sub-enlaces
+            document.getElementById('userListLink').classList.remove('active');
+            document.getElementById('exerciseListLink').classList.remove('active');
+            document.getElementById('questionBatchLink').classList.remove('active');
+
+            // Mostrar la sub-sección seleccionada
+            document.getElementById(subSectionId).style.display = 'block';
+
+            // Añadir la clase 'active' al sub-enlace seleccionado
+            switch (subSectionId) {
+                case 'userList':
+                    document.getElementById('userListLink').classList.add('active');
+                    break;
+                case 'exerciseList':
+                    document.getElementById('exerciseListLink').classList.add('active');
+                    break;
+                case 'questionBatch':
+                    document.getElementById('questionBatchLink').classList.add('active');
+                    break;
+            }
+        }
+
+        function validateForm() {
+            // Obtener valores de las entradas
+            const currentPassword = document.getElementById("currentPassword").value;
+            const newPassword = document.getElementById("newPassword").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+
+            // Comprobar si las nuevas contraseñas coinciden
+            if (newPassword !== confirmPassword) {
+                alert("Las nuevas contraseñas no coinciden");
+                return false; // Evitar que el formulario se envíe
+            }
+
+            return true; // Si todo está bien, permite que el formulario se envíe
+        }
+
+    </script>
+
+    <!-- Enlace a Bootstrap JS y Popper.js -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Librería de gráficos Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Datos para la gráfica
+        let exerciseData = {
+            labels: [{% for count in exercise_counts %}"{{ count.exercise_date.strftime('%d/%m/%Y') }}",{% endfor %}],
+            datasets: [{
+                label: 'Número de ejercicios',
+                data: [{% for count in exercise_counts %}{{ count.exercise_count }},{% endfor %}],
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+                fill: false
+            }]
+        };
+
+
+        // Opciones para la gráfica
+        let exerciseOptions = {
+            scales: {
+                x: {
+                    beginAtZero: true
+                },
+                y: {
+                    beginAtZero: true
+                }
+            }
+        };
+
+        // Crear la gráfica
+        let ctx = document.getElementById('exerciseChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: exerciseData,
+            options: exerciseOptions
+        });
+    </script>
+
+</body>
+
+</html>
+
+
+

@@ -1,0 +1,420 @@
+{% extends "base.html" %}
+
+{% block title %}
+Rankings
+{% endblock %}
+
+{% block head_extra %}
+<style type="text/css">
+    body {
+        margin: 0;
+        height: 100vh;
+        font-family: 'Open Sans', sans-serif;
+        background-color: #E1E9EE; /* Color azul claro */
+    }
+
+    .top-nav, .side-nav {
+        background-color: #72B4A4; /* Color turquesa */
+        box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.1);
+        border-radius: 20px;
+    }
+
+    .top-nav {
+        position: fixed;
+        top: 0px;
+        left: 10px;
+        right: 10px;
+        height: 120px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 30px;
+        font-size: 1.5rem;
+    }
+
+    .logo {
+        height: 140px;
+    }
+
+    .user-profile {
+        display: flex;
+        align-items: center;
+    }
+
+    .user-image {
+        width: 80px;
+        height: 80px;
+        border-radius: 30%;
+        margin-right: 15px;
+    }
+
+    .user-name, .user-config {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 10px;
+        margin-bottom: 0px;
+    }
+
+    .user-config {
+        font-size: 0.7em;
+        color: #FF7F50; /* Color coral */
+    }
+
+    .side-nav {
+        position: fixed;
+        top: 140px;
+        left: 20px;
+        width: 210px;
+        padding: 20px;
+    }
+
+    .side-nav ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .side-nav ul li {
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: #F9D3BA; /* Color melocotón claro */
+    }
+
+    .side-nav ul li:hover {
+        background-color: #FFB085; /* Color melocotón oscuro */
+    }
+
+    .side-nav ul li a {
+        text-decoration: none;
+        color: #364547; /* Color gris oscuro */
+        font-size: 1.2rem;
+    }
+
+    main {
+        margin-left: 280px;
+        padding: 20px;
+        margin-top: 140px;
+    }
+
+    @media only screen and (max-width: 768px) {
+        .top-nav {
+            flex-direction: column;
+            height: auto;
+            padding: 15px;
+            top: 0;
+            left: 10px;
+            right: 10px;
+        }
+
+        .user-profile {
+            flex-direction: column;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .side-nav {
+            position: relative;
+            top: 0;
+            width: 100%;
+            padding: 10px;
+            display: flex;
+            overflow-x: auto;
+        }
+
+        .side-nav ul {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+        main {
+            margin: 0;
+            padding: 15px;
+        }
+    }
+
+    #avatarModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    #avatarModal .avatars {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    #avatarModal img {
+        width: 120px;
+        height: 120px;
+        cursor: pointer;
+    }
+
+    .user-details {
+        display: block;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    @media only screen and (max-width: 500px) {
+        .user-details {
+            align-items: center;
+            text-align: center;
+        }
+    }
+
+    .user-details {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 5px; /* Reducir margen derecho */
+        margin-bottom: 0px;
+    }
+
+    .logout-btn {
+        background-color: #FF7F50; /* Color coral */
+        color: #fff;
+        padding: 5px 10px; /* Ajustar padding */
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 1rem;
+        box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.1);
+        margin-left: 10px; /* Añadir margen izquierdo */
+    }
+
+    .logout-btn:hover {
+        background-color: #E76645; /* Un tono más oscuro de coral para el hover */
+    }
+
+    .rankings-container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .ranking-card {
+        background-color: #F9D3BA; /* Color melocotón claro */
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.1);
+        width: 30%;
+    }
+
+    .ranking-card h2 {
+        text-align: center;
+        color: #364547; /* Color gris oscuro */
+    }
+
+    .ranking-card ol {
+        margin-top: 20px;
+    }
+
+    @media only screen and (max-width: 768px) {
+        .ranking-card {
+            width: 100%;
+        }
+    }
+    .ranking-card {
+        background-color: #FCEBDB; /* Color amarillo claro */
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1);
+        width: 30%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ranking-card h2 {
+        text-align: center;
+        color: #FF7F50; /* Color coral */
+        font-size: 1.5rem; /* Aumentar el tamaño del título */
+    }
+
+    .ranking-card ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .ranking-card li {
+        margin-bottom: 15px; /* Reducir el espacio entre elementos */
+        padding: 10px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .ranking-card li::before {
+        content: "";
+        background-color: #FF7F50; /* Color coral */
+        color: white;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem; /* Tamaño de fuente de los números */
+        font-weight: bold;
+        margin-right: 10px; /* Espacio entre el número y el texto */
+    }
+
+    /* Estilos para los números */
+    .ranking-card li:nth-child(1)::before {
+        background-color: #FF7F50; /* Color coral */
+        content: "1";
+    }
+
+    .ranking-card li:nth-child(2)::before {
+        background-color: #FFA07A; /* Color salmon */
+        content: "2";
+    }
+
+    .ranking-card li:nth-child(3)::before {
+        background-color: #FFC0CB; /* Color rosa */
+        content: "3";
+    }
+
+    /* Estilos para los demás números */
+    .ranking-card li:nth-child(n+4)::before {
+        background-color: #FCEBDB; /* Color amarillo claro */
+        content: attr(data-rank); /* Usar el atributo 'data-rank' para el número */
+    }
+
+    /* Estilos para la tabla */
+    .ranking-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: #F9D3BA; /* Color melocotón claro */
+        border-radius: 15px;
+        box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .ranking-table th, .ranking-table td {
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #364547; /* Línea divisoria gris oscuro */
+    }
+
+    .ranking-table th {
+        background-color: #FF7F50; /* Color coral */
+        color: #fff;
+    }
+
+    .ranking-table tbody tr:nth-child(odd) {
+        background-color: #FCEBDB; /* Color amarillo claro para filas impares */
+    }
+
+    /* Estilos para las celdas de posición */
+    .ranking-table td[data-rank]::before {
+        content: attr(data-rank);
+        background-color: #FF7F50; /* Color coral */
+        color: #fff;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    /* Estilos para las celdas de posición en el top 3 */
+    .ranking-table td[data-rank="1"]::before {
+        background-color: #FF7F50; /* Color coral */
+    }
+
+    .ranking-table td[data-rank="2"]::before {
+        background-color: #FFA07A; /* Color salmon */
+    }
+
+    .ranking-table td[data-rank="3"]::before {
+        background-color: #FFC0CB; /* Color rosa */
+    }
+
+</style>
+{% endblock %}
+
+{% block main_content %}
+    <!-- Relleno Página -->    
+    <div style="background-color: #F9D3BA; border-radius: 15px; padding: 20px; margin-bottom: 20px; margin-left: 20px;">
+        <h2 align="center">Top 5 diario</h2>
+        <table class="ranking-table">
+            <thead>
+                <tr>
+                    <th>Posición</th>
+                    <th>Nombre</th>
+                    <th>Ejercicios Realizados</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in daily_ranking %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ student.first_name }} {{ student.last_name }}</td>
+                    <td>{{ student.exercises_done }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div style="background-color: #F9D3BA; border-radius: 15px; padding: 20px; margin-bottom: 20px; margin-left: 20px;">
+        <h2 align="center">Top 5 semanal</h2>
+        <table class="ranking-table">
+            <thead>
+                <tr>
+                    <th>Posición</th>
+                    <th>Nombre</th>
+                    <th>Ejercicios Realizados</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in weekly_ranking %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ student.first_name }} {{ student.last_name }}</td>
+                    <td>{{ student.exercises_done }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div style="background-color: #F9D3BA; border-radius: 15px; padding: 20px; margin-bottom: 20px; margin-left: 20px;">
+        <h2 align="center">Top 5 mensual</h2>
+        <table class="ranking-table">
+            <thead>
+                <tr>
+                    <th>Posición</th>
+                    <th>Nombre</th>
+                    <th>Ejercicios Realizados</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in monthly_ranking %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ student.first_name }} {{ student.last_name }}</td>
+                    <td>{{ student.exercises_done }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}

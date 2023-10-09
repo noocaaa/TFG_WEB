@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}
+Guía de HTML
+{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" type="text/css" href="../static/css/libraryStyles.css">
+{% endblock %}
+
+{% block main_content %}
+<main>
+    <h2>Guía de HTML</h2>
+
+    <section>
+        <h3>¿Qué es HTML?</h3>
+        <p>
+            HTML (Lenguaje de Marcado de Hipertexto) es el lenguaje estándar para crear páginas web. Es como el esqueleto de una página, determinando su estructura y contenido.
+        </p>
+    </section>
+
+    <section>
+        <h3>Etiquetas y Elementos</h3>
+        <p>
+            HTML se escribe con etiquetas, que son como pequeñas instrucciones para el navegador. Estas etiquetas le dicen cómo mostrar el contenido.
+        </p>
+        <p>Ejemplo:</p>
+        <pre><code>
+&lt;h1&gt;Esto es un título&lt;/h1&gt;
+&lt;p&gt;Esto es un párrafo.&lt;/p&gt;
+        </code></pre>
+        <p>El código anterior mostrará un título grande seguido de un párrafo.</p>
+    </section>
+
+    <section>
+        <h3>Atributos</h3>
+        <p>
+            Los atributos proporcionan información adicional sobre un elemento. Por ejemplo, puedes usar el atributo "href" en la etiqueta &lt;a&gt; para crear un enlace.
+        </p>
+        <p>Ejemplo:</p>
+        <pre><code>
+&lt;a href="https://www.ejemplo.com"&gt;Visitar ejemplo.com&lt;/a&gt;
+        </code></pre>
+        <p>Esto creará un enlace que lleva a "ejemplo.com" cuando se haga clic en él.</p>
+    </section>
+
+    <section>
+        <h3>Listas y Tablas</h3>
+        <p>
+            HTML nos permite crear listas y tablas para organizar la información.
+        </p>
+        <p>Ejemplos:</p>
+        <pre><code>
+<!-- Lista no ordenada -->
+&lt;ul&gt;
+    &lt;li&gt;Elemento 1&lt;/li&gt;
+    &lt;li&gt;Elemento 2&lt;/li&gt;
+&lt;/ul&gt;
+
+<!-- Tabla -->
+&lt;table border="1"&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Fila 1, Celda 1&lt;/td&gt;
+        &lt;td&gt;Fila 1, Celda 2&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Fila 2, Celda 1&lt;/td&gt;
+        &lt;td&gt;Fila 2, Celda 2&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+        </code></pre>
+        <p>El código anterior creará una lista con dos elementos y una tabla con dos filas y dos celdas por fila.</p>
+    </section>
+
+    <section>
+        <h3>Formularios</h3>
+        <p>
+            Los formularios en HTML nos permiten recolectar información de los visitantes, como nombres, correos electrónicos y más.
+        </p>
+        <p>Ejemplo:</p>
+        <pre><code>
+&lt;form action="/enviar" method="post"&gt;
+    &lt;label for="nombre"&gt;Nombre:&lt;/label&gt;
+    &lt;input type="text" id="nombre" name="nombre"&gt;
+    &lt;input type="submit" value="Enviar"&gt;
+&lt;/form&gt;
+        </code></pre>
+        <p>El código anterior crea un formulario con un campo de texto para ingresar un nombre y un botón para enviar el formulario.</p>
+    </section>
+
+</main>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+
+    
+    

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lista de Usuarios</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f9f9f9;
+            font-family: Arial, sans-serif;
+        }
+
+        .sidebar {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px 0;
+            overflow-y: auto;
+            border-right: 1px solid #bdc3c7;
+            min-height: 100vh;
+            position: -webkit-sticky; /* For Safari */
+            position: sticky;
+            top: 0;
+            flex: 1; 
+        }
+
+        .sidebar a {
+            color: #ecf0f1;
+            display: block;
+            padding: 10px 20px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #34495e;
+            text-decoration: none;
+        }
+
+        .content {
+            padding: 20px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+
+        .container-fluid > .row {
+            display: flex;
+            flex-direction: row;
+            min-height: 100vh;
+            flex: 1;
+        }
+
+        .sidebar, 
+        .col-md-9 {
+            flex-grow: 1;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                position: relative;
+                height: auto;
+                min-height: 0;
+            }
+            
+            .container-fluid > .row {
+                flex-direction: column;
+            }
+        }
+
+        .sub-nav-link {
+            margin-left: 20px;
+        }
+
+        .expanded-row {
+            display: none;
+        }
+
+        button, input {
+            overflow: visible;
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            flex-grow: 1;
+            padding-top: 20px;
+        }
+
+        .pagination-center {
+            display: flex;
+            justify-content: center;
+        }
+
+        .pagination-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .main-content {
+            min-height: calc(100vh - 60px);
+            flex: 1; 
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 sidebar">
+            <h3 class="text-center mb-4">Panel del Profesor</h3>
+            <a href="{{ url_for('teacher.teacher_dashboard') }}" class="d-block mb-2 nav-link">Vuelta al Dashboard</a>
+            <a href="{{ url_for('control.login') }}" class="btn btn-danger mt-5">Salir</a>
+        </div>
+
+
+        <!-- Main Content -->
+        <div class="col-md-9 main-content">
+            <h2 class="my-4">Lista de Progresos de Ejercicios</h2>
+
+            <!-- Filtro por student_id -->
+            <form action="{{ url_for('teacher.exercise_list') }}" method="POST">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="search" value="{{ search_term }}" placeholder="Buscar por ID de estudiante">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+                    </div>
+                </div>
+
+                <!-- Filtro por estado del ejercicio -->
+                <div class="input-group mb-3">
+                    <select class="form-control" name="status">
+                        <option value="">Selecciona un estado</option>
+                        <option value="completed">Completado</option>
+                        <option value="in-progress">En progreso</option>
+                        <option value="not-started">No iniciado</option>
+                        <!-- Puedes agregar más estados si los tienes -->
+                    </select>
+                </div>
+
+                <!-- Filtro por fecha -->
+                <div class="input-group mb-3">
+                    <input type="date" class="form-control" name="date" placeholder="Selecciona una fecha">
+                </div>
+            </form>
+
+            
+            
+            <div class="content">
+                <table class="table table-bordered" id="exerciseTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>ID de Estudiante</th>
+                            <th>ID de Ejercicio</th>
+                            <th>Estado</th>
+                            <th>Fecha de Completitud</th>
+                            <th>Nota</th>
+                            <th>Tiempo Usado</th>
+                            <th>Fecha de Inicio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for exercise in exercises %}
+                            <tr>
+                                <td>{{ exercise.id }}</td>
+                                <td>{{ exercise.student_id }}</td>
+                                <td>{{ exercise.exercise_id }}</td>
+                                <td>{{ exercise.status }}</td>
+                                <td>{{ exercise.completion_date }}</td>
+                                <td>{{ exercise.grade }}</td>
+                                <td>{{ exercise.time_spent }}</td>
+                                <td>{{ exercise.start_date }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        
+            <div class="pagination-wrapper">
+                <ul class="pagination">
+                    {% if exercises.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('teacher.exercise_list', page=exercises.prev_num, search=search_term) }}">« Anterior</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link">« Anterior</a>
+                    </li>
+                    {% endif %}
+            
+                    {% for page_num in exercises.iter_pages() %}
+                    <li class="page-item {% if page_num == exercises.page %}active{% elif page_num is none %}disabled{% endif %}">
+                        {% if page_num %}
+                        <a class="page-link" href="{{ url_for('teacher.exercise_list', page=page_num, search=search_term) }}">{{ page_num }}</a>
+                        {% else %}
+                        <a class="page-link">...</a>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+            
+                    {% if exercises.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('teacher.exercise_list', page=exercises.next_num, search=search_term) }}">Siguiente »</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link">Siguiente »</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Scripts -->
+<script>
+    function toggleRow(userId) {
+        var row = document.getElementById('row-' + userId);
+        if (row.style.display === 'none') {
+            row.style.display = 'table-row';  // Cambiado de '' a 'table-row'
+        } else {
+            row.style.display = 'none';
+        }
+    }
+
+    function filterUsers() {
+        var input = document.getElementById("searchInput");
+        var filter = input.value.toUpperCase();
+        var table = document.getElementById("userTable");
+        var trs = table.getElementsByTagName("tr");
+        for (var i = 1; i < trs.length; i++) {
+            var tds = trs[i].getElementsByTagName("td");
+            var firstName = tds[1].textContent.toUpperCase();
+            var lastName = tds[2].textContent.toUpperCase();
+            if (firstName.indexOf(filter) > -1 || lastName.indexOf(filter) > -1) {
+                trs[i].style.display = "";
+            } else {
+                trs[i].style.display = "none";
+            }
+        }
+    }
+</script>
+
+<!-- Enlace a Bootstrap JS y Popper.js -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

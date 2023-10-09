@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}
+Guía de JavaScript
+{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" type="text/css" href="../static/css/libraryStyles.css">
+{% endblock %}
+
+{% block main_content %}
+<main>
+    <h2>Guía de JavaScript</h2>
+
+    <section>
+        <h3>¿Qué es JavaScript?</h3>
+        <p>
+            JavaScript es un lenguaje de programación que le da vida a nuestras páginas web. Con él, podemos crear interactividad, animaciones, juegos y mucho más. ¡Es como la magia detrás de muchos sitios web!
+        </p>
+    </section>
+
+    <section>
+        <h3>Variables y Datos</h3>
+        <p>
+            Las variables son como cajas donde guardamos información. Esta información puede ser un número, un texto, una lista y otros tipos de datos.
+        </p>
+        <p>Ejemplo:</p>
+        <pre><code>
+var nombre = "Ana";
+var edad = 12;
+        </code></pre>
+        <p>El código anterior guarda el texto "Ana" en la variable "nombre" y el número 12 en la variable "edad".</p>
+    </section>
+
+    <section>
+        <h3>Funciones</h3>
+        <p>
+            Las funciones son bloques de código que podemos "llamar" o "ejecutar" cuando queramos. Nos ayudan a organizar y reutilizar código.
+        </p>
+        <p>Ejemplo:</p>
+        <pre><code>
+function saludo() {
+    alert("¡Hola, bienvenido!");
+}
+
+saludo();  // Esto mostrará un mensaje de bienvenida.
+        </code></pre>
+        <p>La función "saludo" muestra un mensaje de bienvenida cuando la llamamos.</p>
+    </section>
+
+    <section>
+        <h3>Eventos</h3>
+        <p>
+            Con JavaScript, podemos hacer que algo suceda cuando ocurre un evento, como un clic en un botón.
+        </p>
+        <p>Ejemplo:</p>
+        <pre><code>
+var boton = document.getElementById("miBoton");
+
+boton.addEventListener("click", function() {
+    alert("¡Has hecho clic en el botón!");
+});
+        </code></pre>
+        <p>El código anterior muestra un mensaje cuando haces clic en un botón con el ID "miBoton".</p>
+    </section>
+
+    <section>
+        <h3>Condicionales</h3>
+        <p>
+            Los condicionales nos permiten tomar decisiones en nuestro código. Si se cumple una condición, hacemos algo; si no, hacemos otra cosa.
+        </p>
+        <p>Ejemplo:</p>
+        <pre><code>
+var numero = 10;
+
+if (numero > 5) {
+    alert("El número es mayor que 5.");
+} else {
+    alert("El número es 5 o menor.");
+}
+        </code></pre>
+        <p>El código anterior muestra un mensaje dependiendo del valor de la variable "numero".</p>
+    </section>
+
+</main>
+{% endblock %}
+    
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Linea clave para diseño responsivo -->
+    <title>Pag. Principal</title>
+    <meta name="Autor" content="Noelia Carrasco Vilar">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style type="text/css">
+        body {
+            margin: 0;
+            height: 100vh;
+            font-family: 'Open Sans', sans-serif;
+            background-color: #E1E9EE; /* Color azul claro */
+        }
+
+        .top-nav, .side-nav {
+            background-color: #72B4A4; /* Color turquesa */
+            box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.1);
+            border-radius: 20px;
+        }
+
+        .top-nav {
+            position: fixed;
+            top: 0px;
+            left: 10px;
+            right: 10px;
+            height: 120px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            font-size: 1.5rem;
+        }
+
+        .logo {
+            height: 140px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 30%;
+            margin-right: 15px;
+        }
+
+        .user-name, .user-config {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 10px;
+            margin-bottom: 0px;
+        }
+
+        .user-config {
+            font-size: 0.7em;
+            color: #FF7F50; /* Color coral */
+        }
+
+        .side-nav {
+            position: fixed;
+            top: 140px;
+            left: 20px;
+            width: 210px;
+            padding: 20px;
+        }
+
+        .side-nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .side-nav ul li {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #F9D3BA; /* Color melocotón claro */
+        }
+
+        .side-nav ul li:hover {
+            background-color: #FFB085; /* Color melocotón oscuro */
+        }
+
+        .side-nav ul li a {
+            text-decoration: none;
+            color: #364547; /* Color gris oscuro */
+            font-size: 1.2rem;
+        }
+
+        main {
+            margin-left: 250px;
+            padding: 20px;
+            margin-top: 140px;
+            margin-left: 300px;
+        }
+        
+        @media only screen and (max-width: 768px) {
+            .top-nav {
+                flex-direction: column;
+                height: auto;
+                padding: 15px;
+                top: 0;
+                left: 10px;
+                right: 10px;
+            }
+
+            .user-profile {
+                flex-direction: column;
+                align-items: center;
+                margin-top: 15px;
+            }
+
+            .side-nav {
+                position: relative;
+                top: 0;
+                width: 100%;
+                padding: 10px;
+                display: flex;
+                overflow-x: auto;
+            }
+
+            .side-nav ul {
+                display: flex;
+                justify-content: space-around;
+                width: 100%;
+            }
+
+            main {
+                margin: 0;
+                padding: 15px;
+                margin-top: 100px;
+                margin-left: 260px;
+            }
+        }
+
+        #avatarModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #avatarModal .avatars {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #avatarModal img {
+            width: 120px;
+            height: 120px;
+            cursor: pointer;
+        }
+
+        .user-details {
+            display: block;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        @media only screen and (max-width: 500px) {
+            .user-details {
+                align-items: center;
+                text-align: center;
+            }
+        }
+
+        .user-details {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 5px; /* Reducir margen derecho */
+            margin-bottom: 0px;
+        }
+
+        .logout-btn {
+            background-color: #FF7F50; /* Color coral */
+            color: #fff;
+            padding: 5px 10px; /* Ajustar padding */
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1rem;
+            box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.1);
+            margin-left: 10px; /* Añadir margen izquierdo */
+        }
+
+        .logout-btn:hover {
+            background-color: #E76645; /* Un tono más oscuro de coral para el hover */
+        }
+
+        /* Cuadrado Modulo */
+        .module-box {
+            background-color: #F9D3BA;  /* Color melocotón claro */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .module-box:hover {
+            transform: scale(0.8);
+        }
+
+        .module-btn {
+            display: inline-block;
+            background-color: #FF7F50; /* Color coral */
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-top: 10px;
+            box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+
+        .module-btn:hover {
+            background-color: #E76645; /* Un tono más oscuro de coral para el hover */
+        }
+
+        /* Barra de progreso */
+        .progress-container {
+            background-color: #E1E9EE; /* Color azul claro */
+            border-radius: 10px;
+            height: 20px;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            background-color: #FF7F50; /* Color coral */
+            border-radius: 10px;
+            height: 100%;
+        }
+
+        .module-description {
+            white-space: pre-line;
+            word-wrap: break-word;
+        }
+
+    </style>
+</head>
+<body>
+    <header class="top-nav">
+        <a href="{{ url_for('student.principal') }}">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="logo">
+        </a>        
+        <div class="user-profile">
+            <img src="{{ url_for('static', filename='img/' + avatar_id|string + '.jpg') }}" alt="User" class="user-image">
+            <div class="user-details">
+                <p class="user-name">{{ username }}</p>
+                <a href="{{ url_for('student.configuracion') }}" class="user-config">Configuración</a>
+            </div>
+            <a href="{{ url_for('control.logout') }}" class="logout-btn">Salir</a> <!-- Botón de Salir -->
+        </div>    
+    </header> 
+    
+
+    <nav class="side-nav">
+        <ul>
+            <li><a href="{{ url_for('student.principal') }}">Principal</a></li>
+            <li><a href="{{ url_for('student.biblioteca') }}">Biblioteca</a></li>
+            <li><a href="{{ url_for('student.preguntas') }}">Preguntas</a></li>
+            <li><a href="{{ url_for('student.rankings') }}">Rankings</a></li>
+            <li><a href="{{ url_for('student.contenido') }}">Contenido</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        {% for module_data in modules_progress %}
+            {% if module_data.available %}
+                <div class="module-box">
+                    <h2>{{ module_data.module.name }}</h2>
+                    <div class="module-description">
+                        {{ module_data.module.description }}
+                    </div>
+                                        
+                    <!-- Barra de progreso -->
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: {{ module_data.progress }}%;"></div>
+                    </div>
+                    
+                    <a href="{{ url_for('student.module_exercise', module_id=module_data.module.id) }}" class="module-btn">Abrir Ejercicio</a>
+                </div>        
+            {% endif %}
+        {% endfor %}
+    </main>
+        
+    <div id="avatarModal" style="display:none;">
+        <h2>Elige tu avatar</h2>
+        <div class="avatars">
+            <img src="{{ url_for('static', filename='img/1.jpg') }}" data-id="1" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/2.jpg') }}" data-id="2" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/3.jpg') }}" data-id="3" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/4.jpg') }}" data-id="4" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/5.jpg') }}" data-id="5" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/6.jpg') }}" data-id="6" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/7.jpg') }}" data-id="7" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/8.jpg') }}" data-id="8" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/9.jpg') }}" data-id="9" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/10.jpg') }}" data-id="10" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/11.jpg') }}" data-id="11" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/12.jpg') }}" data-id="12" onclick="selectAvatar(this)">
+        </div>
+    </div>
+
+    <!-- Formulario oculto para almacenar que avatar prefiere el estudiante -->
+    <form id="avatarForm" method="POST" action="{{ url_for('student.almacenar_avatar') }}" style="display: none;">
+        <input type="hidden" id="avatarElegido" name="avatar_elegido">
+    </form>
+    
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let showModal = "{{ show_modal|lower }}";  // Convertimos el valor booleano de Python a un booleano de JavaScript
+            
+            if (showModal === "true") {
+                $('#avatarModal').show();
+            }
+
+        });
+
+        function selectAvatar(element) {
+            const avatarId = element.getAttribute("data-id");
+            document.getElementById("avatarElegido").value = avatarId;
+            document.getElementById("avatarForm").submit();
+        }
+
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Linea clave para diseño responsivo -->
+    <title>{% block title %}Pag. Principal{% endblock %}</title>
+    <meta name="Autor" content="Noelia Carrasco Vilar">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    {% block head_extra %}{% endblock %}
+</head>
+
+<body>
+    <header class="top-nav">
+        <a href="{{ url_for('student.principal') }}">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="logo">
+        </a>        
+        <div class="user-profile">
+            <img src="{{ url_for('static', filename='img/' + avatar_id|string + '.jpg') }}" alt="User" class="user-image">
+            <div class="user-details">
+                <p class="user-name">{{ username }}</p>
+                <a href="{{ url_for('student.configuracion') }}" class="user-config">Configuración</a>
+            </div>
+            <a href="{{ url_for('control.logout') }}" class="logout-btn">Salir</a> <!-- Botón de Salir -->
+        </div>    
+    </header> 
+
+    <nav class="side-nav">
+        <ul>
+            <li><a href="{{ url_for('student.principal') }}">Principal</a></li>
+            <li><a href="{{ url_for('student.biblioteca') }}">Biblioteca</a></li>
+            <li><a href="{{ url_for('student.preguntas') }}">Preguntas</a></li>
+            <li><a href="{{ url_for('student.rankings') }}">Rankings</a></li>
+            <li><a href="{{ url_for('student.contenido') }}">Contenido</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        {% block main_content %}{% endblock %}
+    </main>
+    
+    {% block avatar %}{% endblock %}
+
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>
+

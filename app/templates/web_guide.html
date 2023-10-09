@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}
+Guía Web
+{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" type="text/css" href="../static/css/libraryStyles.css">
+{% endblock %}
+
+{% block main_content %}
+<main>
+    <h2>Guías de Desarrollo Web</h2>
+    
+    <!-- Botones de guías -->
+    <div style="text-align: center; margin-top: 20px; margin-bottom: 30px;">
+        <a href="web_guide/html" style="background-color: #72B4A4; color: #fff; padding: 10px 20px; border-radius: 10px; text-decoration: none; margin: 5px;">Guía de HTML</a>
+        <a href="web_guide/css" style="background-color: #72B4A4; color: #fff; padding: 10px 20px; border-radius: 10px; text-decoration: none; margin: 5px;">Guía de CSS</a>
+        <a href="web_guide/javascript" style="background-color: #72B4A4; color: #fff; padding: 10px 20px; border-radius: 10px; text-decoration: none; margin: 5px;">Guía de JavaScript</a>
+    </div>
+
+    <!-- Sección de HTML -->
+    <section>
+        <h3>HTML: La Estructura de tu Página Web</h3>
+        <p>
+            HTML es como el esqueleto de una página web. Nos permite estructurar el contenido, como textos, imágenes y enlaces. Cuando escribes HTML, estás dando instrucciones sobre cómo se debe mostrar el contenido en la pantalla.
+        </p>
+        <p>
+            Por ejemplo, si quieres crear un título grande, usarías algo llamado etiqueta de título. Se vería así: <br>
+        </p>
+        <code>&lt;h1&gt;Mi Título Grande&lt;/h1&gt;</code>
+        <p>
+            ¿Interesante, verdad? ¡Hay muchas más etiquetas y trucos que puedes aprender en HTML!
+        </p>
+    </section>
+
+    <!-- Sección de CSS -->
+    <section>
+        <h3>CSS: Vistiendo tu Página Web</h3>
+        <p>
+            Si HTML es el esqueleto, entonces CSS es la ropa y el estilo. CSS te permite darle colores, tamaños y posiciones a las diferentes partes de tu página web.
+        </p>
+        <p>
+            Imagina que quieres que tu título sea de color azul. Usarías CSS para decir: "quiero que mi título sea azul". ¡Y voilà! Tu título se vuelve azul.
+        </p>
+        <p>
+            Con CSS, puedes transformar una página simple en algo realmente atractivo y profesional.
+        </p>
+    </section>
+
+    <!-- Sección de JavaScript -->
+    <section>
+        <h3>JavaScript: Haciendo tu Página Web Interactiva</h3>
+        <p>
+            JavaScript es como la magia detrás de una página web. Con JavaScript, puedes hacer que tu página web responda a las acciones de los visitantes, como hacer clic en un botón o mover el mouse.
+        </p>
+        <p>
+            Si alguna vez has visto una alerta emergente en una página web o un menú que se despliega al pasar el mouse, ¡eso es gracias a JavaScript!
+        </p>
+        <p>
+            JavaScript te permite llevar tu página web al siguiente nivel, haciéndola dinámica e interactiva.
+        </p>
+    </section>
+
+</main>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}

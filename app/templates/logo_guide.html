@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}
+Guía de Logo
+{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" type="text/css" href="../static/css/libraryStyles.css">
+{% endblock %}
+
+{% block main_content %}
+<!-- Contenido de la guía de Logo -->
+<main>
+    <h2>Guía de Logo</h2>
+    
+    <section>
+        <h3>Introducción</h3>
+        <p>
+            Logo es un lenguaje de programación desarrollado en la década de 1960. Es conocido por su famoso "turtle graphics", donde una tortuga se mueve por la pantalla dibujando líneas.
+        </p>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <img src="{{ url_for('static', filename='img/programa.png') }}" alt="Tortuga Logo" style="width: 800px;"> 
+        </div>
+
+    </section>
+
+    
+    <section>
+        <h3>Instrucciones básicas</h3>
+        <ul>
+            <li><strong>FORWARD x</strong> o <strong>FD x</strong>: Mueve la tortuga hacia adelante x unidades.</li>
+            <li><strong>BACK x</strong> o <strong>BK x</strong>: Mueve la tortuga hacia atrás x unidades.</li>
+            <li><strong>RIGHT x</strong> o <strong>RT x</strong>: Gira la tortuga x grados a la derecha.</li>
+            <li><strong>LEFT x</strong> o <strong>LT x</strong>: Gira la tortuga x grados a la izquierda.</li>
+            <li><strong>HOME</strong>: Mueve la tortuga al centro de la pantalla.</li>
+            <li><strong>CLEARSCREEN</strong> o <strong>CS</strong>: Limpia la pantalla y coloca la tortuga en el centro.</li>
+        </ul>
+
+        <code>
+            FORWARD 100<br>
+            RIGHT 90<br>
+            FORWARD 100<br>
+            RIGHT 90<br>
+            FORWARD 100<br>
+            RIGHT 90<br>
+            FORWARD 100<br>
+        </code>
+
+    </section>
+    
+    
+    <section>
+        <h3>Colores y Tamaño del Lápiz</h3>
+        <ul>
+            <li><strong>PENCOLOR [r g b]</strong>: Establece el color del lápiz utilizando valores RGB.</li>
+            <li><strong>FILLCOLOR [r g b]</strong>: Establece el color de relleno utilizando valores RGB.</li>
+            <li><strong>PENSIZE x</strong>: Establece el tamaño del lápiz a x unidades.</li>
+        </ul>
+        <code>PENCOLOR [255 0 0]</code>
+    </section>
+
+    <section>
+        <h3>Condicionales y Bucles</h3>
+        <p>
+            Logo permite el uso de estructuras de control como condicionales y bucles para crear programas más complejos.
+        </p>
+        <ul>
+            <li><strong>IF condición [instrucciones]</strong>: Ejecuta las instrucciones si la condición es verdadera.</li>
+            <li><strong>REPEAT x [instrucciones]</strong>: Repite las instrucciones x veces.</li>
+        </ul>
+        <code>
+            REPEAT 4 [FORWARD 100 RIGHT 90]
+        </code>
+    </section>
+
+    <section>
+        <h3>Procedimientos</h3>
+        <p>
+            Puedes crear tus propios procedimientos en Logo. Por ejemplo, para crear un cuadrado:
+        </p>
+        <code>
+        TO SQUARE :SIZE<br>
+            REPEAT 4 [FD :SIZE RT 90]<br>
+        END
+        </code>
+        <p>
+            Puedes llamar al procedimiento con <strong>SQUARE 50</strong> para dibujar un cuadrado de tamaño 50.
+        </p>
+    </section>
+</main>
+{% endblock %}
+    
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+

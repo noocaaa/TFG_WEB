@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Panel Administrativo</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h3 {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .module-form, .exercise-form, .teacher-form {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"], 
+        input[type="date"], 
+        input[type="email"], 
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #555;
+        }
+
+    </style>
+</head>
+
+<body class="bg-light">
+
+    <div style="position: absolute; top: 10px; right: 10px;">
+        <a href="{{ url_for('control.logout') }}" class="btn btn-danger">Salir</a>
+    </div>    
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-3">
+                <!-- Sidebar for Module and Exercise Creation -->
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action" id="moduleTab" onclick="showModuleForm(event)">Añadir Módulo</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="exerciseTab" onclick="showExerciseForm(event)">Añadir Ejercicio</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="theoryTab" onclick="showAddTheory(event)">Añadir Teoria</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="teacherTab" onclick="showTeacherForm(event)">Añadir Profesor</a>
+                    
+                    <a href="#" class="list-group-item list-group-item-action" id="listModule" onclick="showListModule(event)">Consultar Módulos</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="listExercise" onclick="showListExercise(event)">Consultar Ejercicios</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="listTheory" onclick="showListTheory(event)">Consultar Teoria</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="listTeachers" onclick="showTeacherList(event)">Consultar Profesores</a>
+
+                    <a href="#" class="list-group-item list-group-item-action" id="editModulesTab" onclick="showEditModules(event)">Editar Modulos</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="editExercisesTab" onclick="showEditExercises(event)">Editar Ejercicios</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="editTheoryTab" onclick="showEditTheory(event)">Editar Teoria</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="editTeacherTab" onclick="showEditTeachers(event)">Editar Profesores</a>
+
+                    <a href="#" class="list-group-item list-group-item-action" id="deleteModuleTab" onclick="showDeleteModuleForm(event)">Eliminar Módulo</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="deleteExerciseTab" onclick="showDeleteExerciseForm(event)">Eliminar Ejercicio</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="deleteTheoryTab" onclick="showDeleteTheory(event)">Eliminar Teoria</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="deleteTeacherTab" onclick="showDeleteTeacherForm(event)">Eliminar Profesor</a>
+
+                    <a href="#" class="list-group-item list-group-item-action" id="globalOrderTab" onclick="showGlobalOrder(event)">Orden Global</a>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+
+                <!-- Título -->
+                <h2 class="text-center mb-4">Panel Administrativo</h2>
+
+                <!-- Formulario para añadir módulo -->
+                <div class="card mb-4" id="moduleForm" style="display: none;">
+                    <div class="card-header">
+                        Crear Módulo
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/add_module" method="post">
+                            <!-- Field for Module Name -->
+                            <div class="form-group">
+                                <label for="module_name">Nombre del Módulo:</label>
+                                <input type="text" name="module_name" class="form-control" required>
+                            </div>
+                            
+                            <!-- Field for Module Description -->
+                            <div class="form-group">
+                                <label for="module_description">Descripción:</label>
+                                <textarea name="module_description" class="form-control" rows="3" required></textarea>
+                            </div>                            
+                            
+                            <input type="submit" value="Crear Módulo" class="btn btn-primary">
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Formulario para añadir ejercicio -->
+                <div class="card mb-4" id="exerciseForm" style="display: none;">
+                    <div class="card-header">
+                        Añadir ejercicio
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/add_exercise" method="post">
+                            <div class="form-group">
+                                <label for="title">Título:</label>
+                                <input type="text" name="title" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="module_id">ID del Módulo:</label>
+                                <input type="number" name="module_id" class="form-control" required>
+                            </div>  
+
+                            <div class="form-group">
+                                <label for="language">Lenguaje:</label>
+                                <select name="language" class="form-control" required>
+                                    <option value="LOGO">LOGO</option>
+                                    <option value="PYTHON">PYTHON</option>
+                                    <option value="C++">C++</option>
+                                    <option value="JAVA">JAVA</option>
+                                    <option value="WEB">WEB</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="content">Contenido:</label>
+                                <textarea name="content" class="form-control" rows="3" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="requirements">Requisitos:</label>
+                                <textarea name="requirements" class="form-control" rows="3"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="solution">Solución:</label>
+                                <textarea name="solution" class="form-control" rows="3" required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="test_verification">Test de verificación (¡¡Formato JSON!!):</label>
+                                <textarea name="test_verification" class="form-control" rows="5" placeholder='{"InputProporcionado": "OutputEsperado", ...}' required></textarea>
+                                <small class="form-text text-muted">El JSON debe ser válido.</small>
+                            </div>
+
+                            <input type="submit" value="Añadir ejercicio" class="btn btn-primary">
+                        </form>
+                    </div>
+
+                </div>
+
+                <!-- Lista de módulos -->
+                <div class="card mb-4" id="cardModules" style="display: none;">
+                    <div class="card-header">
+                        Lista de módulos
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for module in modules %}
+                                <tr>
+                                    <td>{{ module.id }}</td>
+                                    <td>{{ module.name }}</td>
+                                    <td>{{ module.description }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+
+                <!-- Lista de ejercicios -->
+                <div class="card mb-4" id="cardExercises" style="display: none;">
+                    <div class="card-header">
+                        Lista de ejercicios
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID del Ejercicio</th>
+                                    <th>ID del Módulo</th>
+                                    <th>Nombre del Ejercicio</th>
+                                    <th>Lenguaje</th>
+                                    <th>Requisitos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for exercise in exercises %}
+                                <tr>
+                                    <td>{{ exercise.id }}</td>
+                                    <td>{{ exercise.module_id }}</td>
+                                    <td>{{ exercise.name }}</td>
+                                    <td>{{ exercise.language }}</td>
+                                    <td>{{ exercise.requirements }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+
+                <div class="container mt-3" id="errorContainer">
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endif %}
+                </div>   
+                
+                <!-- Formulario para eliminar módulo -->
+                <div class="card mb-4" id="deleteModuleForm" style="display: none;">
+                    <div class="card-header">
+                        Eliminar Módulo
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/delete_module" method="post">
+                            <div class="form-group">
+                                <label for="module_id">ID del Módulo a Eliminar:</label>
+                                <input type="number" name="module_id" class="form-control" required>
+                            </div>
+                            <input type="submit" value="Eliminar Módulo" class="btn btn-danger">
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Formulario para eliminar ejercicio -->
+                <div class="card mb-4" id="deleteExerciseForm" style="display: none;">
+                    <div class="card-header">
+                        Eliminar Ejercicio
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/delete_exercise" method="post">
+                            <div class="form-group">
+                                <label for="exercise_id">ID del Ejercicio a Eliminar:</label>
+                                <input type="number" name="exercise_id" class="form-control" required>
+                            </div>
+                            <input type="submit" value="Eliminar Ejercicio" class="btn btn-danger">
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Formulario para añadir profesor -->
+                <div class="card mb-4" id="teacherForm" style="display: none;">
+                    <div class="card-header">
+                        Añadir Profesor
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/add_teacher" method="post">
+                            <!-- Field for ID -->
+                            <div class="form-group">
+                                <label for="teacher_id">ID:</label>
+                                <input type="number" name="teacher_id" class="form-control" required>
+                            </div>
+
+                            <!-- Fields for First Name and Last Name -->
+                            <div class="form-group">
+                                <label for="first_name">Nombre:</label>
+                                <input type="text" name="first_name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name">Apellido:</label>
+                                <input type="text" name="last_name" class="form-control" required>
+                            </div>
+
+                            <!-- Fields for Birth Date, City, Gender -->
+                            <div class="form-group">
+                                <label for="birth_date">Fecha de Nacimiento:</label>
+                                <input type="date" name="birth_date" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">Ciudad:</label>
+                                <input type="text" name="city" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">Género:</label>
+                                <select name="gender" class="form-control" required>
+                                    <option value="male">Masculino</option>
+                                    <option value="female">Femenino</option>
+                                </select>
+                            </div>
+
+                            <!-- Fields for Email and Password -->
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" name="email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Contraseña:</label>
+                                <input type="password" name="password" class="form-control" required>
+                            </div>
+
+                            <!-- Hidden field for Type User -->
+                            <input type="hidden" name="type_user" value="X">
+
+                            <input type="submit" value="Añadir Profesor" class="btn btn-primary">
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Formulario lista profesores -->
+                <div id="teacherList" class="card mb-4"  style="display:none;">
+                    <div class="card-header">
+                        Lista de Profesores
+                    </div>                    
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Apellido</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tbody>
+                                    {% for teacher in teachers %}
+                                        <tr>
+                                            <td>{{ teacher.id }}</td>
+                                            <td>{{ teacher.first_name }}</td>
+                                            <td>{{ teacher.last_name }}</td>
+                                            <td>{{ teacher.email }}</td>    
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Formulario eliminación profesores -->
+                <div id="deleteTeacherForm" class="card mb-4"  style="display:none;">
+                    <div class="card-header">
+                        Eliminar Profesor
+                    </div>                     
+                    <div class="card-body">
+                        <form action="/admin/delete_teacher" method="post">
+                            <div class="form-group">
+                                <label for="teacherID">ID del Profesor a Eliminar:</label>
+                                <input type="number" class="form-control" name="teacher_id" id="teacherID" required>
+                            </div>
+                            <input type="submit" value="Eliminar Profesor" class="btn btn-danger">
+                        </form>
+                    </div>
+                </div>                
+                
+
+                <!-- Formularios edición--> 
+                <div id="editModules" class="card mb-4" style="display:none;">
+                    <div class="card-header">
+                        Modificación de los módulos
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/update_module" method="post">
+                            {% for module in modules %}
+                                <div class="module-form">
+                                    <label>Nombre:</label>
+                                    <input type="text" name="name_{{ module.id }}" value="{{ module.name }}">
+                                    
+                                    <label>Descripción:</label>
+                                    <input type="text" name="description_{{ module.id }}" value="{{ module.description }}">
+                                    
+                                    <input type="submit" value="Modificar módulo" class="btn btn-primary">
+                                </div>
+                            {% endfor %}
+                        </form>
+                    </div>
+                </div>
+                
+                <div id="editExercises" class="card mb-4" {% if not edit_mode %}style="display:none;"{% endif %}>
+                    <div class="card-header">
+                        Modificación de los ejercicios
+                    </div>
+                    <div class="card-body">
+                        <!-- Formulario para filtrar ejercicios en la edición -->
+                        <form method="GET" action="{{ url_for('admin.admin_dashboard') }}">
+                            <input type="hidden" name="editMode" value="true">
+                            <div class="form-row align-items-center">
+                                <div class="col-md-3">
+                                    <label for="edit_filter_id">Filtrar por ID:</label>
+                                    <input type="number" name="edit_filter_id" class="form-control" id="edit_filter_id">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="edit_filter_language">Filtrar por Lenguaje:</label>
+                                    <select name="edit_filter_language" class="form-control" id="edit_filter_language">
+                                        <option value="">-- Todos --</option>
+                                        <option value="LOGO">LOGO</option>
+                                        <option value="PYTHON">PYTHON</option>
+                                        <option value="C++">C++</option>
+                                        <option value="JAVA">JAVA</option>
+                                        <option value="WEB">WEB</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="edit_filter_name">Filtrar por Nombre:</label>
+                                    <input type="text" name="edit_filter_name" class="form-control" id="edit_filter_name">
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                                </div>
+                            </div>
+                        </form>
+                        <hr>
+                        <form action="/admin/update_exercise" method="post">
+                            {% for exercise in exercises %}
+                                <div class="exercise-form">
+                                    <label>Nombre:</label>
+                                    <input type="text" name="name_{{ exercise.id }}" value="{{ exercise.name }}">
+                                    
+                                    <label>Contenido:</label>
+                                    <textarea name="content_{{ exercise.id }}">{{ exercise.content }}</textarea>
+                                    
+                                    <label>Solución:</label>
+                                    <input type="text" name="solution_{{ exercise.id }}" value="{{ exercise.solution }}">
+                                    
+                                    <label>Verificación:</label>
+                                    <input type="text" name="test_verification_{{ exercise.id }}" value="{{ exercise.test_verification }}">
+                                    
+                                    <label>Requerimientos:</label>
+                                    <input type="text" name="requirements_{{ exercise.id }}" value="{{ exercise.requirements }}">
+                                    
+                                    <label>Lenguaje:</label>
+                                    <select name="language_{{ exercise.id }}">
+                                        <option value="LOGO" {% if exercise.language == "LOGO" %}selected{% endif %}>LOGO</option>
+                                        <option value="PYTHON" {% if exercise.language == "PYTHON" %}selected{% endif %}>PYTHON</option>
+                                        <option value="C++" {% if exercise.language == "C++" %}selected{% endif %}>C++</option>
+                                        <option value="JAVA" {% if exercise.language == "JAVA" %}selected{% endif %}>JAVA</option>
+                                        <option value="WEB" {% if exercise.language == "WEB" %}selected{% endif %}>WEB</option>
+                                    </select>
+                                    
+                                    <br><br>
+
+                                    <input type="submit" value="Modificar ejercicio" class="btn btn-primary">
+                                </div>
+                            {% endfor %}
+                        </form>
+                    </div>
+                </div>
+                
+
+                <div id="editTeacher" class="card mb-4" style="display:none;">
+                    <div class="card-header">
+                        Modificación de los profesores
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/update_teacher" method="post">
+                            {% for user in teachers %}
+                                <div class="teacher-form">
+                                    <label>Nombre:</label>
+                                    <input type="text" name="first_name_{{ user.id }}" value="{{ user.first_name }}">
+                                    
+                                    <label>Apellido:</label>
+                                    <input type="text" name="last_name_{{ user.id }}" value="{{ user.last_name }}">
+                                    
+                                    <label>Fecha de Nacimiento:</label>
+                                    <input type="date" name="birth_date_{{ user.id }}" value="{{ user.birth_date }}">
+                                    
+                                    <label>Ciudad:</label>
+                                    <input type="text" name="city_{{ user.id }}" value="{{ user.city }}">
+                                    
+                                    <label>Género:</label>
+                                    <input type="text" name="gender_{{ user.id }}" value="{{ user.gender }}">
+                                    
+                                    <label>Email:</label>
+                                    <input type="email" name="email_{{ user.id }}" value="{{ user.email }}">
+                                    
+                                    <input type="submit" value="Modificar profesor" class="btn btn-primary">
+                                </div>
+                            {% endfor %}
+                        </form>
+                    </div>
+                </div>   
+                
+                <!-- Formulario para añadir teoría -->
+                <div class="card mb-4" id="theoryAddForm" style="display:none;">
+                    <div class="card-header">
+                        Añadir Teoria
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/add_theory" method="post" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="module_id">ID del Módulo:</label>
+                                <input type="number" name="module_id" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="content">Contenido:</label>
+                                <textarea name="content" class="form-control" rows="5" required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="image">Imagen:</label>
+                                <input type="file" name="image">
+                            </div>
+                            <input type="submit" value="Añadir Teoría" class="btn btn-primary">
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Sección para consultar teorías -->
+                <div class="card mb-4" id="theoryListForm" style="display:none;">
+                    <div class="card-header">
+                        Consultar Teoria
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>ID del Módulo</th>
+                                    <th>Contenido</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for the in theory %}
+                                <tr>
+                                    <td>{{ the.id }}</td>
+                                    <td>{{ the.module_id }}</td>
+                                    <td>{{ the.content }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Formulario para eliminar teoria -->
+                <div class="card mb-4" id="deleteTheoryForm" style="display: none;">
+                    <div class="card-header">
+                        Eliminar Teoria
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/delete_theory" method="post">
+                            <div class="form-group">
+                                <label for="exercise_id">ID de la Teoria  a Eliminar:</label>
+                                <input type="number" name="exercise_id" class="form-control" required>
+                            </div>
+                            <input type="submit" value="Eliminar Teoria" class="btn btn-danger">
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Formularios edición Teoria--> 
+                <div id="editTheory" class="card mb-4" style="display:none;">
+                    <div class="card-header">
+                        Modificación de la Teoría
+                    </div>
+                    <div class="card-body">
+                        {% for th in theory %}
+                            <form action="/admin/update_theory/{{ th.id }}" method="post">
+                                <div class="theory-form">
+                                    <label>ID:</label>
+                                    <input type="number" name="theory_id_{{ th.id }}" value="{{ th.id }}" readonly>
+                                    
+                                    <label>Contenido:</label>
+                                    <textarea name="content_{{ th.id }}" rows="4">{{ th.content }}</textarea>
+                                    
+                                    <input type="submit" value="Modificar teoría" class="btn btn-primary">
+                                </div>
+                            </form>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Formulario para Orden Global -->
+                <div class="card mb-4" id="globalOrderForm" style="display:none;">
+                    <div class="card-header">
+                        Administrar Orden Global
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/update_global_order" method="post">
+                            <div class="form-group">
+                                <label for="content_type">Tipo de Contenido:</label>
+                                <select name="content_type" class="form-control">
+                                    <option value="Exercises">Ejercicios</option>
+                                    <option value="Theory">Teoría</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="content_id">ID del Contenido:</label>
+                                <input type="number" name="content_id" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="global_order">Orden Global:</label>
+                                <input type="number" name="global_order" class="form-control" required>
+                            </div>
+                            <input type="submit" value="Actualizar Orden" class="btn btn-primary">
+                        </form>
+                    </div>
+
+                    <!-- Tabla para mostrar los datos -->
+                    <div class="card-header">
+                        Lista Orden Global
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tipo de Contenido</th>
+                                    <th>ID del Contenido</th>
+                                    <th>Orden Global</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in global_orders %}
+                                    <tr>
+                                        <td>{{ order.id }}</td>
+                                        <td>{{ order.content_type }}</td>
+                                        <td>{{ order.content_id }}</td>
+                                        <td>{{ order.global_order }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts for Tabs -->
+    <script>
+        function hideError() {
+            var errorContainer = document.getElementById('errorContainer');
+            if (errorContainer) {
+                errorContainer.style.display = 'none';
+            }
+        }
+
+        function showModuleForm() {
+            event.preventDefault(); // Prevent default behaviour
+
+            document.getElementById('moduleForm').style.display = 'block';
+            document.getElementById('exerciseForm').style.display = 'none';
+            document.getElementById('cardModules').style.display = 'none';
+            document.getElementById('cardExercises').style.display = 'none';
+            document.getElementById('deleteModuleForm').style.display = 'none';
+            document.getElementById('deleteExerciseForm').style.display = 'none';
+            document.getElementById('teacherForm').style.display = 'none';
+            document.getElementById('teacherList').style.display = 'none';
+            document.getElementById('deleteTeacherForm').style.display = 'none';
+            document.getElementById('editModules').style.display = 'none';
+            document.getElementById('editExercises').style.display = 'none';
+            document.getElementById('editTeacher').style.display = 'none';
+            document.getElementById('theoryAddForm').style.display = 'none';
+            document.getElementById('theoryListForm').style.display = 'none';
+            document.getElementById('editTheory').style.display = 'none';
+            document.getElementById('deleteTheoryForm').style.display = 'none';
+            document.getElementById('globalOrderForm').style.display = 'none';
+
+
+            document.getElementById('globalOrderTab').classList.remove('active');
+            document.getElementById('moduleTab').classList.add('active');
+            document.getElementById('exerciseTab').classList.remove('active');
+            document.getElementById('listModule').classList.remove('active');
+            document.getElementById('listExercise').classList.remove('active');
+            document.getElementById('deleteModuleTab').classList.remove('active');
+            document.getElementById('deleteExerciseTab').classList.remove('active');
+            document.getElementById('teacherTab').classList.remove('active');
+            document.getElementById('listTeachers').classList.remove('active');
+            document.getElementById('deleteTeacherTab').classList.remove('active');
+            document.getElementById('editModulesTab').classList.remove('active');
+            document.getElementById('editExercisesTab').classList.remove('active');
+            document.getElementById('editTeacherTab').classList.remove('active');  
+            document.getElementById('theoryTab').classList.remove('active');
+            document.getElementById('listTheory').classList.remove('active');
+            document.getElementById('editTheoryTab').classList.remove('active');
+            document.getElementById('deleteTheoryTab').classList.remove('active');
+
+
+            hideError();
+        }
+
+        function showExerciseForm() {
+            event.preventDefault(); // Prevent default behaviour
+
+            document.getElementById('moduleForm').style.display = 'none';
+            document.getElementById('exerciseForm').style.display = 'block';
+            document.getElementById('cardModules').style.display = 'none';
+            document.getElementById('cardExercises').style.display = 'none';
+            document.getElementById('deleteModuleForm').style.display = 'none';
+            document.getElementById('deleteExerciseForm').style.display = 'none';
+            document.getElementById('teacherForm').style.display = 'none';
+            document.getElementById('teacherList').style.display = 'none';
+            document.getElementById('deleteTeacherForm').style.display = 'none';
+            document.getElementById('editModules').style.display = 'none';
+            document.getElementById('editExercises').style.display = 'none';
+            document.getElementById('editTeacher').style.display = 'none';
+            document.getElementById('theoryAddForm').style.display = 'none';
+            document.getElementById('theoryListForm').style.display = 'none';
+            document.getElementById('editTheory').style.display = 'none';
+            document.getElementById('deleteTheoryForm').style.display = 'none';
+            document.getElementById('globalOrderForm').style.display = 'none';
+
+            
+            document.getElementById('globalOrderTab').classList.remove('active');
+            document.getElementById('moduleTab').classList.remove('active');
+            document.getElementById('exerciseTab').classList.add('active');
+            document.getElementById('listModule').classList.remove('active');
+            document.getElementById('listExercise').classList.remove('active');
+            document.getElementById('deleteModuleTab').classList.remove('active');
+            document.getElementById('deleteExerciseTab').classList.remove('active');
+            document.getElementById('teacherTab').classList.remove('active');
+            document.getElementById('listTeachers').classList.remove('active');
+            document.getElementById('deleteTeacherTab').classList.remove('active');
+            document.getElementById('editModulesTab').classList.remove('active');
+            document.getElementById('editExercisesTab').classList.remove('active');
+            document.getElementById('editTeacherTab').classList.remove('active');   
+            document.getElementById('theoryTab').classList.remove('active');
+            document.getElementById('listTheory').classList.remove('active');
+            document.getElementById('editTheoryTab').classList.remove('active');
+            document.getElementById('deleteTheoryTab').classList.remove('active');
+
+
+            hideError();
+        }
+
+        function showListModule() {
+            event.preventDefault(); // Prevent default behaviour
+
+            document.getElementById('moduleForm').style.display = 'none';
+            document.getElementById('exerciseForm').style.display = 'none';
+            document.getElementById('cardModules').style.display = 'block';
+            document.getElementById('cardExercises').style.display = 'none';
+            document.getElementById('deleteModuleForm').style.display = 'none';
+            document.getElementById('deleteExerciseForm').style.display = 'none';
+            document.getElementById('teacherForm').style.display = 'none';
+            document.getElementById('teacherList').style.display = 'none';
+            document.getElementById('deleteTeacherForm').style.display = 'none';
+            document.getElementById('editModules').style.display = 'none';
+            document.getElementById('editExercises').style.display = 'none';
+            document.getElementById('editTeacher').style.display = 'none';
+            document.getElementById('theoryAddForm').style.display = 'none';
+            document.getElementById('theoryListForm').style.display = 'none';
+            document.getElementById('editTheory').style.display = 'none';
+            document.getElementById('deleteTheoryForm').style.display = 'none';
+            document.getElementById('globalOrderForm').style.display = 'none';
+
+            
+            document.getElementById('globalOrderTab').classList.remove('active');
+            document.getElementById('moduleTab').classList.remove('active');
+            document.getElementById('exerciseTab').classList.remove('active');
+            document.getElementById('listModule').classList.add('active');
+            document.getElementById('listExercise').classList.remove('active');
+            document.getElementById('deleteModuleTab').classList.remove('active');
+            document.getElementById('deleteExerciseTab').classList.remove('active');
+            document.getElementById('teacherTab').classList.remove('active');
+            document.getElementById('listTeachers').classList.remove('active');
+            document.getElementById('deleteTeacherTab').classList.remove('active');
+            document.getElementById('editModulesTab').classList.remove('active');
+            document.getElementById('editExercisesTab').classList.remove('active');
+            document.getElementById('editTeacherTab').classList.remove('active');   
+            document.getElementById('theoryTab').classList.remove('active');
+            document.getElementById('listTheory').classList.remove('active'); 
+            document.getElementById('editTheoryTab').classList.remove('active');
+            document.getElementById('deleteTheoryTab').classList.remove('active');
+
+
+            hideError();
+        }
+
+        function showListExercise() {
+            event.preventDefault(); // Prevent default behaviour
+
+            document.getElementById('moduleForm').style.display = 'none';
+            document.getElementById('exerciseForm').style.display = 'none';
+            document.getElementById('cardModules').style.display = 'none';
+            document.getElementById('cardExercises').style.display = 'block';
+            document.getElementById('deleteModuleForm').style.display = 'none';
+            document.getElementById('deleteExerciseForm').style.display = 'none';
+            document.getElementById('teacherForm').style.display = 'none';
+            document.getElementById('teacherList').style.display = 'none';
+            document.getElementById('deleteTeacherForm').style.display = 'none';
+            document.getElementById('editModules').style.display = 'none';
+            document.getElementById('editExercises').style.display = 'none';
+            document.getElementById('editTeacher').style.display = 'none';
+            document.getElementById('theoryAddForm').style.display = 'none';
+            document.getElementById('theoryListForm').style.display = 'none';
+            document.getElementById('editTheory').style.display = 'none';
+            document.getElementById('deleteTheoryForm').style.display = 'none';
+            document.getElementById('globalOrderForm').style.display = 'none';
+
+            
+            document.getElementById('globalOrderTab').classList.remove('active');
+            document.getElementById('moduleTab').classList.remove('active');
+            document.getElementById('exerciseTab').classList.remove('active');
+            document.getElementById('listModule').classList.remove('active');
+            document.getElementById('listExercise').classList.add('active');
+            document.getElementById('deleteModuleTab').classList.remove('active');
+            document.getElementById('deleteExerciseTab').classList.remove('active');
+            document.getElementById('teacherTab').classList.remove('active');
+            document.getElementById('listTeachers').classList.remove('active');
+            document.getElementById('deleteTeacherTab').classList.remove('active');
+            document.getElementById('editModulesTab').classList.remove('active');
+            document.getElementById('editExercisesTab').classList.remove('active');
+            document.getElementById('editTeacherTab').classList.remove('active');  
+            document.getElementById('theoryTab').classList.remove('active');
+            document.getElementById('listTheory').classList.remove('active');  
+            document.getElementById('editTheoryTab').classList.remove('active');
+            document.getElementById('deleteTheoryTab').classList.remove('active');
+
+
+            hideError();
+        }
+
+        function showDeleteModuleForm(event) {
+            event.preventDefault(); // Prevent default behaviour
+
+            document.getElementById('moduleForm').style.display = 'none';
+            document.getElementById('exerciseForm').style.display = 'none';
+            document.getElementById('cardModules').style.display = 'none';
+            document.getElementById('cardExercises').style.display = 'none';
+            document.getElementById('deleteModuleForm').style.display = 'block';
+            document.getElementById('deleteExerciseForm').style.display = 'none';
+            document.getElementById('teacherForm').style.display = 'none';
+            document.getElementById('teacherList').style.display = 'none';
+            document.getElementById('deleteTeacherForm').style.display = 'none';
+            document.getElementById('editModules').style.display = 'none';
+            document.getElementById('editExercises').style.display = 'none';
+            document.getElementById('editTeacher').style.display = 'none';
+            document.getElementById('theoryAddForm').style.display = 'none';
+            document.getElementById('theoryListForm').style.display = 'none';
+            document.getElementById('editTheory').style.display = 'none';
+            document.getElementById('deleteTheoryForm').style.display = 'none';
+            document.getElementById('globalOrderForm').style.display = 'none';
+
+            
+            document.getElementById('globalOrderTab').classList.remove('active');
+            document.getElementById('moduleTab').classList.remove('active');
+            document.getElementById('exerciseTab').classList.remove('active');
+            document.getElementById('listModule').classList.remove('active');
+            document.getElementById('listExercise').classList.remove('active');
+            document.getElementById('deleteModuleTab').classList.add('active');
+            document.getElementById('deleteExerciseTab').classList.remove('active');
+            document.getElementById('teacherTab').classList.remove('active');
+            document.getElementById('listTeachers').classList.remove('active');
+            document.getElementById('deleteTeacherTab').classList.remove('active');
+            document.getElementById('editModulesTab').classList.remove('active');
+            document.getElementById('editExercisesTab').classList.remove('active');
+            document.getElementById('editTeacherTab').classList.remove('active');   
+            document.getElementById('theoryTab').classList.remove('active');
+            document.getElementById('listTheory').classList.remove('active'); 
+            document.getElementById('editTheoryTab').classList.remove('active');
+            document.getElementById('deleteTheoryTab').classList.remove('active');
+
+
+            hideError();
+        }
+
+        function showDeleteExerciseForm(event) {
+            event.preventDefault(); // Prevent default behaviour
+
+            document.getElementById('moduleForm').style.display = 'none';
+            document.getElementById('exerciseForm').style.display = 'none';
+            document.getElementById('cardModules').style.display = 'none';
+            document.getElementById('cardExercises').style.display = 'none';
+            document.getElementById('deleteModuleForm').style.display = 'none';
+            document.getElementById('deleteExerciseForm').style.display = 'block';
+            document.getElementById('teacherForm').style.display = 'none';
+            document.getElementById('teacherList').style.display = 'none';
+            document.getElementById('deleteTeacherForm').style.display = 'none';
+            document.getElementById('editModules').style.display = 'none';
+            document.getElementById('editExercises').style.display = 'none';
+            document.getElementById('editTeacher').style.display = 'none';
+            document.getElementById('theoryAddForm').style.display = 'none';
+            document.getElementById('theoryListForm').style.display = 'none';
+            document.getElementById('editTheory').style.display = 'none';
+            document.getElementById('deleteTheoryForm').style.display = 'none';
+            document.getElementById('globalOrderForm').style.display = 'none';
+
+            
+            document.getElementById('globalOrderTab').classList.remove('active');
+            document.getElementById('moduleTab').classList.remove('active');
+            document.getElementById('exerciseTab').classList.remove('active');
+            document.getElementById('listModule').classList.remove('active');
+            document.getElementById('listExercise').classList.remove('active');
+            document.getElementById('deleteModuleTab').classList.remove('active');
+            document.getElementById('deleteExerciseTab').classList.add('active');
+            document.getElementById('teacherTab').classList.remove('active');
+            document.getElementById('listTeachers').classList.remove('active');
+            document.getElementById('deleteTeacherTab').classList.remove('active');
+            document.getElementById('editModulesTab').classList.remove('active');
+            document.getElementById('editExercisesTab').classList.remove('active');
+            document.getElementById('editTeacherTab').classList.remove('active');    
+            document.getElementById('theoryTab').classList.remove('active');
+            document.getElementById('listTheory').classList.remove('active');
+            document.getElementById('editTheoryTab').classList.remove('active');
+            document.getElementById('deleteTheoryTab').classList.remove('active');
+
+
+            hideError();
+        }
+
+        function showTeacherForm(event) {
+            event.preventDefault(); // Prevent default behaviour
+
+            document.getElementById('moduleForm').style.display = 'none';
+            document.getElementById('exerciseForm').style.display = 'none';
+            document.getElementById('cardModules').style.display = 'none';
+            document.getElementById('cardExercises').style.display = 'none';
+            document.getElementById('deleteModuleForm').style.display = 'none';
+            document.getElementById('deleteExerciseForm').style.display = 'none';
+            document.getElementById('teacherForm').style.display = 'block';
+            document.getElementById('teacherList').style.display = 'none';
+            document.getElementById('deleteTeacherForm').style.display = 'none';
+            document.getElementById('editModules').style.display = 'none';
+            document.getElementById('editExercises').style.display = 'none';
+            document.getElementById('editTeacher').style.display = 'none';
+            document.getElementById('theoryAddForm').style.display = 'none';
+            document.getElementById('theoryListForm').style.display = 'none';
+            document.getElementById('editTheory').style.display = 'none';
+            document.getElementById('deleteTheoryForm').style.display = 'none';
+            document.getElementById('globalOrderForm').style.display = 'none';
+
+            
+            document.getElementById('globalOrderTab').classList.remove('active');
+            document.getElementById('moduleTab').classList.remove('active');
+            document.getElementById('exerciseTab').classList.remove('active');
+            document.getElementById('listModule').classList.remove('active');
+            document.getElementById('listExercise').classList.remove('active');
+            document.getElementById('deleteModuleTab').classList.remove('active');
+            document.getElementById('deleteExerciseTab').classList.remove('active');
+            document.getElementById('teacherTab').classList.add('active');
+            document.getElementById('listTeachers').classList.remove('active');
+            document.getElementById('deleteTeacherTab').classList.remove('active');
+            document.getElementById('editModulesTab').classList.remove('active');
+            document.getElementById('editExercisesTab').classList.remove('active');
+            document.getElementById('editTeacherTab').classList.remove('active'); 
+            document.getElementById('theoryTab').classList.remove('active');
+            document.getElementById('listTheory').classList.remove('active');   
+            document.getElementById('editTheoryTab').classList.remove('active');
+            document.getElementById('deleteTheoryTab').classList.remove('active');
+
+
+            hideError();
+        }
+
+
+        function showTeacherList(event) {
+            event.preventDefault(); // Prevent default behaviour
+
+            document.getElementById('moduleForm').style.display = 'none';
+            document.getElementById('exerciseForm').style.display = 'none';
+            document.getElementById('cardModules').style.display = 'none';
+            document.getElementById('cardExercises').style.display = 'none';
+            document.getElementById('deleteModuleForm').style.display = 'none';
+            document.getElementById('deleteExerciseForm').style.display = 'none';
+            document.getElementById('teacherForm').style.display = 'none';
+            document.getElementById('teacherList').style.display = 'block';
+            document.getElementById('deleteTeacherForm').style.display = 'none';
+            document.getElementById('editModules').style.display = 'none';
+            document.getElementById('editExercises').style.display = 'none';
+            document.getElementById('editTeacher').style.display = 'none';
+            document.getElementById('theoryAddForm').style.display = 'none';
+            document.getElementById('theoryListForm').style.display = 'none';
+            document.getElementById('editTheory').style.display = 'none';
+            document.getElementById('deleteTheoryForm').style.display = 'none';
+            document.getElementById('globalOrderForm').style.display = 'none';
+
+            
+            document.getElementById('globalOrderTab').classList.remove('active');
+            document.getElementById('moduleTab').classList.remove('active');
+            document.getElementById('exerciseTab').classList.remove('active');
+            document.getElementById('listModule').classList.remove('active');
+            document.getElementById('listExercise').classList.remove('active');
+            document.getElementById('deleteModuleTab').classList.remove('active');
+            document.getElementById('deleteExerciseTab').classList.remove('active');
+            document.getElementById('teacherTab').classList.remove('active');
+            document.getElementById('listTeachers').classList.add('active');
+            document.getElementById('deleteTeacherTab').classList.remove('active');
+            document.getElementById('editModulesTab').classList.remove('active');
+            document.getElementById('editExercisesTab').classList.remove('active');
+            document.getElementById('editTeacherTab').classList.remove('active');   
+            document.getElementById('theoryTab').classList.remove('active');
+            document.getElementById('listTheory').classList.remove('active'); 
+            document.getElementById('editTheoryTab').classList.remove('active');
+            document.getElementById('deleteTheoryTab').classList.remove('active');
+
+
+            hideError();
+        }
+
+
+        function showDeleteTeacherForm(event) {
+            event.preventDefault(); // Prevent default behaviour
+
+            document.getElementById('moduleForm').style.display = 'none';
+            document.getElementById('exerciseForm').style.display = 'none';
+            document.getElementById('cardModules').style.display = 'none';
+            document.getElementById('cardExercises').style.display = 'none';
+            document.getElementById('deleteModuleForm').style.display = 'none';
+            document.getElementById('deleteExerciseForm').style.display = 'none';
+            document.getElementById('teacherForm').style.display = 'none';
+            document.getElementById('teacherList').style.display = 'none';
+            document.getElementById('deleteTeacherForm').style.display = 'block';
+            document.getElementById('editModules').style.display = 'none';
+            document.getElementById('editExercises').style.display = 'none';
+            document.getElementById('editTeacher').style.display = 'none';
+            document.getElementById('theoryAddForm').style.display = 'none';
+            document.getElementById('theoryListForm').style.display = 'none';
+            document.getElementById('editTheory').style.display = 'none';
+            document.getElementById('deleteTheoryForm').style.display = 'none';
+            document.getElementById('globalOrderForm').style.display = 'none';
+
+            
+            document.getElementById('globalOrderTab').classList.remove('active');
+            document.getElementById('moduleTab').classList.remove('active');
+            document.getElementById('exerciseTab').classList.remove('active');
+            document.getElementById('listModule').classList.remove('active');
+            document.getElementById('listExercise').classList.remove('active');
+            document.getElementById('deleteModuleTab').classList.remove('active');
+            document.getElementById('deleteExerciseTab').classList.remove('active');
+            document.getElementById('teacherTab').classList.remove('active');
+            document.getElementById('listTeachers').classList.remove('active');
+            document.getElementById('deleteTeacherTab').classList.add('active');
+            document.getElementById('editModulesTab').classList.remove('active');
+            document.getElementById('editExercisesTab').classList.remove('active');
+            document.getElementById('editTeacherTab').classList.remove('active');
+            document.getElementById('theoryTab').classList.remove('active');
+            document.getElementById('listTheory').classList.remove('active');    
+            document.getElementById('editTheoryTab').classList.remove('active');
+            document.getElementById('deleteTheoryTab').classList.remove('active');
+
+
+            hideError();
+        }
+
+        function showEditModules(event) {
+            event.preventDefault(); // Prevent default behaviour
+
+            document.getElementById('moduleForm').style.display = 'none';
+            document.getElementById('exerciseForm').style.display = 'none';
+            document.getElementById('cardModules').style.display = 'none';
+            document.getElementById('cardExercises').style.display = 'none';
+            document.getElementById('deleteModuleForm').style.display = 'none';
+            document.getElementById('deleteExerciseForm').style.display = 'none';
+            document.getElementById('teacherForm').style.display = 'none';
+            document.getElementById('teacherList').style.display = 'none';
+            document.getElementById('deleteTeacherForm').style.display = 'none';
+            document.getElementById('editModules').style.display = 'block';
+            document.getElementById('editExercises').style.display = 'none';
+            document.getElementById('editTeacher').style.display = 'none';
+            document.getElementById('theoryAddForm').style.display = 'none';
+            document.getElementById('theoryListForm').style.display = 'none';
+            document.getElementById('editTheory').style.display = 'none';
+            document.getElementById('deleteTheoryForm').style.display = 'none';
+            document.getElementById('globalOrderForm').style.display = 'none';
+
+            
+            document.getElementById('globalOrderTab').classList.remove('active');
+            document.getElementById('moduleTab').classList.remove('active');
+            document.getElementById('exerciseTab').classList.remove('active');
+            document.getElementById('listModule').classList.remove('active');
+            document.getElementById('listExercise').classList.remove('active');
+            document.getElementById('deleteModuleTab').classList.remove('active');
+            document.getElementById('deleteExerciseTab').classList.remove('active');
+            document.getElementById('teacherTab').classList.remove('active');
+            document.getElementById('listTeachers').classList.remove('active');
+            document.getElementById('deleteTeacherTab').classList.remove('active');
+            document.getElementById('editModulesTab').classList.add('active');
+            document.getElementById('editExercisesTab').classList.remove('active');
+            document.getElementById('editTeacherTab').classList.remove('active');  
+            document.getElementById('theoryTab').classList.remove('active');
+            document.getElementById('listTheory').classList.remove('active');
+            document.getElementById('editTheoryTab').classList.remove('active');
+            document.getElementById('deleteTheoryTab').classList.remove('active');
+
+
+            hideError();
+        }
+
+        function showEditExercises(event) {
+            event.preventDefault(); // Prevent default behaviour
+
+            document.getElementById('moduleForm').style.display = 'none';
+            document.getElementById('exerciseForm').style.display = 'none';
+            document.getElementById('cardModules').style.display = 'none';
+            document.getElementById('cardExercises').style.display = 'none';
+            document.getElementById('deleteModuleForm').style.display = 'none';
+            document.getElementById('deleteExerciseForm').style.display = 'none';
+            document.getElementById('teacherForm').style.display = 'none';
+            document.getElementById('teacherList').style.display = 'none';
+            document.getElementById('deleteTeacherForm').style.display = 'none';
+            document.getElementById('editModules').style.display = 'none';
+            document.getElementById('editExercises').style.display = 'block';
+            document.getElementById('editTeacher').style.display = 'none';
+            document.getElementById('theoryAddForm').style.display = 'none';
+            document.getElementById('theoryListForm').style.display = 'none';
+            document.getElementById('editTheory').style.display = 'none';
+            document.getElementById('deleteTheoryForm').style.display = 'none';
+            document.getElementById('globalOrderForm').style.display = 'none';
+
+            
+            document.getElementById('globalOrderTab').classList.remove('active');
+            document.getElementById('moduleTab').classList.remove('active');
+            document.getElementById('exerciseTab').classList.remove('active');
+            document.getElementById('listModule').classList.remove('active');
+            document.getElementById('listExercise').classList.remove('active');
+            document.getElementById('deleteModuleTab').classList.remove('active');
+            document.getElementById('deleteExerciseTab').classList.remove('active');
+            document.getElementById('teacherTab').classList.remove('active');
+            document.getElementById('listTeachers').classList.remove('active');
+            document.getElementById('deleteTeacherTab').classList.remove('active');
+            document.getElementById('editModulesTab').classList.remove('active');
+            document.getElementById('editExercisesTab').classList.add('active');
+            document.getElementById('editTeacherTab').classList.remove('active');    
+            document.getElementById('theoryTab').classList.remove('active');
+            document.getElementById('listTheory').classList.remove('active');
+            document.getElementById('editTheoryTab').classList.remove('active');
+            document.getElementById('deleteTheoryTab').classList.remove('active');
+
+
+            hideError();
+        }
+
+        function showEditTeachers(event) {
+            event.preventDefault(); // Prevent default behaviour
+
+            document.getElementById('moduleForm').style.display = 'none';
+            document.getElementById('exerciseForm').style.display = 'none';
+            document.getElementById('cardModules').style.display = 'none';
+            document.getElementById('cardExercises').style.display = 'none';
+            document.getElementById('deleteModuleForm').style.display = 'none';
+            document.getElementById('deleteExerciseForm').style.display = 'none';
+            document.getElementById('teacherForm').style.display = 'none';
+            document.getElementById('teacherList').style.display = 'none';
+            document.getElementById('deleteTeacherForm').style.display = 'none';
+            document.getElementById('editModules').style.display = 'none';
+            document.getElementById('editExercises').style.display = 'none';
+            document.getElementById('editTeacher').style.display = 'block';
+            document.getElementById('theoryAddForm').style.display = 'none';
+            document.getElementById('theoryListForm').style.display = 'none';
+            document.getElementById('editTheory').style.display = 'none';
+            document.getElementById('deleteTheoryForm').style.display = 'none';
+            document.getElementById('globalOrderForm').style.display = 'none';
+
+            
+            document.getElementById('globalOrderTab').classList.remove('active');
+            document.getElementById('moduleTab').classList.remove('active');
+            document.getElementById('exerciseTab').classList.remove('active');
+            document.getElementById('listModule').classList.remove('active');
+            document.getElementById('listExercise').classList.remove('active');
+            document.getElementById('deleteModuleTab').classList.remove('active');
+            document.getElementById('deleteExerciseTab').classList.remove('active');
+            document.getElementById('teacherTab').classList.remove('active');
+            document.getElementById('listTeachers').classList.remove('active');
+            document.getElementById('deleteTeacherTab').classList.remove('active');
+            document.getElementById('editModulesTab').classList.remove('active');
+            document.getElementById('editExercisesTab').classList.remove('active');
+            document.getElementById('editTeacherTab').classList.add('active');  
+            document.getElementById('theoryTab').classList.remove('active');
+            document.getElementById('listTheory').classList.remove('active');
+            document.getElementById('editTheoryTab').classList.remove('active');
+            document.getElementById('deleteTheoryTab').classList.remove('active');
+
+
+            hideError();
+        }
+
+        function showAddTheory(event) {
+            event.preventDefault(); // Prevent default behaviour
+
+            document.getElementById('moduleForm').style.display = 'none';
+            document.getElementById('exerciseForm').style.display = 'none';
+            document.getElementById('cardModules').style.display = 'none';
+            document.getElementById('cardExercises').style.display = 'none';
+            document.getElementById('deleteModuleForm').style.display = 'none';
+            document.getElementById('deleteExerciseForm').style.display = 'none';
+            document.getElementById('teacherForm').style.display = 'none';
+            document.getElementById('teacherList').style.display = 'none';
+            document.getElementById('deleteTeacherForm').style.display = 'none';
+            document.getElementById('editModules').style.display = 'none';
+            document.getElementById('editExercises').style.display = 'none';
+            document.getElementById('editTeacher').style.display = 'none';
+            document.getElementById('theoryAddForm').style.display = 'block';
+            document.getElementById('theoryListForm').style.display = 'none';
+            document.getElementById('editTheory').style.display = 'none';
+            document.getElementById('deleteTheoryForm').style.display = 'none';
+            document.getElementById('globalOrderForm').style.display = 'none';
+
+            
+            document.getElementById('globalOrderTab').classList.remove('active');
+            document.getElementById('moduleTab').classList.remove('active');
+            document.getElementById('exerciseTab').classList.remove('active');
+            document.getElementById('listModule').classList.remove('active');
+            document.getElementById('listExercise').classList.remove('active');
+            document.getElementById('deleteModuleTab').classList.remove('active');
+            document.getElementById('deleteExerciseTab').classList.remove('active');
+            document.getElementById('teacherTab').classList.remove('active');
+            document.getElementById('listTeachers').classList.remove('active');
+            document.getElementById('deleteTeacherTab').classList.remove('active');
+            document.getElementById('editModulesTab').classList.remove('active');
+            document.getElementById('editExercisesTab').classList.remove('active');
+            document.getElementById('editTeacherTab').classList.remove('active');    
+            document.getElementById('theoryTab').classList.add('active');
+            document.getElementById('listTheory').classList.remove('active');
+            document.getElementById('editTheoryTab').classList.remove('active');
+            document.getElementById('deleteTheoryTab').classList.remove('active');
+
+
+            hideError();
+        }
+
+        function showListTheory(event) {
+            event.preventDefault(); // Prevent default behaviour
+
+            document.getElementById('moduleForm').style.display = 'none';
+            document.getElementById('exerciseForm').style.display = 'none';
+            document.getElementById('cardModules').style.display = 'none';
+            document.getElementById('cardExercises').style.display = 'none';
+            document.getElementById('deleteModuleForm').style.display = 'none';
+            document.getElementById('deleteExerciseForm').style.display = 'none';
+            document.getElementById('teacherForm').style.display = 'none';
+            document.getElementById('teacherList').style.display = 'none';
+            document.getElementById('deleteTeacherForm').style.display = 'none';
+            document.getElementById('editModules').style.display = 'none';
+            document.getElementById('editExercises').style.display = 'none';
+            document.getElementById('editTeacher').style.display = 'none';
+            document.getElementById('theoryAddForm').style.display = 'none';
+            document.getElementById('theoryListForm').style.display = 'block';
+            document.getElementById('editTheory').style.display = 'none';
+            document.getElementById('deleteTheoryForm').style.display = 'none';
+            document.getElementById('globalOrderForm').style.display = 'none';
+
+            
+            document.getElementById('globalOrderTab').classList.remove('active');
+            document.getElementById('moduleTab').classList.remove('active');
+            document.getElementById('exerciseTab').classList.remove('active');
+            document.getElementById('listModule').classList.remove('active');
+            document.getElementById('listExercise').classList.remove('active');
+            document.getElementById('deleteModuleTab').classList.remove('active');
+            document.getElementById('deleteExerciseTab').classList.remove('active');
+            document.getElementById('teacherTab').classList.remove('active');
+            document.getElementById('listTeachers').classList.remove('active');
+            document.getElementById('deleteTeacherTab').classList.remove('active');
+            document.getElementById('editModulesTab').classList.remove('active');
+            document.getElementById('editExercisesTab').classList.remove('active');
+            document.getElementById('editTeacherTab').classList.remove('active');    
+            document.getElementById('theoryTab').classList.remove('active');
+            document.getElementById('listTheory').classList.add('active');
+            document.getElementById('editTheoryTab').classList.remove('active');
+            document.getElementById('deleteTheoryTab').classList.remove('active');
+
+
+            hideError();
+        }
+
+
+        function showEditTheory(event) {
+            event.preventDefault(); // Prevent default behaviour
+
+            document.getElementById('moduleForm').style.display = 'none';
+            document.getElementById('exerciseForm').style.display = 'none';
+            document.getElementById('cardModules').style.display = 'none';
+            document.getElementById('cardExercises').style.display = 'none';
+            document.getElementById('deleteModuleForm').style.display = 'none';
+            document.getElementById('deleteExerciseForm').style.display = 'none';
+            document.getElementById('teacherForm').style.display = 'none';
+            document.getElementById('teacherList').style.display = 'none';
+            document.getElementById('deleteTeacherForm').style.display = 'none';
+            document.getElementById('editModules').style.display = 'none';
+            document.getElementById('editExercises').style.display = 'none';
+            document.getElementById('editTeacher').style.display = 'none';
+            document.getElementById('theoryAddForm').style.display = 'none';
+            document.getElementById('theoryListForm').style.display = 'none';
+            document.getElementById('editTheory').style.display = 'block';
+            document.getElementById('deleteTheoryForm').style.display = 'none';
+            document.getElementById('globalOrderForm').style.display = 'none';
+
+            
+            document.getElementById('globalOrderTab').classList.remove('active');
+            document.getElementById('moduleTab').classList.remove('active');
+            document.getElementById('exerciseTab').classList.remove('active');
+            document.getElementById('listModule').classList.remove('active');
+            document.getElementById('listExercise').classList.remove('active');
+            document.getElementById('deleteModuleTab').classList.remove('active');
+            document.getElementById('deleteExerciseTab').classList.remove('active');
+            document.getElementById('teacherTab').classList.remove('active');
+            document.getElementById('listTeachers').classList.remove('active');
+            document.getElementById('deleteTeacherTab').classList.remove('active');
+            document.getElementById('editModulesTab').classList.remove('active');
+            document.getElementById('editExercisesTab').classList.remove('active');
+            document.getElementById('editTeacherTab').classList.remove('active');    
+            document.getElementById('theoryTab').classList.remove('active');
+            document.getElementById('listTheory').classList.remove('active');
+            document.getElementById('editTheoryTab').classList.add('active');
+            document.getElementById('deleteTheoryTab').classList.remove('active');
+
+
+            hideError();
+        }
+
+
+        function showDeleteTheory(event) {
+            event.preventDefault(); // Prevent default behaviour
+
+            document.getElementById('moduleForm').style.display = 'none';
+            document.getElementById('exerciseForm').style.display = 'none';
+            document.getElementById('cardModules').style.display = 'none';
+            document.getElementById('cardExercises').style.display = 'none';
+            document.getElementById('deleteModuleForm').style.display = 'none';
+            document.getElementById('deleteExerciseForm').style.display = 'none';
+            document.getElementById('teacherForm').style.display = 'none';
+            document.getElementById('teacherList').style.display = 'none';
+            document.getElementById('deleteTeacherForm').style.display = 'none';
+            document.getElementById('editModules').style.display = 'none';
+            document.getElementById('editExercises').style.display = 'none';
+            document.getElementById('editTeacher').style.display = 'none';
+            document.getElementById('theoryAddForm').style.display = 'none';
+            document.getElementById('theoryListForm').style.display = 'none';
+            document.getElementById('editTheory').style.display = 'none';
+            document.getElementById('deleteTheoryForm').style.display = 'block';
+            document.getElementById('globalOrderForm').style.display = 'none';
+
+            
+            document.getElementById('globalOrderTab').classList.remove('active');
+            document.getElementById('moduleTab').classList.remove('active');
+            document.getElementById('exerciseTab').classList.remove('active');
+            document.getElementById('listModule').classList.remove('active');
+            document.getElementById('listExercise').classList.remove('active');
+            document.getElementById('deleteModuleTab').classList.remove('active');
+            document.getElementById('deleteExerciseTab').classList.remove('active');
+            document.getElementById('teacherTab').classList.remove('active');
+            document.getElementById('listTeachers').classList.remove('active');
+            document.getElementById('deleteTeacherTab').classList.remove('active');
+            document.getElementById('editModulesTab').classList.remove('active');
+            document.getElementById('editExercisesTab').classList.remove('active');
+            document.getElementById('editTeacherTab').classList.remove('active');    
+            document.getElementById('theoryTab').classList.remove('active');
+            document.getElementById('listTheory').classList.remove('active');
+            document.getElementById('editTheoryTab').classList.remove('active');
+            document.getElementById('deleteTheoryTab').classList.add('active');
+
+
+            hideError();
+        }
+
+
+        function showGlobalOrder(event) {
+            event.preventDefault(); // Prevent default behaviour
+
+            document.getElementById('moduleForm').style.display = 'none';
+            document.getElementById('exerciseForm').style.display = 'none';
+            document.getElementById('cardModules').style.display = 'none';
+            document.getElementById('cardExercises').style.display = 'none';
+            document.getElementById('deleteModuleForm').style.display = 'none';
+            document.getElementById('deleteExerciseForm').style.display = 'none';
+            document.getElementById('teacherForm').style.display = 'none';
+            document.getElementById('teacherList').style.display = 'none';
+            document.getElementById('deleteTeacherForm').style.display = 'none';
+            document.getElementById('editModules').style.display = 'none';
+            document.getElementById('editExercises').style.display = 'none';
+            document.getElementById('editTeacher').style.display = 'none';
+            document.getElementById('theoryAddForm').style.display = 'none';
+            document.getElementById('theoryListForm').style.display = 'none';
+            document.getElementById('editTheory').style.display = 'none';
+            document.getElementById('deleteTheoryForm').style.display = 'none';
+            document.getElementById('globalOrderForm').style.display = 'block';
+
+            
+            document.getElementById('globalOrderTab').classList.add('active');
+            document.getElementById('moduleTab').classList.remove('active');
+            document.getElementById('exerciseTab').classList.remove('active');
+            document.getElementById('listModule').classList.remove('active');
+            document.getElementById('listExercise').classList.remove('active');
+            document.getElementById('deleteModuleTab').classList.remove('active');
+            document.getElementById('deleteExerciseTab').classList.remove('active');
+            document.getElementById('teacherTab').classList.remove('active');
+            document.getElementById('listTeachers').classList.remove('active');
+            document.getElementById('deleteTeacherTab').classList.remove('active');
+            document.getElementById('editModulesTab').classList.remove('active');
+            document.getElementById('editExercisesTab').classList.remove('active');
+            document.getElementById('editTeacherTab').classList.remove('active');    
+            document.getElementById('theoryTab').classList.remove('active');
+            document.getElementById('listTheory').classList.remove('active');
+            document.getElementById('editTheoryTab').classList.remove('active');
+            document.getElementById('deleteTheoryTab').classList.remove('active');
+
+
+            hideError();
+        }
+    </script>
+
+    <!-- Enlace a Bootstrap JS y Popper.js (opcional) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

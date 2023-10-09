@@ -1,0 +1,584 @@
+{% extends "base.html" %}
+
+{% block title %}
+Ejercicio
+{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.64.0/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.64.0/theme/material.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.64.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.64.0/mode/clike/clike.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.64.0/mode/javascript/javascript.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.64.0/mode/python/python.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.64.0/mode/xml/xml.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.64.0/mode/css/css.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+<style type="text/css">
+    body {
+        margin: 0;
+        height: 100vh;
+        font-family: 'Open Sans', sans-serif;
+        background-color: #E1E9EE; /* Color azul claro */
+    }
+
+    .top-nav, .side-nav {
+        background-color: #72B4A4; /* Color turquesa */
+        box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.1);
+        border-radius: 20px;
+    }
+
+    .top-nav {
+        z-index: 10;
+        position: fixed;
+        top: 0px;
+        left: 10px;
+        right: 10px;
+        height: 120px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 30px;
+        font-size: 1.5rem;
+    }
+
+    .logo {
+        height: 140px;
+    }
+
+    .user-profile {
+        display: flex;
+        align-items: center;
+    }
+
+    .user-image {
+        width: 80px;
+        height: 80px;
+        border-radius: 30%;
+        margin-right: 15px;
+    }
+
+    .user-name, .user-config {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 10px;
+        margin-bottom: 0px;
+    }
+
+    .user-config {
+        font-size: 0.7em;
+        color: #FF7F50; /* Color coral */
+    }
+
+    .side-nav {
+        position: fixed;
+        top: 140px;
+        left: 20px;
+        width: 210px;
+        padding: 20px;
+    }
+
+    .side-nav ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .side-nav ul li {
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: #F9D3BA; /* Color melocotón claro */
+    }
+
+    .side-nav ul li:hover {
+        background-color: #FFB085; /* Color melocotón oscuro */
+    }
+
+    .side-nav ul li a {
+        text-decoration: none;
+        color: #364547; /* Color gris oscuro */
+        font-size: 1.2rem;
+    }
+
+    main {
+        margin-left: 140px;
+        padding: 20px;
+    }
+    
+    @media only screen and (max-width: 768px) {
+        .top-nav {
+            flex-direction: column;
+            height: auto;
+            padding: 15px;
+            top: 0px;
+            left: 10px;
+            right: 10px;
+        }
+
+        .user-profile {
+            flex-direction: column;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .side-nav {
+            position: relative;
+            top: 0;
+            width: 100%;
+            padding: 10px;
+            display: flex;
+            overflow-x: auto;
+        }
+
+        .side-nav ul {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+        main {
+            margin: 0;
+            padding: 15px;
+            padding-top: 50px;
+        }
+    }
+
+    #avatarModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    #avatarModal .avatars {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    #avatarModal img {
+        width: 120px;
+        height: 120px;
+        cursor: pointer;
+    }
+
+    #sourceCode {
+        height: 300px; /* Ajusta según tus preferencias */
+        width: 100%;
+    }
+
+    .user-details {
+        display: block;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .compiler-section {
+        flex: 1;
+        padding: 20px;
+        border: 1px solid #72B4A4;
+        border-radius: 15px;
+        margin: 10px;
+        background-color: #FFF;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+
+        display: flex;
+        flex-direction: column;
+    }
+
+    .exercise-info {
+        flex: 1;
+        padding: 20px;
+        border: 1px solid #72B4A4;
+        border-radius: 15px;
+        margin: 10px;
+        background-color: #FFF;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 120px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .editor-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+    }
+
+    button {
+        font-size: 1.5em;
+        padding: 10px 20px;
+        background-color: #72B4A4;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-top: 10px;
+        align-self: center;
+        transition: background-color 0.3s;
+    }
+
+    button:hover {
+        background-color: #62a394;
+    }
+
+
+    @media only screen and (max-width: 500px) {
+        .user-details {
+            align-items: center;
+            text-align: center;
+        }
+    }
+
+    .show-result {
+        flex: 1;
+        padding: 20px;
+        border: 1px solid #72B4A4;
+        border-radius: 15px;
+        margin: 10px;
+        background-color: #FFF;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 10px;
+    }
+
+    .user-details {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 5px; /* Reducir margen derecho */
+        margin-bottom: 0px;
+    }
+
+    .logout-btn {
+        background-color: #FF7F50; /* Color coral */
+        color: #fff;
+        padding: 5px 10px; /* Ajustar padding */
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 1rem;
+        box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.1);
+        margin-left: 10px; /* Añadir margen izquierdo */
+    }
+
+    .logout-btn:hover {
+        background-color: #E76645; /* Un tono más oscuro de coral para el hover */
+    }
+
+    /* Estilos variables introducidas */
+    textarea.programInput {
+        width: 80%;
+        padding: 10px;
+        margin-top: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+    }
+
+    #addInput {
+        margin-top: 10px;
+        font-size: 1em;
+        background-color: #F9D3BA;
+    }
+
+    #addInput:hover {
+        background-color: #FFB085;
+    }
+
+    #language {
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .editor {
+        margin-top: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 10px;
+    }
+
+    #output {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        margin-top: 0px;
+        background-color: #f5f5f5;
+    }
+
+    .compiler-section h2 {
+        margin-top: 0;
+    }
+
+    .exercise-info h2 {
+        margin-top: 0;
+    }
+
+    .language-selector {
+        margin-bottom: 40px;
+    }
+
+    .send_button {
+        background-color: #FF7F50;
+    }
+    
+</style>
+{% endblock %}
+
+{% block main_content %}
+<!-- Contenido Principal -->
+<main>
+
+    <div class="exercise-info">
+        <h2><strong id="exercise-name">{{ exercise.name }}</strong></h2> <!-- nombre del ejercicio -->
+        <div class="exercise-text">{{ exercise.content }}</div> <!-- descripción del ejercicio -->
+        <input type="hidden" id="module-id" value="{{ exercise.module_id }}"> <!-- para saber de que modulo es -->
+        <input type="hidden" id="exercise-id" value="{{ exercise.id }}"> <!-- para saber el id del ejercicio es -->
+        <input type="hidden" id="start-time" value="">
+    </div>
+
+    <div class="compiler-section">
+        <h2>Prueba tu código:</h2>
+
+        <div class="editor-area">
+            <div class="editor">
+                <form id="codeForm" method="post">
+                    <div class="language-selector">
+                        <label for="language">Elige el lenguaje: </label>
+                        <select name="language" id="language">
+                            {% if exercise_language %}
+                                {% if exercise_language == "WEB" %}
+                                    <option value="html">HTML+CSS+JS</option>
+                                {% else %}
+                                    <option value="{{ exercise_language }}">{{ exercise_language }}</option>
+                                {% endif %}
+                            {% else %}
+                                <option value="java">Java</option>
+                                <option value="cpp">C++</option>
+                                <option value="python">Python</option>
+                                <option value="html">HTML+CSS+JS</option>
+                            {% endif %}
+                        </select>
+                    </div>
+
+                    <textarea name="source_code" id="sourceCode"></textarea>
+
+                    <div id="inputsDiv">
+                        <textarea class="programInput" placeholder="Introduce un dato de entrada..."></textarea>
+                    </div>
+                    
+                    <button id="addInput" type="button">Agregar otro dato</button>
+                    <button type="submit">Comprobar</button>
+                    <button id="sendExercise" type="button" class="send_button">Enviar ejercicio</button>
+
+                    <div id="nextButtonContainer"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="show-result">
+        <div id="output">Resultado aparecerá aquí...</div>
+        <iframe id="webOutput" style="display:none; width:100%; height:300px;"></iframe> <!-- iframe para mostrar el resultado web -->
+    </div>        
+</main>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $("#addInput").click(function() {
+            $("#inputsDiv").append('<textarea class="programInput" placeholder="Introduce un dato de entrada..."></textarea>');
+        });
+
+        // Se actualiza el resultado solo cuando se hace clic en "Comprobar"
+        $("#codeForm").on("submit", function (event) {
+            event.preventDefault();
+            if ($("#language").val() === "html") {
+                $("#webOutput").show().contents().find("body").html(editor.getValue());
+                $("#output").hide();
+            } else {
+                $("#webOutput").hide();
+                $("#output").show();
+                $.ajax({
+                    url: '/compile',
+                    method: 'post',
+                    data: {
+                        source_code: editor.getValue(),
+                        language: $("#language").val(),
+                        user_inputs: $(".programInput").map(function () {
+                            return $(this).val();
+                        }).get()
+                    },
+                    success: function (result) {
+                        $("#output").html(result.output);
+                    },
+                    error: function (error) {
+                        $("#output").html("Error al enviar el código para compilación.");
+                    }
+                });
+            }
+        });
+
+        var editor = CodeMirror.fromTextArea(document.getElementById("sourceCode"), {
+            lineNumbers: true,
+            mode: "text/x-c++src",
+            matchBrackets: true,
+            theme: "default", // Tema por defecto con fondo blanco
+            tabSize: 4,
+            indentWithTabs: true
+        });
+
+        var exercise_language = "{{ exercise_language }}";
+
+        if(exercise_language == "JAVA") {
+            addJavaTemplate();
+        } else if (exercise_language == "CPP" ) {
+            addCppTemplate();
+        } else if ( exercise_language == "PYTHON") {
+            addEncodingLine();
+        } else if (exercise_language == "WEB") {
+            addHTMLTemplate();
+        } 
+
+        document.getElementById("language").addEventListener("change", function () {
+            if (this.value === "cpp") {
+                editor.setOption("mode", "text/x-c++src");
+                removeTemplate();
+                addCppTemplate();
+                showInputs(); // Mostrar los campos de entrada
+            } else if (this.value === "java") {
+                editor.setOption("mode", "text/x-java");
+                removeTemplate();
+                addJavaTemplate();
+                showInputs(); // Mostrar los campos de entrada
+            } else if (this.value === "python") {
+                editor.setOption("mode", "text/x-python");
+                removeTemplate();
+                addEncodingLine();
+                showInputs(); // Mostrar los campos de entrada
+            } else if (this.value === "html") {
+                hideInputs(); // Ocultar los campos de entrada
+                removeTemplate();
+                addHTMLTemplate();
+            } else {
+                showInputs(); // Mostrar los campos de entrada por defecto
+            }
+        });
+
+        function showInputs() {
+            $("#inputsDiv, #addInput").css("display", "block");
+        }
+
+        function hideInputs() {
+            $("#inputsDiv, #addInput").css("display", "none");
+        }
+
+        function addHTMLTemplate() {
+            const htmlTemplate = `
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Título de la página</title>
+        <!-- CSS entre otras cosas -->
+    </head>
+    <body>
+        <!-- Contenido principal de la página: textos, imágenes, enlaces, etc. -->
+    </body>
+</html>
+            `;
+            editor.setValue(htmlTemplate);
+        }
+
+
+
+        function addCppTemplate() {
+            const cppTemplate = `#include <iostream>\n\nusing namespace std;\n\nint main(int argc, char *argv[]) {\n\n    return 0;\n}`;
+            editor.setValue(cppTemplate);
+        }
+
+        function addEncodingLine() {
+            const encodingLine = "# -*- coding: utf-8 -*-";
+            if (editor.getLine(0) !== encodingLine) {
+                editor.replaceRange(encodingLine + "\n", {line: 0, ch: 0});
+            }
+        }
+
+        function addJavaTemplate() {
+            const javaTemplate = `import java.util.Scanner;\n\nclass Name {\n    public static void main(String[] args) {\n\n    }\n}`;
+            editor.setValue(javaTemplate);
+        }
+
+
+        function removeTemplate() {
+            editor.setValue("");
+        }
+
+        var nextContentId = null;
+        var moduleId = $("#module-id").val();  // Definir a nivel de script, no dentro de una función
+
+        $('#start-time').val(new Date().getTime());
+
+        $("#sendExercise").click(function() {
+            let startTime = parseInt($('#start-time').val(), 10);
+            let timeSpent = (new Date().getTime() - startTime) / 1000; // Diferencia en segundos
+            
+            $.ajax({
+                url: '/correct_exercise',
+                method: 'post',
+                data: {
+                    source_code: editor.getValue(),
+                    language: $("#language").val(),
+                    user_inputs: $(".programInput").map(function() {
+                        return $(this).val();
+                    }).get(),
+                    exercise_name: $("#exercise-name").text().trim(),
+                    module_id: $("#module-id").val(),
+                    exercise_id: $("#exercise-id").val(),
+                    start_time: startTime // Enviar la hora de inicio al servidor
+                },
+                success: function(result) {
+                    if (result.status === "completed" || result.status === "under_review") {
+                        alert("¡Ejercicio " + (result.status === "completed" ? "correcto" : "bajo revisión manual") + "!");
+
+                        if (result.next_content_id) {
+                            let nextButton = `<button id="nextExercise">Siguiente Ejercicio</button>`;
+                            $("#nextButtonContainer").html(nextButton);
+                            nextContentId = result.next_content_id;
+                        } else {
+                            alert("¡Has completado todos los ejercicios de este módulo!");
+                        }
+                    } else {
+                        alert("Resultado incorrecto. Por favor, inténtalo de nuevo.");
+                    }
+                },
+                error: function(error) {
+                    alert("Error al enviar el ejercicio. Inténtalo de nuevo.");
+                }
+            });
+        });
+
+        // Listener del botón "Siguiente Ejercicio"
+        $(document).on("click", "#nextExercise", function() {
+            if (nextContentId) {
+                window.location.href = "/module/" + moduleId + "/exercise";
+            } else {
+                alert("¡Has completado todos los ejercicios de este módulo!");
+            }
+        });
+    </script>
+{% endblock %}

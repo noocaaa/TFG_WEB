@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Responder Pregunta</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f9f9f9;
+            font-family: Arial, sans-serif;
+        }
+
+        .sidebar {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px 0;
+            overflow-y: auto;
+            border-right: 1px solid #bdc3c7;
+            min-height: 100vh;  /* Asegura que la barra lateral ocupe al menos la altura de la ventana */
+        }
+
+        .sidebar a {
+            color: #ecf0f1;
+            display: block;
+            padding: 10px 20px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #34495e;
+            text-decoration: none;
+        }
+
+        .content {
+            padding: 20px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+
+
+        .container-fluid > .row {
+            display: flex;  /* Establece el contenedor como un contenedor flex */
+            flex-direction: row;  /* Asegura que los hijos estén en fila */
+            min-height: 100vh;  /* Ocupa al menos la altura de la ventana */
+        }
+
+        .sidebar, 
+        .col-md-9 {
+            flex-grow: 1;  /* Ambas columnas crecerán al mismo ritmo */
+        }
+
+        @media (max-width: 992px) { /* Cuando la pantalla sea menor a 992px */
+            .sidebar {
+                position: relative;
+                height: auto;
+                min-height: 0;
+            }
+            
+            .container-fluid > .row {
+                flex-direction: column;  /* En pantallas pequeñas, los elementos estarán en columna */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Barra Lateral -->
+            <div class="col-md-3 sidebar">
+                <h3 class="text-center mb-4">Panel del Profesor</h3>
+                <a href="{{ url_for('teacher.teacher_dashboard') }}" class="d-block mb-2 nav-link">Regresar al Dashboard</a>
+                <a href="{{ url_for('control.login') }}" class="btn btn-danger mt-5">Salir</a>
+            </div>
+
+            <!-- Contenido -->
+            <div class="col-md-9">
+                <h2 class="my-4">Responder a la pregunta</h2>
+
+                <div class="content">
+                    <p><strong>Estudiante:</strong> {{ question.student.first_name }} {{ question.student.last_name }}</p>
+                    <p><strong>Pregunta:</strong> {{ question.question_text }}</p>
+                    
+                    {% if question.attachment_name %}
+                    <a href="{{ url_for('teacher.asked_questions', filename=question.attachment_name) }}" class="btn btn-secondary">Descargar adjunto</a>
+                    {% endif %}
+
+                    <form action="{{ url_for('teacher.answer_question', question_id=question.id) }}" method="post">
+                        <div class="form-group">
+                            <label for="answer_text">Respuesta:</label>
+                            <textarea class="form-control" id="answer_text" name="answer_text" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enviar respuesta</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enlace a Bootstrap JS y Popper.js (opcional) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
