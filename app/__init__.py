@@ -4,6 +4,7 @@ from flask_login import LoginManager
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv, find_dotenv
+from flask_wtf import CSRFProtect
 
 import os
 
@@ -12,6 +13,7 @@ db = SQLAlchemy()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
 cors = CORS()
+
 load_dotenv(find_dotenv())
 
 def create_app():
@@ -34,9 +36,9 @@ def create_app():
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
-    cors.init_app(app)
+    cors.init_app(app, resources={r"/api/*": {"origins": "http://127.0.0.1:5000", "supports_credentials": True}})
 
-    login_manager.login_view = 'login'
+    login_manager.login_view = 'student.login'
     login_manager.login_message = "Please log in to access this page."
 
     # Importar y registrar las vistas (Blueprints) al final para evitar referencias circulares

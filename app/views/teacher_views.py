@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import current_user, login_required
 
 from app import db, bcrypt
-from app.models import Users, Exercises, StudentProgress, Question, StudentActivity
+from app.models import Users, Exercises, StudentProgress, Question, StudentActivity, Notification
 
 
 from sqlalchemy import func
@@ -137,10 +137,26 @@ def answer_question(question_id):
         if answer_text:
             question.answer_text = answer_text
             question.answered_date = datetime.now()
+            
+            # Mensaje amigable y animado
+            notification_message = f"Tu profesor ya ha a respondido tu pregunta: '{question.question_text}'. ¡Haz clic en Aceptar para verla!"
+            
+            # Crear una nueva notificación
+            notification = Notification(
+                user_id=question.student_id,
+                message=notification_message,
+                timestamp=datetime.now(),
+                is_read=False
+            )
+
+            # Añadir y comprometer la notificación a la base de datos
+            db.session.add(notification)
+            db.session.commit()
+
             return redirect(url_for('teacher.teacher_dashboard'))
         else:
             flash('La respuesta no puede estar vacía.', 'danger')
-
+    
     return render_template('answer_question.html', question=question)
 
 @teacher_blueprint.route('/asked_questions/<filename>')
@@ -250,6 +266,9 @@ def review_exercise(exercise_id):
 
         # Si el ejercicio es marcado como failed, se crea una nueva entrada con estado "pending"
         if status == "failed":
+
+            notification_message = f"Tu ejercicio '{exercise.name}' ha sido revisado y necesita ser corregido. ¡Haz clic en Aceptar para ver los comentarios!"
+
             new_progress = StudentProgress(
                 student_id=student.id,
                 exercise_id=exercise.id,
@@ -259,19 +278,29 @@ def review_exercise(exercise_id):
             )
             db.session.add(new_progress)
 
-            # [Opcional] Actualizar una tabla de actividad del estudiante si existe
-            # Suponiendo que hay una tabla como `StudentActivity` y un campo `content_id` que corresponde a `exercise_id`
+            # Actualizar una tabla de actividad del estudiante, con tal de marcar el progreso del propio estudiante. 
             student_activity = StudentActivity.query.filter_by(student_id=student.id, content_id=exercise.id).first()
+
             if student_activity:
                 student_activity.done = False
 
+        else:
+            notification_message = f"¡Buenas noticias! Tu ejercicio '{exercise.name}' ha sido revisado y marcado como válido."
+
+        # Crear una nueva notificación
+        notification = Notification(
+            user_id=student.id,  # Asegurándonos de notificar al estudiante
+            message=notification_message,
+            timestamp=datetime.now(),
+            is_read=False
+        )
+
         # Guardar los cambios en la base de datos
+        db.session.add(notification)
         db.session.commit()
 
         flash('Revisión completada con éxito.', 'success')
         return redirect(url_for('teacher.teacher_dashboard'))
 
     return render_template('review_exercise.html', exercise=exercise, student=student, progress=progress, solution_code=solution_code)
-
-
-
+    

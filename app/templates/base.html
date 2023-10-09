@@ -41,7 +41,45 @@
     
     {% block avatar %}{% endblock %}
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            function checkForNotifications() {
+                fetch('{{ url_for("student.get_notifications") }}')
+                    .then(response => response.json())
+                    .then(notifications => {
+                        notifications.forEach(notification => {
+                            // Guardar la decisión del usuario al hacer clic en "Aceptar"
+                            var userDecision = alert(notification.message);
+                            
+                            // Si el usuario hace clic en "Aceptar", redirige a la página de preguntas
+                            window.location.href = '{{ url_for("student.preguntas") }}';
+                            
+                            markNotificationAsRead(notification.id);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching notifications:', error));
+            }
+    
+            function markNotificationAsRead(notificationId) {
+                fetch('{{ url_for("student.mark_notification_read", notification_id="") }}' + notificationId, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    }
+                })
+                .catch(error => console.error('Error marking notification as read:', error));
+            }
+    
+            setInterval(checkForNotifications, 10000); // Cambiado a 10000 para evitar llamadas excesivas al servidor
+        });
+    </script>
+    
+
     {% block scripts %}{% endblock %}
+    
 </body>
 
 </html>

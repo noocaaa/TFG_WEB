@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, jsonify,
 from flask_login import login_user, current_user, logout_user, login_required
 
 from app import db, login_manager, bcrypt
-from app.models import Users, Exercises, StudentProgress, StudentModules, Module, Question, StudentActivity, GlobalOrder, Theory
+from app.models import Users, Exercises, StudentProgress, StudentModules, Module, Question, StudentActivity, GlobalOrder, Theory, Notification
 
 from sqlalchemy import func, text, and_
 
@@ -96,11 +96,6 @@ def registro():
         new_user = Users(first_name=first_name, last_name=last_name, birth_date=birth_date, city=city, gender=gender, email=email, password=hashed_password, type_user="S", avatar_id=None, current_module_id="7")
 
         db.session.add(new_user)
-        db.session.commit()
-
-        # Insertamos el módulo con ID 7 para el nuevo usuario
-        new_student_module = StudentModules(student_id=new_user.id, module_id=7, current_exercise_id=None, completed=False)
-        db.session.add(new_student_module)
         db.session.commit()
 
         first_exercise = Exercises.query.filter_by(module_id=7).order_by(Exercises.id).first()
@@ -479,7 +474,13 @@ def preguntas():
     # Asumiendo que tienes un modelo 'Question' que representa las preguntas en la base de datos
     student_questions = Question.query.filter_by(student_id=current_user.id).all()
 
-    return render_template('preguntas.html', avatar_id = avatar_id, username=username, student_questions=student_questions)
+    # Obtención de los ejercicios que tienen comentarios del profesor para el estudiante
+    commented_exercises = StudentProgress.query.filter(
+        StudentProgress.student_id == current_user.id,
+        StudentProgress.comments != None  # O usa una verificación más adecuada para los comentarios no vacíos
+    ).all()
+
+    return render_template('preguntas.html', avatar_id = avatar_id, username=username, student_questions=student_questions, commented_exercises=commented_exercises)
 
 
 @student_blueprint.route('/submit_question', methods=['POST'])
@@ -833,3 +834,27 @@ def correct_exercise():
         return jsonify({"status": status, "next_content_id": None})
 
     return jsonify({"status": status, "next_content_id": next_content.content_id})
+
+
+@student_blueprint.route('/notifications', methods=['GET'])
+@login_required
+def get_notifications():
+    notifications = Notification.query.filter_by(user_id=current_user.id, is_read=False).all()
+    notifications_data = [{"id": n.id, "message": n.message} for n in notifications]
+    return jsonify(notifications_data)
+
+
+@student_blueprint.route('/api/mark_notification_read/<notification_id>', methods=['POST'])
+@login_required
+def mark_notification_read(notification_id):
+    try:
+        notification_id = int(notification_id)
+    except ValueError:
+        return "Invalid notification_id", 400  # Bad Request
+
+    notification = Notification.query.get(notification_id)
+    if notification and notification.user_id == current_user.id:
+        notification.is_read = True
+        db.session.commit()
+    return '', 204  # No content
+

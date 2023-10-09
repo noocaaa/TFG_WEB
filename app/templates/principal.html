@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Linea clave para diseño responsivo -->
-    <title>Pag. Principal</title>
-    <meta name="Autor" content="Noelia Carrasco Vilar">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+{% extends "base.html" %}
+
+{% block title %}
+Principal
+{% endblock %}
+
+{% block head_extra %}
     <style type="text/css">
         body {
             margin: 0;
@@ -249,56 +248,36 @@
             word-wrap: break-word;
         }
 
+        .nameTitle  {
+            color: #E76645;
+        }
+
     </style>
-</head>
-<body>
-    <header class="top-nav">
-        <a href="{{ url_for('student.principal') }}">
-            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="logo">
-        </a>        
-        <div class="user-profile">
-            <img src="{{ url_for('static', filename='img/' + avatar_id|string + '.jpg') }}" alt="User" class="user-image">
-            <div class="user-details">
-                <p class="user-name">{{ username }}</p>
-                <a href="{{ url_for('student.configuracion') }}" class="user-config">Configuración</a>
-            </div>
-            <a href="{{ url_for('control.logout') }}" class="logout-btn">Salir</a> <!-- Botón de Salir -->
-        </div>    
-    </header> 
-    
+{% endblock %}
 
-    <nav class="side-nav">
-        <ul>
-            <li><a href="{{ url_for('student.principal') }}">Principal</a></li>
-            <li><a href="{{ url_for('student.biblioteca') }}">Biblioteca</a></li>
-            <li><a href="{{ url_for('student.preguntas') }}">Preguntas</a></li>
-            <li><a href="{{ url_for('student.rankings') }}">Rankings</a></li>
-            <li><a href="{{ url_for('student.contenido') }}">Contenido</a></li>
-        </ul>
-    </nav>
+{% block main_content %}
+    {% for module_data in modules_progress %}
+        {% if module_data.available %}
+            <div class="module-box">
+                <h2>{{ module_data.module.name }}</h2>
+                <div class="module-description">
+                    {{ module_data.module.description }}
+                </div>
+                                    
+                <!-- Barra de progreso -->
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: {{ module_data.progress }}%;"></div>
+                </div>
+                
+                <a href="{{ url_for('student.module_exercise', module_id=module_data.module.id) }}" class="module-btn">Abrir Ejercicio</a>
+            </div>        
+        {% endif %}
+    {% endfor %}
+{% endblock %}
 
-    <main>
-        {% for module_data in modules_progress %}
-            {% if module_data.available %}
-                <div class="module-box">
-                    <h2>{{ module_data.module.name }}</h2>
-                    <div class="module-description">
-                        {{ module_data.module.description }}
-                    </div>
-                                        
-                    <!-- Barra de progreso -->
-                    <div class="progress-container">
-                        <div class="progress-bar" style="width: {{ module_data.progress }}%;"></div>
-                    </div>
-                    
-                    <a href="{{ url_for('student.module_exercise', module_id=module_data.module.id) }}" class="module-btn">Abrir Ejercicio</a>
-                </div>        
-            {% endif %}
-        {% endfor %}
-    </main>
-        
+{% block avatar %}
     <div id="avatarModal" style="display:none;">
-        <h2>Elige tu avatar</h2>
+        <h2 class="nameTitle">Elige tu avatar</h2>
         <div class="avatars">
             <img src="{{ url_for('static', filename='img/1.jpg') }}" data-id="1" onclick="selectAvatar(this)">
             <img src="{{ url_for('static', filename='img/2.jpg') }}" data-id="2" onclick="selectAvatar(this)">
@@ -319,8 +298,10 @@
     <form id="avatarForm" method="POST" action="{{ url_for('student.almacenar_avatar') }}" style="display: none;">
         <input type="hidden" id="avatarElegido" name="avatar_elegido">
     </form>
-    
+{% endblock %}
+        
 
+{% block scripts %}
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -340,7 +321,6 @@
         }
 
     </script>
-</body>
-</html>
+{% endblock %}
 
 

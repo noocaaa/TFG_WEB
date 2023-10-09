@@ -132,3 +132,14 @@ class Theory(db.Model):
     image_path = db.Column(db.String, nullable=True)
 
     module = db.relationship('Module', backref='theories', lazy=True)
+
+class Notification(db.Model):
+    __tablename__ = 'notifications'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    is_read = db.Column(db.Boolean, nullable=False, default=False)
+
+    user = db.relationship('Users', backref='notifications', lazy=True)
