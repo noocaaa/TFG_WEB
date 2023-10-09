@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
 import os
 
@@ -12,7 +12,7 @@ db = SQLAlchemy()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
 cors = CORS()
-load_dotenv(os.path.join(os.path.dirname(__file__), '../.env'))
+load_dotenv(find_dotenv())
 
 def create_app():
     # Inicializar la instancia de Flask
