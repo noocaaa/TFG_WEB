@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
+from dotenv import load_dotenv
 
 import os
 
@@ -11,17 +12,19 @@ db = SQLAlchemy()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
 cors = CORS()
+load_dotenv(os.path.join(os.path.dirname(__file__), '../.env'))
 
 def create_app():
     # Inicializar la instancia de Flask
     app = Flask(__name__)
 
     # Configuraciones básicas (por ejemplo, configuración de la base de datos)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://noelia:nocavi12@localhost:5432/mydatabase'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Para silenciar una advertencia específica
-    app.config['SECRET_KEY'] = '24f1e69128a141189d62a30e56e2098e'
-    app.config['UPLOAD_FOLDER'] = './asked_questions'
-    app.config['STATIC_FOLDER'] = 'static'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS') == 'True'
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+    app.config['UPLOAD_FOLDER'] = os.getenv('UPLOAD_FOLDER')
+    app.config['STATIC_FOLDER'] = os.getenv('STATIC_FOLDER')
+
 
     # Crear la carpeta de subida si no existe
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
@@ -34,6 +37,7 @@ def create_app():
     cors.init_app(app)
 
     login_manager.login_view = 'login'
+    login_manager.login_message = "Please log in to access this page."
 
     # Importar y registrar las vistas (Blueprints) al final para evitar referencias circulares
     from app.views import admin_blueprint, student_blueprint, teacher_blueprint, control_blueprint
