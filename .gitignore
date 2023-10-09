@@ -128,3 +128,5 @@ dmypy.json
 # db file
 *.db
 
+# Excluir carpeta donde se almacena el contenido proporcionado por el usuario
+asked_questions/
