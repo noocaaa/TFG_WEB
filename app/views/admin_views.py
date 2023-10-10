@@ -20,7 +20,6 @@ def allowed_file(filename):
 
 def is_valid_json(data):
     try:
-        print("Data to validate:", data)  # ¡Esto es solo para depuración!
         json.loads(data)
         return True
     except ValueError:

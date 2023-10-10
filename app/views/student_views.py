@@ -367,7 +367,7 @@ def some_compile_function(source_code, language, user_inputs):
     try:
         input_data = '\n'.join(user_inputs)  # Combina todas las entradas con saltos de línea
         if language == 'CPP':
-            time.sleep(0.5)  # Agregar retraso de medio segundo
+            time.sleep(0.1)  # Agregar retraso de medio segundo
             process = subprocess.Popen(executable_name, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, text=True)
             output, error = process.communicate(input=input_data) # Aquí es donde pasas la entrada del usuario
             if process.returncode != 0:  # Esto es para manejar errores en la ejecución
@@ -377,14 +377,14 @@ def some_compile_function(source_code, language, user_inputs):
             class_name = extract_classname(source_code)
             if not class_name:
                 return "Error: No se pudo determinar el nombre de la clase en el código fuente."
-            time.sleep(0.5)  # Agregar retraso de medio segundo
+            time.sleep(0.1)  # Agregar retraso de medio segundo
             process = subprocess.Popen(['java', '-cp', '.', class_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, text=True)
             output, error = process.communicate(input=input_data) # Aquí es donde pasas la entrada del usuario
             if process.returncode != 0:  # Esto es para manejar errores en la ejecución
                 return error
             return output
         elif language == 'PYTHON':
-            time.sleep(0.5)
+            time.sleep(0.1)
             process = subprocess.Popen(['python', filename], stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, text=True)
             output, error = process.communicate(input=input_data)
             if process.returncode != 0:
@@ -740,7 +740,39 @@ def get_module_id_for_content(content_id, content_type):
     return content.module_id if content else None
 
 
-# Revisar con el under_review
+@student_blueprint.route('/notifications', methods=['GET'])
+@login_required
+def get_notifications():
+    notifications = Notification.query.filter_by(user_id=current_user.id, is_read=False).all()
+    notifications_data = [{"id": n.id, "message": n.message} for n in notifications]
+    return jsonify(notifications_data)
+
+
+@student_blueprint.route('/api/mark_notification_read/<notification_id>', methods=['POST'])
+@login_required
+def mark_notification_read(notification_id):
+    try:
+        notification_id = int(notification_id)
+    except ValueError:
+        return "Invalid notification_id", 400  # Bad Request
+
+    notification = Notification.query.get(notification_id)
+    if notification and notification.user_id == current_user.id:
+        notification.is_read = True
+        db.session.commit()
+    return '', 204  # No content
+
+
+
+# ---------------------- CORRECIÓN EJERCICIO ----------------------
+
+
+def check_requirements(source_code, requirements):
+    for req in requirements:
+        if req not in source_code:
+            return False, f"El código fuente no cumple con el requisito: {req}"
+    return True, "Todos los requisitos satisfechos"
+
 
 @student_blueprint.route('/correct_exercise', methods=['POST'])
 @login_required
@@ -775,28 +807,56 @@ def correct_exercise():
     if not exercise:
         return jsonify({"status": "error", "message": "El ejercicio no existe."})
 
+    # Obtener los requisitos del ejercicio
     if exercise.requirements and exercise.requirements != "None":
         requirements = exercise.requirements.split(', ')
-        for req in requirements:
-            if req not in source_code:
-                return jsonify({"status": "incorrect", "message": f"El código fuente no cumple con el requisito: {req}"})
+    else:
+        requirements = []
+
+    # Paso 2: Verificar los requisitos en el código fuente del estudiante.
+    is_requirements_satisfied, requirements_message = check_requirements(source_code, requirements)
+    if not is_requirements_satisfied:
+        return jsonify({"status": "incorrect", "message": requirements_message})
 
     user_inputs = request.form.getlist('user_inputs[]')
-    result = some_compile_function(source_code, language, user_inputs)  # Asegúrate de tener esta función definida en tu código
-    correct_solution = get_solution_for_exercise(exercise.name, exercise.module_id)  # Asegúrate de tener esta función definida en tu código
-    correct_solution = str(correct_solution).strip()
-    result = str(result).strip()
+
+    try:
+        # Decodifica una vez
+        once_decoded = json.loads(exercise.test_verification)
+
+        test_verification = json.loads(once_decoded)
+
+        print("test_verification: ", test_verification)
+    except ValueError:  # incluir json.decoder.JSONDecodeError en Python 3.5+
+        return jsonify({"status": "error", "message": "Invalid test_verification format"})
+    
+
+    if list(test_verification.keys()) == ["A"] and test_verification["A"] == "B":
+        print("Easy Csae")
+        # Caso simple, comparar con la solución
+        result = some_compile_function(source_code, language, user_inputs)
+        is_correct = (result.strip() == str(exercise.solution).strip())
+    else:
+        print("Complex Case")
+        # Caso complejo, usar test_verification
+        first_key = list(test_verification.keys())[0]
+        result = some_compile_function(source_code, language, first_key)
+        print("result: ", result)
+        is_correct = (str(test_verification[first_key]).strip() == result.strip())
+
+
+    # correct_solution = get_solution_for_exercise(exercise.name, exercise.module_id)
+    # correct_solution = str(correct_solution).strip()
+    # result = str(result).strip()
 
     end_time = datetime.now()
     time_spent = (end_time - start_time).seconds  
     
     # Suponiendo que el lenguaje "HTML" indica ejercicios que necesitan revisión del profesor
     if language == "html":
-        print("fffffffffffffffffffffff")
         status = "under_review"
     else:
-        print("llllllllllllll")
-        status = "completed" if result == correct_solution else "failed"
+        status = "completed" if is_correct else "failed"
 
     new_progress = StudentProgress(
         student_id=current_user.id, 
@@ -834,27 +894,3 @@ def correct_exercise():
         return jsonify({"status": status, "next_content_id": None})
 
     return jsonify({"status": status, "next_content_id": next_content.content_id})
-
-
-@student_blueprint.route('/notifications', methods=['GET'])
-@login_required
-def get_notifications():
-    notifications = Notification.query.filter_by(user_id=current_user.id, is_read=False).all()
-    notifications_data = [{"id": n.id, "message": n.message} for n in notifications]
-    return jsonify(notifications_data)
-
-
-@student_blueprint.route('/api/mark_notification_read/<notification_id>', methods=['POST'])
-@login_required
-def mark_notification_read(notification_id):
-    try:
-        notification_id = int(notification_id)
-    except ValueError:
-        return "Invalid notification_id", 400  # Bad Request
-
-    notification = Notification.query.get(notification_id)
-    if notification and notification.user_id == current_user.id:
-        notification.is_read = True
-        db.session.commit()
-    return '', 204  # No content
-
