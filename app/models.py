@@ -55,7 +55,7 @@ class StudentProgress(db.Model):
     status = db.Column(db.String(50), nullable=False, server_default='pending', info={'valid_values': ['pending', 'completed', 'in progress']})
     completion_date = db.Column(db.DateTime, nullable=True)
     grade = db.Column(db.Float, nullable=True) # Se podría forzar a un valor entre 0 y 10.
-    time_spent = db.Column(db.Integer, default=0)  # Yiempo en segundos
+    time_spent = db.Column(db.Integer, default=0)  # Tiempo en segundos
     start_date = db.Column(db.DateTime, nullable=True)
     solution_code = db.Column(db.Text, nullable=True)
     comments = db.Column(db.Text, nullable=True)

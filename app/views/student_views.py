@@ -2,17 +2,20 @@ from flask import Blueprint, render_template, redirect, url_for, flash, jsonify,
 from flask_login import login_user, current_user, logout_user, login_required
 
 from app import db, login_manager, bcrypt
-from app.models import Users, Exercises, StudentProgress, StudentModules, Module, Question, StudentActivity, GlobalOrder, Theory, Notification
+from app.models import Users, Exercises, StudentProgress, Module, Question, StudentActivity, GlobalOrder, Theory, Notification
 
 from sqlalchemy import func, text, and_
-
+from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
 
 from datetime import datetime, timedelta
 
 from werkzeug.utils import secure_filename
 
-import os, subprocess, json, uuid, time
+import os, subprocess, json, uuid, time, re, math
+
+import numpy as np
+
 
 student_blueprint = Blueprint('student', __name__)
 
@@ -93,19 +96,11 @@ def registro():
         # Hash the password using Flask-Bcrypt
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
+        # --- Hay que quitar el current module_id no nos sirve para nada de lo implementado. 
         new_user = Users(first_name=first_name, last_name=last_name, birth_date=birth_date, city=city, gender=gender, email=email, password=hashed_password, type_user="S", avatar_id=None, current_module_id="7")
 
         db.session.add(new_user)
         db.session.commit()
-
-        first_exercise = Exercises.query.filter_by(module_id=7).order_by(Exercises.id).first()
-
-        # Verificar si encontramos un ejercicio
-        if first_exercise:
-            # Insertar un registro en student_progress con el estado inicial
-            new_student_progress = StudentProgress(student_id=new_user.id, exercise_id=first_exercise.id, status='pending', completion_date=None, grade=None, time_spent=0)
-            db.session.add(new_student_progress)
-            db.session.commit()
 
         return redirect(url_for('control.login'))
 
@@ -120,6 +115,94 @@ def validate_password(password):
     if not any(char.isupper() for char in password):
         return False
     return True
+
+
+
+
+
+# Número de ejercicios extra basándose en el rendimiento del estudiante.
+def determine_number_of_extra_exercises(student_id, recent_num=5, max_extra_exercises=6):
+    recent_exercises = (StudentProgress.query
+                        .filter_by(student_id=student_id)
+                        .order_by(StudentProgress.completion_date.desc())
+                        .limit(recent_num)
+                        .all())
+
+    if len(recent_exercises) < recent_num:
+        return 0
+    
+    failed_exercises = sum(1 for exercise in recent_exercises if exercise.status == "failed")
+    failure_rate = failed_exercises / recent_num
+
+    for e in recent_exercises:
+        print (e.time_spent )
+    
+    # Recoger los tiempos de todos los ejercicios para encontrar el mínimo y el máximo
+    all_times = [e.time_spent for e in recent_exercises]
+    min_time = min(all_times)
+    max_time = max(all_times)
+    
+    # Evitar la división por cero si min_time == max_time
+    if min_time == max_time:
+        normalized_time_last_exercise = 1
+    else:
+        # Normalizar el tiempo del último ejercicio con respecto al rango [min_time, max_time]
+        time_spent_last_exercise = recent_exercises[0].time_spent
+
+        # Si hay 0 por algun motivo
+        if time_spent_last_exercise == 0:
+            time_spent_last_exercise = min_time
+
+        normalized_time = (time_spent_last_exercise - min_time) / (max_time - min_time)
+    
+    # Ajustar los pesos según tu propia lógica y pruebas
+    weight_failure_rate = 0.7
+    weight_time = 0.3
+
+    # De esta manera se penaliza los que tarden muy poco o los que tarden mucho
+    normalized_time = abs(0.5 - normalized_time_last_exercise) * 2
+    
+    weighted_sum = (weight_failure_rate * failure_rate + weight_time * normalized_time)
+    
+    recommended_exercises = max(0, round(weighted_sum * max_extra_exercises))  
+
+    return recommended_exercises
+
+
+
+
+
+
+# Obtención de ejercicios adicionales en base a los ejercicios fallados por el estudiante, y que tengan requerimientos similares no identicos.
+def get_extra_exercises(student_id):
+    difficulty_areas = set()
+    
+    # Paso 1: Identificar Áreas de Dificultad
+    failed_exercises = StudentProgress.query.filter_by(student_id=student_id, status='failed').all()
+
+    for progress in failed_exercises:
+        exercise = Exercises.query.get(progress.exercise_id)
+
+        if exercise and exercise.requirements:
+            difficulty_areas.update(exercise.requirements.split(', '))
+
+    # Paso 2: Buscar Ejercicios Adicionales
+    # Obtén todos los ejercicios que matcheen con las áreas de dificultad
+    potential_extra_exercises = Exercises.query.filter(
+        or_(*[Exercises.requirements.ilike(f"%{area}%") for area in difficulty_areas])
+    ).all()
+
+    # Filtra los ejercicios que el estudiante ya ha intentado o completado
+    attempted_exercise_ids = {progress.exercise_id for progress in StudentProgress.query.filter_by(student_id=student_id).all()}
+    extra_exercises = [exercise for exercise in potential_extra_exercises if exercise.id not in attempted_exercise_ids]
+    
+    num_extra_exercises = determine_number_of_extra_exercises(student_id)
+
+    # Paso 3: Recomendar Ejercicios
+    recommended_exercises = extra_exercises[:num_extra_exercises]
+
+    return recommended_exercises
+
 
 
 @student_blueprint.route('/principal')
@@ -165,7 +248,6 @@ def principal():
 
             if module_id <= last_module_completely_done + 1: 
                 module_prog['available'] = True
-
 
     return render_template('principal.html', show_modal=show_modal, avatar_id=avatar_id, username=username, modules_progress=modules_progress)
 
@@ -323,8 +405,6 @@ def view_exercise(exercise_id):
         return redirect(url_for('student.principal'))
     return render_template('contenido.html', exercise=exercise, username=username)
 
-
-import re 
 
 def extract_classname(source_code):
     match = re.search(r'\bclass\s+(\w+)', source_code)

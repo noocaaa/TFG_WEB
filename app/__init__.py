@@ -42,10 +42,12 @@ def create_app():
     login_manager.login_message = "Please log in to access this page."
 
     # Importar y registrar las vistas (Blueprints) al final para evitar referencias circulares
-    from app.views import admin_blueprint, student_blueprint, teacher_blueprint, control_blueprint
+    from app.views import admin_blueprint, student_blueprint, teacher_blueprint, control_blueprint, module_blueprint
+    
     app.register_blueprint(admin_blueprint)
     app.register_blueprint(student_blueprint)
     app.register_blueprint(teacher_blueprint)
     app.register_blueprint(control_blueprint)
+    app.register_blueprint(module_blueprint)
 
     return app
