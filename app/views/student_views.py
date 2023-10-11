@@ -16,7 +16,7 @@ import os, subprocess, json, uuid, time, re, math
 
 import numpy as np
 
-from app.views.module_views import get_extra_exercises
+from app.views.module_views import get_extra_exercises, determine_number_of_skipped_exercises, get_advanced_exercises
 
 student_blueprint = Blueprint('student', __name__)
 
@@ -172,6 +172,8 @@ def module_exercise(module_id):
     if not current_user.is_authenticated:
         return redirect(url_for('control.login'))
 
+    print(get_extra_exercises(current_user.id, module_id))
+    
     avatar_id = current_user.avatar_id
     username = current_user.first_name
 
@@ -764,6 +766,7 @@ def mark_notification_read(notification_id):
 def check_requirements(source_code, requirements):
     for req in requirements:
         if req not in source_code:
+            print("asasa: ", req)
             return False, f"El código fuente no cumple con el requisito: {req}"
     return True, "Todos los requisitos satisfechos"
 
@@ -803,12 +806,13 @@ def correct_exercise():
 
     # Obtener los requisitos del ejercicio
     if exercise.requirements and exercise.requirements != "None":
-        requirements = exercise.requirements.split(', ')
+        requirements = exercise.requirements.split(' ')
     else:
         requirements = []
 
     # Paso 2: Verificar los requisitos en el código fuente del estudiante.
     is_requirements_satisfied, requirements_message = check_requirements(source_code, requirements)
+
     if not is_requirements_satisfied:
         return jsonify({"status": "incorrect", "message": requirements_message})
 
