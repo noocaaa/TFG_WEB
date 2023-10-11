@@ -172,8 +172,6 @@ def module_exercise(module_id):
     if not current_user.is_authenticated:
         return redirect(url_for('control.login'))
 
-    print(get_extra_exercises(current_user.id, module_id))
-    
     avatar_id = current_user.avatar_id
     username = current_user.first_name
 
