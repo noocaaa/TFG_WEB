@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from app.models import StudentProgress, Exercises, GlobalOrder
 
-from sqlalchemy import or_, and_
+from sqlalchemy import and_, func
 
 module_blueprint = Blueprint('module', __name__)
 
@@ -142,7 +142,8 @@ def time_score(actual_time, min_time, max_time):
 
 
 
-# Devuelve el numero de ejercicios que se podrían saltar del estudiante
+# Devuelve el numero de ejercicios que se podrían saltar del estudiante, , basado en su historial reciente.
+from sqlalchemy import or_
 def determine_number_of_skipped_exercises(student_id, primary_requirement, recent_num=6, max_skip_exercises=3, pass_rate_threshold=0.6):
     recent_exercises = (StudentProgress.query
                         .filter_by(student_id=student_id)
@@ -152,46 +153,63 @@ def determine_number_of_skipped_exercises(student_id, primary_requirement, recen
                         .limit(recent_num)
                         .all())
     
-    print ("longitud ejers encontrados: ", len(recent_exercises))
-    print (recent_exercises)
-    # Hasta que el estudiante no haya realizado el recent_num no se puede establecer si avanzar o añadir ejercicios
+    # Verificar si hay suficientes ejercicios recientes para considerar
     if len(recent_exercises) < recent_num:
         return 0
-
-    passed_exercises = sum(1 for exercise in recent_exercises if exercise.status == "completed")
-    pass_rate = passed_exercises / recent_num
     
-    # Si la tasa de aprobación está por debajo del umbral, no se salta ningún ejercicio
+    effective_pass_count = 0
+    unique_exercise_ids = set()
+    for exercise in recent_exercises:
+        # ID del ejercicio único
+        unique_exercise_ids.add(exercise.exercise_id)
+
+        # Ajustamos solo para ejercicios completados
+        if exercise.status == "completed":
+            previous_fails = (StudentProgress.query
+                              .filter_by(student_id=student_id, exercise_id=exercise.exercise_id, status="failed")
+                              .count())
+            # Hay que sumarle uno porque el completado tambien cuenta como intento
+            adjuster = max(1, previous_fails + 1)
+            effective_pass_count += 1/adjuster
+    
+    num_unique_exercises = len(unique_exercise_ids)  # Número de ejercicios únicos intentados
+
+    # Calcular la tasa de éxito y verificar contra el umbral
+    pass_rate = effective_pass_count / num_unique_exercises
     if pass_rate < pass_rate_threshold:
         return 0
-
+    
     # Recoger los tiempos de todos los ejercicios para encontrar el mínimo y el máximo
     all_times = [e.time_spent for e in recent_exercises]
     min_time = min(all_times)
     max_time = max(all_times)
-
+    
     # Normalizar el tiempo del último ejercicio con respecto al rango [min_time, max_time]
     time_spent_last_exercise = recent_exercises[0].time_spent
-
-    # Si hay 0 por algun motivo
+    
+    # Proteger contra divisiones por cero
     if time_spent_last_exercise == 0:
         time_spent_last_exercise = min_time
+    
+    # Función para calcular el rendimiento en función del tiempo
+    def time_score(time, min_t, max_t):
+        return (max_t - time) / (max_t - min_t)
 
     time_performance = time_score(time_spent_last_exercise, min_time, max_time)
-
-    # Ajustar los pesos según tu propia lógica y pruebas
+    
+    # Ponderar y sumar métricas
     weight_pass_rate = 0.7
     weight_time = 0.3
-    
     weighted_sum = (weight_pass_rate * pass_rate + weight_time * time_performance)
+    
+    print (weighted_sum)
 
-    print ("pass rate: ", pass_rate)
-    print ("time_performance: ", time_performance)
-    print ("suma de pesos: ", weighted_sum)
-
+    # Calcular y devolver la cantidad recomendada de ejercicios para saltar
     recommended_skips = max(0, round(weighted_sum * max_skip_exercises))  
 
+    print (recommended_skips)
     return recommended_skips
+
 
 
 # Devuelve los ejercicios que se deberían saltar
@@ -228,8 +246,7 @@ def get_advanced_exercises(student_id, min_successes=5, min_success_rate=0.8):
 
     primary_requirement = most_successful_area
 
-    print("proficiency: ", proficiency_areas)
-    print("primary requirement: ", primary_requirement)
+    print (primary_requirement)
 
     # Paso 2: Buscar Ejercicios Avanzados
     if primary_requirement:
@@ -237,7 +254,7 @@ def get_advanced_exercises(student_id, min_successes=5, min_success_rate=0.8):
             .join(GlobalOrder, Exercises.id == GlobalOrder.content_id)
             .filter(
                 GlobalOrder.content_type == 'Exercises',
-                Exercises.requirements.ilike(f"%{primary_requirement}%")
+                func.trim(Exercises.requirements) == primary_requirement.strip()
             )
             .order_by(GlobalOrder.global_order)
             .all())
@@ -252,9 +269,11 @@ def get_advanced_exercises(student_id, min_successes=5, min_success_rate=0.8):
     # Usa determine_number_of_skipped_exercises para decidir cuántos ejercicios recomendar
     # Asumiendo que tienes una función determine_number_of_skipped_exercises definida en otro lugar
     num_skip_exercises = determine_number_of_skipped_exercises(student_id, primary_requirement)
-    recommended_exercises = advanced_exercises[:num_skip_exercises]
-    
-    print ("num skip: ", num_skip_exercises)
-    print ("recommended: ", recommended_exercises)
 
+    print (num_skip_exercises)
+    print (advanced_exercises)
+
+    recommended_exercises = advanced_exercises[:num_skip_exercises]
+
+    
     return recommended_exercises
