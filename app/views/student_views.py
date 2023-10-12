@@ -125,7 +125,8 @@ def principal():
     if not current_user.is_authenticated:
         return redirect(url_for('control.login'))
 
-    get_advanced_exercises(current_user.id)
+    #get_advanced_exercises(current_user.id)
+    #get_extra_exercises(current_user.id)
 
     show_modal = not bool(current_user.avatar_id)
     avatar_id = current_user.avatar_id

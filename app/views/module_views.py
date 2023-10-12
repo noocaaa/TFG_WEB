@@ -2,9 +2,9 @@ from flask import Blueprint
 
 from collections import defaultdict
 
-from app.models import StudentProgress, Exercises, GlobalOrder
+from app.models import StudentProgress, Exercises, GlobalOrder, StudentActivity
 
-from sqlalchemy import and_, func
+from sqlalchemy import and_, func, desc, asc
 
 module_blueprint = Blueprint('module', __name__)
 
@@ -15,14 +15,47 @@ module_blueprint = Blueprint('module', __name__)
 
 # Número de ejercicios extra basándose en el rendimiento del estudiante.
 def determine_number_of_extra_exercises(student_id, requirement, recent_num=5, max_extra_exercises=6, failure_rate_threshold=0.2):
-    recent_exercises = (StudentProgress.query
-                        .join(Exercises, StudentProgress.exercise_id == Exercises.id)
-                        .filter(and_(StudentProgress.student_id == student_id, Exercises.requirements.ilike(f"%{requirement}%")))
-                        .order_by(StudentProgress.completion_date.desc())
-                        .limit(recent_num)
-                        .all())
+    # Identificar el primer ejercicio que NO está en la StudentActivity para este estudiante.
+    next_exercise = (
+        Exercises.query
+        .join(GlobalOrder, Exercises.id == GlobalOrder.content_id)
+        .outerjoin(
+            StudentActivity, 
+            and_(
+                StudentActivity.content_id == Exercises.id, 
+                StudentActivity.student_id == student_id
+            )
+        )
+        .filter(
+            GlobalOrder.content_type == 'Exercises',
+            StudentActivity.id == None  # No existe un registro correspondiente en StudentActivity.
+        )
+        .order_by(asc(GlobalOrder.global_order))  # Ordenar para obtener el próximo ejercicio.
+        .first()
+    )
 
-    # print("recent: ", recent_exercises)
+    # Asegurarse de que se encontró un ejercicio.
+    if next_exercise:
+        current_module_id = next_exercise.module_id
+    else:
+        current_module_id = None
+
+    # Asegurarse de que tenemos un `module_id` antes de realizar la consulta.
+    if current_module_id:
+        recent_exercises = (
+            StudentProgress.query
+            .join(Exercises, StudentProgress.exercise_id == Exercises.id)
+            .filter(and_(
+                StudentProgress.student_id == student_id,
+                Exercises.requirements.ilike(f"%{requirement}%"),
+                Exercises.module_id == current_module_id  # Añadir este filtro
+            ))
+            .order_by(StudentProgress.completion_date.desc())
+            .limit(recent_num)
+            .all()
+        )
+    else:
+        recent_exercises = []
 
     # Hasta que el estudiante no haya realizado el recent_num no se puede establecer si avanzar o añadir ejercicios
     if len(recent_exercises) < recent_num:
@@ -30,8 +63,6 @@ def determine_number_of_extra_exercises(student_id, requirement, recent_num=5, m
     
     failed_exercises = sum(1 for exercise in recent_exercises if exercise.status == "failed")
     failure_rate = failed_exercises / recent_num
-
-    # print ("failed rate: ", failure_rate)
 
     # Si la tasa de fallos es demasiado baja, no asignar ejercicios adicionales
     if failure_rate < failure_rate_threshold:
@@ -62,8 +93,6 @@ def determine_number_of_extra_exercises(student_id, requirement, recent_num=5, m
     # De esta manera se penaliza los que tarden muy poco o los que tarden mucho
     normalized_time = abs(0.5 - normalized_time_last_exercise) * 2
     
-    # print ("time: ", normalized_time)
-
     weighted_sum = (weight_failure_rate * failure_rate + weight_time * normalized_time)
     
     recommended_exercises = max(0, round(weighted_sum * max_extra_exercises))  
@@ -90,8 +119,6 @@ def get_extra_exercises(student_id):
     # Seleccionar el requirement que ha sido fallado más veces
     primary_requirement = max(difficulty_areas_counts, key=difficulty_areas_counts.get, default=None)
     
-    # print("primary requirement: ", primary_requirement)
-
     if not primary_requirement:
         return []
 
@@ -105,12 +132,8 @@ def get_extra_exercises(student_id):
     
     num_extra_exercises = determine_number_of_extra_exercises(student_id, primary_requirement)
 
-    # print("num extra: ", num_extra_exercises)
-
     # Paso 3: Recomendar Ejercicios
     recommended_exercises = extra_exercises[:num_extra_exercises]
-
-    # print ("recommended: ", recommended_exercises)
 
     return recommended_exercises
 
@@ -145,14 +168,51 @@ def time_score(actual_time, min_time, max_time):
 # Devuelve el numero de ejercicios que se podrían saltar del estudiante, , basado en su historial reciente.
 from sqlalchemy import or_
 def determine_number_of_skipped_exercises(student_id, primary_requirement, recent_num=6, max_skip_exercises=3, pass_rate_threshold=0.6):
-    recent_exercises = (StudentProgress.query
-                        .filter_by(student_id=student_id)
-                        .join(Exercises, StudentProgress.exercise_id == Exercises.id)
-                        .filter(Exercises.requirements.ilike(f"%{primary_requirement}%"))
-                        .order_by(StudentProgress.completion_date.desc())
-                        .limit(recent_num)
-                        .all())
-    
+    # Identificar el primer ejercicio que NO está en la StudentActivity para este estudiante.
+    next_exercise = (
+        Exercises.query
+        .join(GlobalOrder, Exercises.id == GlobalOrder.content_id)
+        .outerjoin(
+            StudentActivity, 
+            and_(
+                StudentActivity.content_id == Exercises.id, 
+                StudentActivity.student_id == student_id
+            )
+        )
+        .filter(
+            GlobalOrder.content_type == 'Exercises',
+            StudentActivity.id == None  # No existe un registro correspondiente en StudentActivity.
+        )
+        .order_by(asc(GlobalOrder.global_order))  # Ordenar para obtener el próximo ejercicio.
+        .first()
+    )
+
+    # Asegurarse de que se encontró un ejercicio.
+    if next_exercise:
+        current_module_id = next_exercise.module_id
+    else:
+        current_module_id = None
+
+
+    # Asegurarse de que tenemos un `module_id` antes de realizar la consulta.
+    if current_module_id:
+        recent_exercises = (
+            StudentProgress.query
+            .join(Exercises, StudentProgress.exercise_id == Exercises.id)
+            .filter(and_(
+                StudentProgress.student_id == student_id,
+                Exercises.requirements.ilike(f"%{primary_requirement}%"),
+                Exercises.module_id == current_module_id  # Añadir este filtro
+            ))
+            .order_by(StudentProgress.completion_date.desc())
+            .limit(recent_num)
+            .all()
+        )
+    else:
+        recent_exercises = []
+
+    print (recent_exercises)
+
     # Verificar si hay suficientes ejercicios recientes para considerar
     if len(recent_exercises) < recent_num:
         return 0

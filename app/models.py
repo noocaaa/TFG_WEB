@@ -119,6 +119,7 @@ class GlobalOrder(db.Model):
     content_type = db.Column(db.String(10), nullable=False)  # 'theory' o 'exercise'
     content_id = db.Column(db.Integer, nullable=False)
     global_order = db.Column(db.Integer, nullable=False)
+    done = db.Column(db.Boolean, default=False)
 
     # Agregar restricción única para content_id y content_type
     __table_args__ = (db.UniqueConstraint('content_id', 'content_type', name='unique_content'),)
