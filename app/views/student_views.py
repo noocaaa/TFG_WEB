@@ -125,6 +125,8 @@ def principal():
     if not current_user.is_authenticated:
         return redirect(url_for('control.login'))
 
+    get_advanced_exercises(current_user.id)
+
     show_modal = not bool(current_user.avatar_id)
     avatar_id = current_user.avatar_id
     username = current_user.first_name
@@ -828,16 +830,13 @@ def correct_exercise():
     
 
     if list(test_verification.keys()) == ["A"] and test_verification["A"] == "B":
-        print("Easy Csae")
         # Caso simple, comparar con la solución
         result = some_compile_function(source_code, language, user_inputs)
         is_correct = (result.strip() == str(exercise.solution).strip())
     else:
-        print("Complex Case")
         # Caso complejo, usar test_verification
         first_key = list(test_verification.keys())[0]
         result = some_compile_function(source_code, language, first_key)
-        print("result: ", result)
         is_correct = (str(test_verification[first_key]).strip() == result.strip())
 
 
