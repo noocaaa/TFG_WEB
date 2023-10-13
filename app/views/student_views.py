@@ -133,11 +133,41 @@ def principal():
     last_module_completely_done = None
 
     for module in modules:
-        total_exercises = Exercises.query.filter_by(module_id=module.id).count()
+        total_exercises = (
+            db.session.query(Exercises)
+            .join(GlobalOrder, Exercises.id == GlobalOrder.content_id)
+            .filter(
+                Exercises.module_id == module.id
+            )
+            .count()
+        )
+
         completed_exercises = StudentProgress.query.filter_by(student_id=current_user.id, status="completed").join(Exercises).filter_by(module_id=module.id).count()
 
+        extra_exercises_count = (
+            db.session.query(ExtraExercises)
+            .join(Exercises, ExtraExercises.exercise_id == Exercises.id)
+            .filter(
+                ExtraExercises.student_id == current_user.id,
+                ExtraExercises.status == "Completed",
+                Exercises.module_id == module.id
+            )
+            .count()
+        )
+
+        skipped_count = (
+            db.session.query(StudentActivity)
+            .join (Exercises, Exercises.id == StudentActivity.content_id)
+            .filter(
+                StudentActivity.student_id == current_user.id,
+                StudentActivity.skipped == True,
+                Exercises.module_id == module.id
+            )
+            .count()
+        )
+
         if total_exercises > 0:
-            progress = (completed_exercises / total_exercises) * 100
+            progress = (completed_exercises + skipped_count) / (total_exercises + extra_exercises_count) * 100
         else:
             progress = 0
 
@@ -150,16 +180,14 @@ def principal():
             'available': False  # Inicialmente ponemos todos los módulos como no disponibles
         })
 
+    if last_module_completely_done == None:
+        last_module_completely_done = 12 # el primer modulo q tenemos en la BBDD
 
-    if last_module_completely_done is None:
-        last_module_completely_done = 7
-        modules_progress[0]['available'] = True
-    else:
-        for module_prog in modules_progress:
-            module_id = module_prog['module'].id
+    for module_prog in modules_progress:
+        module_id = module_prog['module'].id
 
-            if module_id <= last_module_completely_done + 1: 
-                module_prog['available'] = True
+        if module_id <= last_module_completely_done: 
+            module_prog['available'] = True
 
     return render_template('principal.html', show_modal=show_modal, avatar_id=avatar_id, username=username, modules_progress=modules_progress)
 
