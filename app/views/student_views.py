@@ -869,8 +869,12 @@ def correct_exercise():
     source_code = request.form.get('source_code')
     language = request.form.get('language')
     content_id = request.form.get('exercise_id')
+
     start_time = int(request.form.get('start_time'))
     start_time = datetime.fromtimestamp(start_time / 1000.0)
+
+    end_time = int(request.form.get('end_time'))
+    end_time = datetime.fromtimestamp(end_time / 1000.0)
 
     extra_exercise = ExtraExercises.query.filter_by(exercise_id=content_id).first()
     extra = extra_exercise is not None
@@ -899,7 +903,23 @@ def correct_exercise():
 
     is_requirements_satisfied, requirements_message = check_requirements(source_code, requirements)
 
+    time_spent = (end_time - start_time).seconds  
+
     if not is_requirements_satisfied:
+        new_progress = StudentProgress(
+            student_id=current_user.id, 
+            exercise_id=content_id, 
+            status="failed", 
+            solution_code=source_code,
+            start_date=start_time, 
+            completion_date=end_time, 
+            time_spent=time_spent
+        )
+
+        db.session.add(new_progress)
+
+        db.session.commit()
+
         return jsonify({"status": "incorrect", "message": requirements_message})
 
     user_inputs = request.form.getlist('user_inputs[]')
@@ -917,9 +937,6 @@ def correct_exercise():
         first_key = list(test_verification.keys())[0]
         result = some_compile_function(source_code, language, first_key)
         is_correct = (str(test_verification[first_key]).strip() == result.strip())
-
-    end_time = datetime.now()
-    time_spent = (end_time - start_time).seconds  
     
     if language == "html":
         status = "under_review"

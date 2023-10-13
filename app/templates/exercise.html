@@ -352,6 +352,7 @@ Ejercicio
         <input type="hidden" id="module-id" value="{{ exercise.module_id }}"> <!-- para saber de que modulo es -->
         <input type="hidden" id="exercise-id" value="{{ exercise.id }}"> <!-- para saber el id del ejercicio es -->
         <input type="hidden" id="start-time" value="">
+        <input type="hidden" id="end-time" value="">
     </div>
 
     <div class="alert-requirements">
@@ -365,7 +366,7 @@ Ejercicio
             <div class="editor">
                 <form id="codeForm" method="post">
                     <div class="language-selector">
-                        <label for="language">Elige el lenguaje: </label>
+                        <label for="language">Lenguaje: </label>
                         <select name="language" id="language">
                             {% if exercise_language %}
                                 {% if exercise_language == "WEB" %}
@@ -541,11 +542,12 @@ Ejercicio
         var moduleId = $("#module-id").val();  // Definir a nivel de script, no dentro de una función
 
         $('#start-time').val(new Date().getTime());
+        $('#end-time').val(new Date().getTime());
 
         $("#sendExercise").click(function() {
             let startTime = parseInt($('#start-time').val(), 10);
-            let timeSpent = (new Date().getTime() - startTime) / 1000; // Diferencia en segundos
-            
+            let endTime =  parseInt($('#end-time').val(new Date().getTime()).val(), 10);
+
             $.ajax({
                 url: '/correct_exercise',
                 method: 'post',
@@ -559,6 +561,7 @@ Ejercicio
                     module_id: $("#module-id").val(),
                     exercise_id: $("#exercise-id").val(),
                     start_time: startTime, // Enviar la hora de inicio al servidor
+                    end_time: endTime
                 },
                 success: function(result) {
                     if (result.status === "completed" || result.status === "under_review") {

@@ -581,13 +581,14 @@ def update_global_order():
     # Consulta el registro que actualmente tiene el global_order que deseas
     existing_order = GlobalOrder.query.filter_by(global_order=new_order).first()
 
-    # Si ese registro existe, incrementa su valor y todos los valores subsiguientes en global_order
+    # Si ese registro existe, incrementa su valor y todos los valores subsiguientes
     if existing_order:
+        # Obtén todos los registros que tienen un global_order mayor o igual al nuevo, en orden descendente
         subsequent_orders = GlobalOrder.query.filter(GlobalOrder.global_order >= new_order).order_by(GlobalOrder.global_order.desc()).all()
         for order in subsequent_orders:
             order.global_order += 1
 
-    # Lógica para agregar o actualizar el registro en global_order
+    # Luego sigue la lógica para agregar o actualizar el registro
     existing_entry = GlobalOrder.query.filter_by(content_type=content_type, content_id=content_id).first()
     if existing_entry:
         existing_entry.global_order = new_order
@@ -597,18 +598,6 @@ def update_global_order():
 
     db.session.commit()
 
-    # Si ese registro existe, incrementa su valor y todos los valores subsiguientes en studentactivity
-    if existing_order:
-        subsequent_student_activities = StudentActivity.query.filter(StudentActivity.order_global >= new_order).order_by(StudentActivity.order_global.desc()).all()
-        for activity in subsequent_student_activities:
-            activity.order_global += 1
-
-    # Luego sigue la lógica para agregar o actualizar los registros en studentactivity
-    students_to_update = StudentActivity.query.filter_by(content_id=content_id, content_type=content_type).all()
-    for student_activity in students_to_update:
-        student_activity.order_global = new_order
-
-    db.session.commit()
 
     # En la función update_global_order
     global_orders_updated = GlobalOrder.query.order_by(GlobalOrder.global_order).all()
