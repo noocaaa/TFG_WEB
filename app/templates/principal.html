@@ -269,7 +269,9 @@ Principal
                     <div class="progress-bar" style="width: {{ module_data.progress }}%;"></div>
                 </div>
                 
-                <a href="{{ url_for('student.module_exercise', module_id=module_data.module.id) }}" class="module-btn">Abrir Ejercicio</a>
+                {% if module_data.progress != 100 %}
+                    <a href="{{ url_for('student.module_exercise', module_id=module_data.module.id) }}" class="module-btn">Abrir Ejercicio</a>
+                {% endif %}
             </div>        
         {% endif %}
     {% endfor %}

@@ -571,6 +571,8 @@ Ejercicio
                         } else {
                             alert("¡Has completado todos los ejercicios de este módulo!");
                         }
+                    } else if (result.status === "incorrect") {
+                        alert("No has utilizado los requisitos necesarios para completar el ejercicio.")
                     } else {
                         alert("Resultado incorrecto. Por favor, inténtalo de nuevo.");
                     }
