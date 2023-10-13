@@ -172,7 +172,7 @@ def principal():
             progress = 0
 
         if progress == 100:
-            last_module_completely_done = module.id
+            last_module_completely_done = module.id + 1
 
         modules_progress.append({
             'module': module,
@@ -185,6 +185,8 @@ def principal():
 
     for module_prog in modules_progress:
         module_id = module_prog['module'].id
+
+        print("fff", module_id)
 
         if module_id <= last_module_completely_done: 
             module_prog['available'] = True
@@ -309,8 +311,11 @@ def module_exercise(module_id):
     elif next_global_order_entry.content_type == "Exercises":
         exercise = get_exercise(next_global_order_entry.content_id)
         if exercise and exercise.module_id != module_id:
+            print("a")
             return redirect(url_for('student.module_exercise', module_id=exercise.module_id))
         if exercise:
+            print (module_id)
+            print ("b")
             return render_template('exercise.html', avatar_id=avatar_id, username=username, exercise=exercise, exercise_language=exercise.language)
 
     # Redirect to principal if no action is taken.

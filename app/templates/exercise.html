@@ -195,7 +195,7 @@ Ejercicio
         flex-direction: column;
     }
 
-    .exercise-info {
+    .exercise-info, .alert-requirements {
         flex: 1;
         padding: 20px;
         border: 1px solid #72B4A4;
@@ -322,7 +322,7 @@ Ejercicio
         margin-top: 0;
     }
 
-    .exercise-info h2 {
+    .exercise-info h2, .alert-requirements h2 {
         margin-top: 0;
     }
 
@@ -332,6 +332,11 @@ Ejercicio
 
     .send_button {
         background-color: #FF7F50;
+    }
+
+    .alert-requirements {
+        margin-top: 0px;
+        background-color: #e74545;
     }
     
 </style>
@@ -347,6 +352,10 @@ Ejercicio
         <input type="hidden" id="module-id" value="{{ exercise.module_id }}"> <!-- para saber de que modulo es -->
         <input type="hidden" id="exercise-id" value="{{ exercise.id }}"> <!-- para saber el id del ejercicio es -->
         <input type="hidden" id="start-time" value="">
+    </div>
+
+    <div class="alert-requirements">
+        <h3>¡Cuidado! Este ejercicio debe contener: <strong>{{ exercise.requirements }}</strong> para poder ser corregido.</h3>
     </div>
 
     <div class="compiler-section">
