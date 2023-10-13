@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from app.models import StudentProgress, Exercises, GlobalOrder, StudentActivity
 
-from sqlalchemy import and_, func, desc, asc
+from sqlalchemy import and_, func, asc
 
 module_blueprint = Blueprint('module', __name__)
 
@@ -166,7 +166,6 @@ def time_score(actual_time, min_time, max_time):
 
 
 # Devuelve el numero de ejercicios que se podrían saltar del estudiante, , basado en su historial reciente.
-from sqlalchemy import or_
 def determine_number_of_skipped_exercises(student_id, primary_requirement, recent_num=6, max_skip_exercises=3, pass_rate_threshold=0.6):
     # Identificar el primer ejercicio que NO está en la StudentActivity para este estudiante.
     next_exercise = (
@@ -210,8 +209,6 @@ def determine_number_of_skipped_exercises(student_id, primary_requirement, recen
         )
     else:
         recent_exercises = []
-
-    print (recent_exercises)
 
     # Verificar si hay suficientes ejercicios recientes para considerar
     if len(recent_exercises) < recent_num:
@@ -262,12 +259,9 @@ def determine_number_of_skipped_exercises(student_id, primary_requirement, recen
     weight_time = 0.3
     weighted_sum = (weight_pass_rate * pass_rate + weight_time * time_performance)
     
-    print (weighted_sum)
-
     # Calcular y devolver la cantidad recomendada de ejercicios para saltar
     recommended_skips = max(0, round(weighted_sum * max_skip_exercises))  
 
-    print (recommended_skips)
     return recommended_skips
 
 
@@ -306,8 +300,6 @@ def get_advanced_exercises(student_id, min_successes=5, min_success_rate=0.8):
 
     primary_requirement = most_successful_area
 
-    print (primary_requirement)
-
     # Paso 2: Buscar Ejercicios Avanzados
     if primary_requirement:
         potential_advanced_exercises = (Exercises.query
@@ -322,16 +314,13 @@ def get_advanced_exercises(student_id, min_successes=5, min_success_rate=0.8):
         potential_advanced_exercises = []
         
     # Filtrar los ejercicios avanzados para incluir solo aquellos que el estudiante no ha intentado
-    attempted_exercise_ids = {progress.exercise_id for progress in StudentProgress.query.filter_by(student_id=student_id).all()}
+    attempted_exercise_ids = {activity.content_id for activity in StudentActivity.query.filter_by(student_id=student_id, done=True).all()}
     advanced_exercises = [exercise for exercise in potential_advanced_exercises if exercise.id not in attempted_exercise_ids]
 
     # Paso 3: Recomendar Ejercicios
     # Usa determine_number_of_skipped_exercises para decidir cuántos ejercicios recomendar
     # Asumiendo que tienes una función determine_number_of_skipped_exercises definida en otro lugar
     num_skip_exercises = determine_number_of_skipped_exercises(student_id, primary_requirement)
-
-    print (num_skip_exercises)
-    print (advanced_exercises)
 
     recommended_exercises = advanced_exercises[:num_skip_exercises]
 

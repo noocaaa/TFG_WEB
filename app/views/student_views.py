@@ -1,29 +1,27 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, jsonify, request, session, current_app
+from flask import Blueprint, render_template, redirect, url_for, flash, jsonify, request, current_app
 from flask_login import login_user, current_user, logout_user, login_required
 
 from app import db, login_manager, bcrypt
-from app.models import Users, Exercises, StudentProgress, Module, Question, StudentActivity, GlobalOrder, Theory, Notification
+from app.models import Users, Exercises, StudentProgress, Module, Question, StudentActivity, GlobalOrder, Theory, Notification, ExtraExercises
 
 from sqlalchemy import func, text, and_
-from sqlalchemy import or_
-from sqlalchemy.exc import IntegrityError
 
 from datetime import datetime, timedelta
 
 from werkzeug.utils import secure_filename
 
-import os, subprocess, json, uuid, time, re, math
+import os, subprocess, json, uuid, time, re
 
-import numpy as np
-
-from app.views.module_views import get_extra_exercises, determine_number_of_skipped_exercises, get_advanced_exercises
+from app.views.module_views import get_extra_exercises, get_advanced_exercises
 
 student_blueprint = Blueprint('student', __name__)
 
+# con tal de evitar que haya skips consecutivos
+MIN_EXERCISES_BETWEEN_SKIPS = 3
+MAX_CONSECUTIVE_SKIPS = 1
 
 def is_valid_json(data):
     try:
-        print("Data to validate:", data)  # ¡Esto es solo para depuración!
         json.loads(data)
         return True
     except ValueError:
@@ -125,9 +123,6 @@ def principal():
     if not current_user.is_authenticated:
         return redirect(url_for('control.login'))
 
-    #get_advanced_exercises(current_user.id)
-    #get_extra_exercises(current_user.id)
-
     show_modal = not bool(current_user.avatar_id)
     avatar_id = current_user.avatar_id
     username = current_user.first_name
@@ -169,68 +164,132 @@ def principal():
     return render_template('principal.html', show_modal=show_modal, avatar_id=avatar_id, username=username, modules_progress=modules_progress)
 
 
+
 @student_blueprint.route('/module/<int:module_id>/exercise')
 @login_required
 def module_exercise(module_id):
-    if not current_user.is_authenticated:
-        return redirect(url_for('control.login'))
 
     avatar_id = current_user.avatar_id
     username = current_user.first_name
+    
+    # Functions to get queries
+    def get_exercise(exercise_id):
+        return Exercises.query.filter_by(id=exercise_id).first()
 
-    # Buscar el primer ejercicio no realizado (done = False)
-    undone_exercise = (
-        StudentActivity.query
-        .filter_by(student_id=current_user.id, done=False, content_type="Exercises")
-        .order_by(StudentActivity.order_global)
-        .first()
-    )
+    def get_theory(theory_id):
+        return Theory.query.filter_by(id=theory_id).first()
+    
+    # Extra Exercises Logic
+    recommended_exercises = get_extra_exercises(current_user.id)
+    pending_extra_exercise = ExtraExercises.query.filter_by(student_id=current_user.id, status='Assigned').first()
 
-    # Si se encuentra un ejercicio no realizado, mostrarlo
-    if undone_exercise:
-        exercise = Exercises.query.filter_by(id=undone_exercise.content_id).first()
-        if exercise:
-            return render_template('exercise.html', avatar_id=avatar_id, username=username, exercise=exercise, exercise_language=exercise.language)
+    if recommended_exercises and not pending_extra_exercise:
+        for exercise in recommended_exercises:
+            new_extra_exercise = ExtraExercises(student_id=current_user.id, exercise_id=exercise.id)
+            db.session.add(new_extra_exercise)
+        db.session.commit()
+        exercise = get_exercise(recommended_exercises[0].id)
+        return render_template('exercise.html', avatar_id=avatar_id, username=username, exercise=exercise, exercise_language=exercise.language)
 
-    # Si no hay ejercicios no realizados, continuar con la lógica existente...
+    elif pending_extra_exercise:
+        exercise = get_exercise(pending_extra_exercise.exercise_id)
+        return render_template('exercise.html', avatar_id=avatar_id, username=username, exercise=exercise, exercise_language=exercise.language)
 
-    last_seen_content = (
-        StudentActivity.query
-        .filter_by(student_id=current_user.id, done=True)
-        .join(GlobalOrder, GlobalOrder.content_id == StudentActivity.content_id)
-        .filter(GlobalOrder.content_type.in_(["Theory", "Exercises"]))
-        .order_by(GlobalOrder.global_order.desc())
-        .first()
-    )
+    # Skip Exercises Logic
+    advanced_exercises = get_advanced_exercises(current_user.id)
 
-    current_global_order = last_seen_content.order_global if last_seen_content else 0
+    if advanced_exercises:
+        # Obtener las últimas n actividades del estudiante
+        recent_activities = (
+            StudentActivity.query
+            .filter_by(student_id=current_user.id)
+            .order_by(StudentActivity.order_global.desc())
+            .limit(MAX_CONSECUTIVE_SKIPS + MIN_EXERCISES_BETWEEN_SKIPS + 1)
+            .all()
+        )
 
-    next_content = (
+        # Contar ejercicios realizados y skips
+        exercise_count_since_last_skip = 0
+        skip_count = 0
+
+        for activity in recent_activities:
+            if activity.skipped:
+                if exercise_count_since_last_skip < MIN_EXERCISES_BETWEEN_SKIPS:
+                    # No permitir otro skip
+                    return redirect(url_for('student.principal'))  # Redirigir o manejar como prefieras.
+                else:
+                    # Se ha realizado un nuevo skip, reiniciar el contador de ejercicios
+                    exercise_count_since_last_skip = 0
+                    skip_count += 1
+            else:
+                # Se ha completado un ejercicio, incrementar el contador
+                exercise_count_since_last_skip += 1
+
+        if skip_count < MAX_CONSECUTIVE_SKIPS:
+            for exercise in advanced_exercises:
+                existing_activity = (
+                    StudentActivity.query
+                    .filter_by(content_id=exercise.id, student_id=current_user.id, content_type="Exercises")
+                    .first()
+                )
+
+                if not existing_activity:
+                    global_order_entry = (
+                        GlobalOrder.query
+                        .filter_by(content_id=exercise.id, content_type="Exercises")
+                        .first()
+                    )
+
+                    if global_order_entry:
+                        new_activity = StudentActivity(
+                            student_id=current_user.id,
+                            content_id=exercise.id,
+                            order_global=global_order_entry.global_order,
+                            done=False,
+                            skipped=True,
+                            content_type="Exercises"
+                        )
+                        db.session.add(new_activity)
+            
+            db.session.commit()
+
+    # Next Exercise
+    existing_order_globals = (
+        db.session.query(StudentActivity.order_global)
+        .filter_by(student_id=current_user.id)
+    ).subquery()
+
+    next_global_order_entry = (
         GlobalOrder.query
-        .filter(GlobalOrder.global_order > current_global_order)
+        .filter(
+            GlobalOrder.content_type.in_(["Theory", "Exercises"]),
+            ~GlobalOrder.global_order.in_(existing_order_globals)
+        )
         .order_by(GlobalOrder.global_order)
         .first()
     )
 
-    if not next_content:
-        next_content = GlobalOrder.query.order_by(GlobalOrder.global_order).first()
-
-    if next_content:
-        if next_content.content_type == "Theory":
-            theory = Theory.query.filter_by(id=next_content.content_id).first()
-            if theory and theory.module_id == module_id:
-                return render_template('theory.html', avatar_id=avatar_id, username=username, content=theory, content_id=theory.id)
-
-        elif next_content.content_type == "Exercises":
-            exercise = Exercises.query.filter_by(id=next_content.content_id).first()
-            if exercise and exercise.module_id != module_id:
-                return redirect(url_for('student.module_exercise', module_id=exercise.module_id))
-            if exercise:
-                return render_template('exercise.html', avatar_id=avatar_id, username=username, exercise=exercise, exercise_language=exercise.language)
-    else:
+    if not next_global_order_entry:
         return redirect(url_for('student.principal'))
 
+    # Handle next content
+    if next_global_order_entry.content_type == "Theory":
+        theory = get_theory(next_global_order_entry.content_id)
+        if theory and theory.module_id == module_id:
+            return render_template('theory.html', avatar_id=avatar_id, username=username, content=theory, content_id=theory.id)
+
+    elif next_global_order_entry.content_type == "Exercises":
+        exercise = get_exercise(next_global_order_entry.content_id)
+        if exercise and exercise.module_id != module_id:
+            return redirect(url_for('student.module_exercise', module_id=exercise.module_id))
+        if exercise:
+            return render_template('exercise.html', avatar_id=avatar_id, username=username, exercise=exercise, exercise_language=exercise.language)
+
+    # Redirect to principal if no action is taken.
     return redirect(url_for('student.principal'))
+
+
+
 
 
 @student_blueprint.route('/mark_theory_as_read/<int:content_id>', methods=['POST'])
@@ -767,9 +826,10 @@ def mark_notification_read(notification_id):
 def check_requirements(source_code, requirements):
     for req in requirements:
         if req not in source_code:
-            print("asasa: ", req)
             return False, f"El código fuente no cumple con el requisito: {req}"
     return True, "Todos los requisitos satisfechos"
+
+
 
 
 @student_blueprint.route('/correct_exercise', methods=['POST'])
@@ -781,37 +841,34 @@ def correct_exercise():
     source_code = request.form.get('source_code')
     language = request.form.get('language')
     content_id = request.form.get('exercise_id')
-    start_time = int(request.form.get('start_time'))  # milisegundos
-    start_time = datetime.fromtimestamp(start_time / 1000.0)  # Convertir ms a s, es decir, a datetime
+    start_time = int(request.form.get('start_time'))
+    start_time = datetime.fromtimestamp(start_time / 1000.0)
 
-    if content_id is None:
-        content_id = request.form.get('exercise_id')
+    extra_exercise = ExtraExercises.query.filter_by(exercise_id=content_id).first()
+    extra = extra_exercise is not None
 
-    current_content = GlobalOrder.query.filter_by(content_id=int(content_id)).first()
-
-    if not current_content:
+    current_content = None if extra else GlobalOrder.query.filter_by(content_id=int(content_id)).first()
+    
+    if not current_content and not extra:
         return jsonify({"status": "error", "message": "El contenido no existe."})
-
-    if current_content.content_type == "Theory":
+    
+    if current_content and current_content.content_type == "Theory":
         student_activity = StudentActivity.query.filter_by(student_id=current_user.id, content_id=content_id).first()
         if not student_activity:
             new_activity = StudentActivity(student_id=current_user.id, content_id=content_id, order_global=current_content.global_order, done=True, content_type="Theory")
             db.session.add(new_activity)
             db.session.commit()
         return jsonify({"status": "theory_completed"})
-
-    exercise = Exercises.query.get(content_id)
     
+    exercise = Exercises.query.get(content_id)
     if not exercise:
         return jsonify({"status": "error", "message": "El ejercicio no existe."})
 
-    # Obtener los requisitos del ejercicio
     if exercise.requirements and exercise.requirements != "None":
         requirements = exercise.requirements.split(' ')
     else:
         requirements = []
 
-    # Paso 2: Verificar los requisitos en el código fuente del estudiante.
     is_requirements_satisfied, requirements_message = check_requirements(source_code, requirements)
 
     if not is_requirements_satisfied:
@@ -820,35 +877,22 @@ def correct_exercise():
     user_inputs = request.form.getlist('user_inputs[]')
 
     try:
-        # Decodifica una vez
         once_decoded = json.loads(exercise.test_verification)
-
         test_verification = json.loads(once_decoded)
-
-        print("test_verification: ", test_verification)
-    except ValueError:  # incluir json.decoder.JSONDecodeError en Python 3.5+
+    except ValueError:
         return jsonify({"status": "error", "message": "Invalid test_verification format"})
     
-
     if list(test_verification.keys()) == ["A"] and test_verification["A"] == "B":
-        # Caso simple, comparar con la solución
         result = some_compile_function(source_code, language, user_inputs)
         is_correct = (result.strip() == str(exercise.solution).strip())
     else:
-        # Caso complejo, usar test_verification
         first_key = list(test_verification.keys())[0]
         result = some_compile_function(source_code, language, first_key)
         is_correct = (str(test_verification[first_key]).strip() == result.strip())
 
-
-    # correct_solution = get_solution_for_exercise(exercise.name, exercise.module_id)
-    # correct_solution = str(correct_solution).strip()
-    # result = str(result).strip()
-
     end_time = datetime.now()
     time_spent = (end_time - start_time).seconds  
     
-    # Suponiendo que el lenguaje "HTML" indica ejercicios que necesitan revisión del profesor
     if language == "html":
         status = "under_review"
     else:
@@ -865,15 +909,20 @@ def correct_exercise():
     )
 
     db.session.add(new_progress)
-    db.session.commit()
-
-    student_activity = StudentActivity.query.filter_by(student_id=current_user.id, content_id=content_id).first()
-
-    if not student_activity:
-        new_activity = StudentActivity(student_id=current_user.id, content_id=content_id, order_global=current_content.global_order, done=True, content_type="Exercises")
-        db.session.add(new_activity)
+    
+    if not extra:
+        student_activity = StudentActivity.query.filter_by(student_id=current_user.id, content_id=content_id).first()
+        if not student_activity:
+            new_activity = StudentActivity(student_id=current_user.id, content_id=content_id, order_global=current_content.global_order, done=True, content_type="Exercises")
+            db.session.add(new_activity)
+        else:
+            student_activity.done = True
     else:
-        student_activity.done = True
+        extra_exercise_entry = ExtraExercises.query.filter_by(student_id=current_user.id, exercise_id=content_id, status='Assigned').first()
+        if extra_exercise_entry:
+            extra_exercise_entry.status = "Completed"
+            extra_exercise_entry.completed_date = datetime.now()
+    
     db.session.commit()
 
     next_global_order = db.session.query(GlobalOrder.global_order).\
@@ -886,6 +935,7 @@ def correct_exercise():
         return jsonify({"status": status, "next_content_id": None})
     
     next_content = GlobalOrder.query.filter_by(global_order=next_global_order[0]).first()
+
     if not next_content:
         return jsonify({"status": status, "next_content_id": None})
 

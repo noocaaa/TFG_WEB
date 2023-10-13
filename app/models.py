@@ -27,6 +27,9 @@ class Users(db.Model, UserMixin):
         self.avatar_id = avatar_id
         db.session.commit()
 
+    extra_exercises = db.relationship('ExtraExercises', back_populates='student')
+
+
 class Exercises(db.Model):    
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
@@ -38,6 +41,9 @@ class Exercises(db.Model):
     requirements = db.Column(db.Text)
     requires_manual_review = db.Column(db.Boolean, default=False)
 
+    assigned_exercises = db.relationship('ExtraExercises', back_populates='exercise')
+
+
 class Module(db.Model):
     __tablename__ = 'modules'
     
@@ -45,6 +51,7 @@ class Module(db.Model):
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text)
     exercises = db.relationship('Exercises', backref='module', lazy=True) # Clase Ejercicios ya definida
+
 
 class StudentProgress(db.Model):
     __tablename__ = 'student_progress'
@@ -64,6 +71,7 @@ class StudentProgress(db.Model):
     student = db.relationship('Users', backref='progresses', lazy=True) # Clase Usuario ya definida
     exercise = db.relationship('Exercises', backref='student_progresses', lazy=True) # Clase Ejercicios ya definida
 
+
 class Question(db.Model):
 
     __tablename__ = 'questions'
@@ -81,6 +89,7 @@ class Question(db.Model):
     # todas las preguntas relacionadas (preguntas de seguimiento) si las hay.
     follow_ups = db.relationship('Question', backref=db.backref('parent', remote_side=[id]), primaryjoin=(id == parent_question_id))
     student = db.relationship('Users', backref='questions', lazy=True)
+
 
 class StudentModules(db.Model):
     __tablename__ = 'student_modules'
@@ -105,12 +114,14 @@ class StudentActivity(db.Model):
     order_global = db.Column(db.Integer, nullable=False)
     done = db.Column(db.Boolean, default=False)
     content_type = db.Column(db.String(50))
+    skipped = db.Column(db.Boolean, default=False)
     
     # Relaciones con ejercicios y/o teoria
     content = db.relationship('GlobalOrder', backref=db.backref('student_activities', lazy=True))
     
     # Relación con el estudiante
     student = db.relationship('Users', backref='activities', lazy=True)
+
 
 class GlobalOrder(db.Model):
     __tablename__ = 'global_order'
@@ -119,11 +130,11 @@ class GlobalOrder(db.Model):
     content_type = db.Column(db.String(10), nullable=False)  # 'theory' o 'exercise'
     content_id = db.Column(db.Integer, nullable=False)
     global_order = db.Column(db.Integer, nullable=False)
-    done = db.Column(db.Boolean, default=False)
 
     # Agregar restricción única para content_id y content_type
     __table_args__ = (db.UniqueConstraint('content_id', 'content_type', name='unique_content'),)
     
+
 class Theory(db.Model):
     __tablename__ = 'theory'
 
@@ -133,6 +144,7 @@ class Theory(db.Model):
     image_path = db.Column(db.String, nullable=True)
 
     module = db.relationship('Module', backref='theories', lazy=True)
+
 
 class Notification(db.Model):
     __tablename__ = 'notifications'
@@ -144,3 +156,17 @@ class Notification(db.Model):
     is_read = db.Column(db.Boolean, nullable=False, default=False)
 
     user = db.relationship('Users', backref='notifications', lazy=True)
+
+
+class ExtraExercises(db.Model):
+    __tablename__ = 'extraexercises'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'), nullable=False)
+    assigned_date = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
+    completed_date = db.Column(db.DateTime)
+    status = db.Column(db.String(255), nullable=False, default='Assigned')
+    
+    student = db.relationship('Users', back_populates='extra_exercises')
+    exercise = db.relationship('Exercises', back_populates='assigned_exercises')

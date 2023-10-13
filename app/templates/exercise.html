@@ -549,7 +549,7 @@ Ejercicio
                     exercise_name: $("#exercise-name").text().trim(),
                     module_id: $("#module-id").val(),
                     exercise_id: $("#exercise-id").val(),
-                    start_time: startTime // Enviar la hora de inicio al servidor
+                    start_time: startTime, // Enviar la hora de inicio al servidor
                 },
                 success: function(result) {
                     if (result.status === "completed" || result.status === "under_review") {
