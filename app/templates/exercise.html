@@ -367,6 +367,41 @@ Ejercicio
         var nextContentId = null;
         var moduleId = $("#module-id").val();  // Definir a nivel de script, no dentro de una función
 
+        // Tiempo límite en milisegundos, por ejemplo 10 minutos serían 600000 milisegundos
+        const TIEMPO_LIMITE = 600000; 
+
+        setTimeout(function() {
+            let startTime = parseInt($('#start-time').val(), 10);
+            let endTime =  parseInt($('#end-time').val(new Date().getTime()).val(), 10);
+
+            $.ajax({
+                url: '/time_out',
+                method: 'post',
+                data: {
+                    source_code: editor.getValue(),
+                    language: $("#language").val(),
+                    user_inputs: $(".programInput").map(function() {
+                        return $(this).val();
+                    }).get(),
+                    exercise_name: $("#exercise-name").text().trim(),
+                    module_id: $("#module-id").val(),
+                    exercise_id: $("#exercise-id").val(),
+                    start_time: startTime, // Enviar la hora de inicio al servidor
+                    end_time: endTime
+                },
+                success: function(response) {
+                    if (response.status=== "done") {
+                        // Redirigimos al usuario
+                        window.location.href = "/module/" + moduleId + "/exercise";
+                    }
+                },
+                error: function() {
+                    alert('Hubo un error al intentar contactar al servidor.');
+                }
+            });
+        }, TIEMPO_LIMITE);
+
+
         $('#start-time').val(new Date().getTime());
         $('#end-time').val(new Date().getTime());
 

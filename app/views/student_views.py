@@ -942,3 +942,37 @@ def correct_exercise():
         return jsonify({"status": status, "next_content_id": None})
 
     return jsonify({"status": status, "next_content_id": next_content.content_id})
+
+
+
+@student_blueprint.route('/time_out', methods=['POST'])
+@login_required
+def time_out():
+    source_code = request.form.get('source_code')
+    content_id = request.form.get('exercise_id')
+
+    start_time = int(request.form.get('start_time'))
+    start_time = datetime.fromtimestamp(start_time / 1000.0)
+
+    end_time = int(request.form.get('end_time'))
+    end_time = datetime.fromtimestamp(end_time / 1000.0)
+
+    time_spent = (end_time - start_time).seconds  
+
+    status = "failed"
+
+    new_progress = StudentProgress(
+        student_id=current_user.id, 
+        exercise_id=content_id, 
+        status=status, 
+        solution_code=source_code,
+        start_date=start_time, 
+        completion_date=end_time, 
+        time_spent=time_spent
+    )
+
+    db.session.add(new_progress)
+
+    db.session.commit()
+
+    return jsonify({"status": "done"})
