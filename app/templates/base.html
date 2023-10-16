@@ -180,18 +180,23 @@
 
 <body>
     <header class="top-nav">
-        <a href="{{ url_for('student.principal') }}">
-            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="logo">
-        </a>        
-        <div class="user-profile">
-            <img src="{{ url_for('static', filename='img/' + avatar_id|string + '.jpg') }}" alt="User" class="user-image">
-            <div class="user-details">
-                <p class="user-name">{{ username }}</p>
-                <p class="points">{{ points }} puntos</p>
-                <a href="{{ url_for('student.configuracion') }}" class="user-config">Configuración</a>
-            </div>
-            <a href="{{ url_for('control.logout') }}" class="logout-btn">Salir</a> <!-- Botón de Salir -->
-        </div>    
+
+        {% if user %}
+            <a href="{{ url_for('student.principal') }}">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="logo">
+            </a>        
+            <div class="user-profile">
+                <img src="{{ url_for('static', filename='img/' + user.avatar_id|string + '.jpg') }}" alt="User" class="user-image">
+                <div class="user-details">
+                    <p class="user-name">{{ user.first_name }}</p>
+                    <p class="points">{{ user.score }} puntos</p>
+                    <a href="{{ url_for('student.configuracion') }}" class="user-config">Configuración</a>
+                </div>
+                <a href="{{ url_for('control.logout') }}" class="logout-btn">Salir</a> <!-- Botón de Salir -->
+            </div>          
+        {% endif %}
+
+  
     </header> 
 
     <nav class="side-nav">

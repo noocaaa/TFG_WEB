@@ -124,9 +124,8 @@ def principal():
         return redirect(url_for('control.login'))
 
     show_modal = not bool(current_user.avatar_id)
-    avatar_id = current_user.avatar_id
-    username = current_user.first_name
-    points = current_user.score
+
+    user = current_user
 
     modules = Module.query.order_by(Module.id).all()
     modules_progress = []
@@ -194,7 +193,7 @@ def principal():
         if module_id <= last_module_completely_done: 
             module_prog['available'] = True
 
-    return render_template('principal.html', show_modal=show_modal, avatar_id=avatar_id, points=points, username=username, modules_progress=modules_progress)
+    return render_template('principal.html', show_modal=show_modal, user=user, modules_progress=modules_progress)
 
 
 
@@ -202,9 +201,8 @@ def principal():
 @login_required
 def module_exercise(module_id):
 
-    avatar_id = current_user.avatar_id
-    username = current_user.first_name
-    
+    user = current_user
+
     # Functions to get queries
     def get_exercise(exercise_id):
         return Exercises.query.filter_by(id=exercise_id).first()
@@ -222,11 +220,11 @@ def module_exercise(module_id):
             db.session.add(new_extra_exercise)
         db.session.commit()
         exercise = get_exercise(recommended_exercises[0].id)
-        return render_template('exercise.html', avatar_id=avatar_id, username=username, exercise=exercise, exercise_language=exercise.language)
+        return render_template('exercise.html', user=user, exercise=exercise, exercise_language=exercise.language)
 
     elif pending_extra_exercise:
         exercise = get_exercise(pending_extra_exercise.exercise_id)
-        return render_template('exercise.html', avatar_id=avatar_id, username=username, exercise=exercise, exercise_language=exercise.language)
+        return render_template('exercise.html', user=user, exercise=exercise, exercise_language=exercise.language)
 
     # Skip Exercises Logic
     advanced_exercises = get_advanced_exercises(current_user.id)
@@ -309,14 +307,14 @@ def module_exercise(module_id):
     if next_global_order_entry.content_type == "Theory":
         theory = get_theory(next_global_order_entry.content_id)
         if theory and theory.module_id == module_id:
-            return render_template('theory.html', avatar_id=avatar_id, username=username, content=theory, content_id=theory.id)
+            return render_template('theory.html', user=user, content=theory, content_id=theory.id)
 
     elif next_global_order_entry.content_type == "Exercises":
         exercise = get_exercise(next_global_order_entry.content_id)
         if exercise and exercise.module_id != module_id:
             return redirect(url_for('student.module_exercise', module_id=exercise.module_id))
         if exercise:
-            return render_template('exercise.html', avatar_id=avatar_id, username=username, exercise=exercise, exercise_language=exercise.language)
+            return render_template('exercise.html', user=user, exercise=exercise, exercise_language=exercise.language)
 
     # Redirect to principal if no action is taken.
     return redirect(url_for('student.principal'))
@@ -390,7 +388,7 @@ def contenido():
     if not current_user.is_authenticated:  
         return redirect(url_for('control.login'))
 
-    username = current_user.first_name
+    user = current_user
 
     if request.method == 'POST':
         # maneja el método POST aquí
@@ -398,7 +396,7 @@ def contenido():
     else:
         # maneja el método GET aquí
         avatar_id = current_user.avatar_id
-        return render_template('contenido.html', avatar_id=avatar_id, username=username)
+        return render_template('contenido.html', user=user)
 
 @student_blueprint.route('/contenido/view/<int:exercise_id>')
 @login_required
@@ -407,12 +405,13 @@ def view_exercise(exercise_id):
     if not current_user.is_authenticated:  
         return redirect(url_for('control.login'))
     
-    username = current_user.first_name
+    user = current_user
+
     exercise = Exercises.query.get(exercise_id)
     if not exercise:
         flash('Exercise not found!', 'error')
         return redirect(url_for('student.principal'))
-    return render_template('contenido.html', exercise=exercise, username=username)
+    return render_template('contenido.html', exercise=exercise, user=user)
 
 
 def extract_classname(source_code):
@@ -515,10 +514,6 @@ def compile_code():
 
 
 
-
-
-
-
 def get_solution_for_exercise(exercise_name, module_id):
     # Buscar en la base de datos el ejercicio por su nombre y módulo
     try:
@@ -545,10 +540,9 @@ def biblioteca():
     if not current_user.is_authenticated:  
         return redirect(url_for('control.login'))
         
-    avatar_id = current_user.avatar_id
-    username = current_user.first_name
+    user = current_user
 
-    return render_template('biblioteca.html', avatar_id = avatar_id, username=username)
+    return render_template('biblioteca.html', user=user)
   
 @student_blueprint.route('/preguntas')
 @login_required
@@ -557,9 +551,6 @@ def preguntas():
     if not current_user.is_authenticated:  
         return redirect(url_for('control.login'))
     
-    avatar_id = current_user.avatar_id
-    username = current_user.first_name
-
     # Asumiendo que tienes un modelo 'Question' que representa las preguntas en la base de datos
     student_questions = Question.query.filter_by(student_id=current_user.id).all()
 
@@ -569,7 +560,7 @@ def preguntas():
         StudentProgress.comments != None  # O usa una verificación más adecuada para los comentarios no vacíos
     ).all()
 
-    return render_template('preguntas.html', avatar_id = avatar_id, username=username, student_questions=student_questions, commented_exercises=commented_exercises)
+    return render_template('preguntas.html', user=current_user, student_questions=student_questions, commented_exercises=commented_exercises)
 
 
 @student_blueprint.route('/submit_question', methods=['POST'])
@@ -604,9 +595,6 @@ def rankings():
     if not current_user.is_authenticated:  
         return redirect(url_for('control.login'))
         
-    avatar_id = current_user.avatar_id
-    username = current_user.first_name
-    
     # Obtener la fecha actual
     today = datetime.today().date()
     
@@ -651,7 +639,7 @@ def rankings():
     monthly_ranking = db.session.execute(text(monthly_query), {'start_month': start_month, 'end_date': today}).fetchall()
 
 
-    return render_template('rankings.html', avatar_id=avatar_id, username=username, daily_ranking=daily_ranking, weekly_ranking=weekly_ranking, monthly_ranking=monthly_ranking)
+    return render_template('rankings.html', user=current_user, daily_ranking=daily_ranking, weekly_ranking=weekly_ranking, monthly_ranking=monthly_ranking)
 
 
 @student_blueprint.route('/clanes')
@@ -661,11 +649,7 @@ def clanes():
     if not current_user.is_authenticated:  
         return redirect(url_for('control.login'))
     
-    avatar_id = current_user.avatar_id
-    username = current_user.first_name
-
-
-    return render_template('clanes.html', avatar_id = avatar_id, username=username)
+    return render_template('clanes.html', user=current_user)
 
 @student_blueprint.route('/configuracion', methods=['GET', 'POST'])
 @login_required
@@ -690,9 +674,7 @@ def configuracion():
         flash('Configuración actualizada con éxito', 'success')
         return redirect(url_for('student.principal'))
 
-    avatar_id = current_user.avatar_id
-    username = current_user.first_name
-    return render_template('configuracion.html', avatar_id = avatar_id, username=username)
+    return render_template('configuracion.html', user=current_user,)
 
 @student_blueprint.route('/logo_guide')
 @login_required
@@ -701,11 +683,7 @@ def logo_guide():
     if not current_user.is_authenticated:  
         return redirect(url_for('control.login'))
     
-    avatar_id = current_user.avatar_id
-    username = current_user.first_name
-
-
-    return render_template('logo_guide.html', avatar_id = avatar_id, username=username)
+    return render_template('logo_guide.html', user=current_user)
 
 @student_blueprint.route('/cpp_guide')
 @login_required
@@ -713,12 +691,8 @@ def cpp_guide():
     # Comprobar si el usuario está loggeado
     if not current_user.is_authenticated:  
         return redirect(url_for('control.login'))
-    
-    avatar_id = current_user.avatar_id
-    username = current_user.first_name
 
-
-    return render_template('cpp_guide.html', avatar_id = avatar_id, username=username)
+    return render_template('cpp_guide.html', user=current_user)
 
 @student_blueprint.route('/python_guide')
 @login_required
@@ -727,11 +701,7 @@ def python_guide():
     if not current_user.is_authenticated:  
         return redirect(url_for('control.login'))
     
-    avatar_id = current_user.avatar_id
-    username = current_user.first_name
-
-
-    return render_template('python_guide.html', avatar_id = avatar_id, username=username)
+    return render_template('python_guide.html', user=current_user)
 
 @student_blueprint.route('/java_guide')
 @login_required
@@ -739,12 +709,8 @@ def java_guide():
     # Comprobar si el usuario está loggeado
     if not current_user.is_authenticated:  
         return redirect(url_for('control.login'))
-    
-    avatar_id = current_user.avatar_id
-    username = current_user.first_name
 
-
-    return render_template('java_guide.html', avatar_id = avatar_id, username=username)
+    return render_template('java_guide.html', user=current_user)
 
 @student_blueprint.route('/web_guide')
 @login_required
@@ -753,11 +719,9 @@ def web_guide():
     if not current_user.is_authenticated:  
         return redirect(url_for('control.login'))
     
-    avatar_id = current_user.avatar_id
-    username = current_user.first_name
+    user=current_user
 
-
-    return render_template('web_guide.html', avatar_id = avatar_id, username=username)
+    return render_template('web_guide.html')
 
 @student_blueprint.route('/web_guide/html')
 @login_required
@@ -766,11 +730,7 @@ def html_guide():
     if not current_user.is_authenticated:  
         return redirect(url_for('control.login'))
     
-    avatar_id = current_user.avatar_id
-    username = current_user.first_name
-
-
-    return render_template('html_guide.html', avatar_id = avatar_id, username=username)
+    return render_template('html_guide.html', user=current_user)
 
 @student_blueprint.route('/web_guide/css')
 @login_required
@@ -779,11 +739,7 @@ def css_guide():
     if not current_user.is_authenticated:  
         return redirect(url_for('control.login'))
     
-    avatar_id = current_user.avatar_id
-    username = current_user.first_name
-
-
-    return render_template('css_guide.html', avatar_id = avatar_id, username=username)
+    return render_template('css_guide.html', user=current_user)
 
 @student_blueprint.route('/web_guide/javascript')
 @login_required
@@ -792,11 +748,7 @@ def javascript_guide():
     if not current_user.is_authenticated:  
         return redirect(url_for('control.login'))
     
-    avatar_id = current_user.avatar_id
-    username = current_user.first_name
-
-
-    return render_template('javascript_guide.html', avatar_id = avatar_id, username=username)
+    return render_template('javascript_guide.html', user=current_user)
 
 
 
