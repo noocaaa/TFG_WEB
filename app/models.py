@@ -15,6 +15,7 @@ class Users(db.Model, UserMixin):
     avatar_id = db.Column(db.Integer)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     current_module_id = db.Column(db.Integer)
+    score = db.Column(db.Integer)
 
     @property
     def is_active(self):

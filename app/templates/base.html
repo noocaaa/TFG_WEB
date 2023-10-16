@@ -7,6 +7,174 @@
     <title>{% block title %}Pag. Principal{% endblock %}</title>
     <meta name="Autor" content="Noelia Carrasco Vilar">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style type="text/css">
+        body {
+            margin: 0;
+            height: 100vh;
+            font-family: 'Open Sans', sans-serif;
+            background-color: #E1E9EE; /* Color azul claro */
+        }
+
+        .top-nav, .side-nav {
+            background-color: #72B4A4; /* Color turquesa */
+            box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.1);
+            border-radius: 20px;
+        }
+
+        .top-nav {
+            position: fixed;
+            top: 0px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+        }
+
+ 
+        .logo {
+            height: 140px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 30%;
+            margin-right: 15px;
+        }
+
+        .user-name, .user-config {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 10px;
+            margin-bottom: 0px;
+            font-size: 1.5em;
+        }
+
+        .user-config {
+            font-size: 0.9em;
+            color: #FF7F50; /* Color coral */
+        }
+
+        .side-nav {
+            position: fixed;
+            top: 140px;
+            left: 20px;
+            width: 210px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .side-nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .side-nav ul li {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #F9D3BA; /* Color melocotón claro */
+        }
+
+        .side-nav ul li:hover {
+            background-color: #FFB085; /* Color melocotón oscuro */
+        }
+
+        .side-nav ul li a {
+            text-decoration: none;
+            color: #364547; /* Color gris oscuro */
+            font-size: 1.2rem;
+        }
+
+        main {
+            margin-left: 160px;
+            margin-top: 180px;
+        }
+
+
+        @media only screen and (max-width: 768px) {
+            .top-nav {
+                flex-direction: column;
+                height: auto;
+                padding: 15px;
+                top: 0;
+                left: 10px;
+                right: 10px;
+            }
+
+            .user-profile {
+                flex-direction: column;
+                align-items: center;
+                margin-top: 15px;
+            }
+
+            .side-nav {
+                position: relative;
+                top: 0;
+                width: 100%;
+                padding: 10px;
+                display: flex;
+                overflow-x: auto;
+            }
+
+            .side-nav ul {
+                display: flex;
+                justify-content: space-around;
+                width: 100%;
+            }
+
+            main {
+                margin: 0;
+                padding: 15px;
+                margin-top: 100px;
+                margin-left: 260px;
+            }
+
+            .user-details {
+                align-items: center;
+                text-align: center;
+            }
+        }
+
+        .user-details {
+            display: block;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .user-details {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 5px; /* Reducir margen derecho */
+            margin-bottom: 0px;
+        }
+
+        .logout-btn {
+            background-color: #FF7F50; /* Color coral */
+            color: #fff;
+            padding: 5px 10px; /* Ajustar padding */
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1rem;
+            box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.1);
+            margin-left: 10px; /* Añadir margen izquierdo */
+        }
+
+        .logout-btn:hover {
+            background-color: #E76645; /* Un tono más oscuro de coral para el hover */
+        }
+
+
+    </style>
     {% block head_extra %}{% endblock %}
 </head>
 
@@ -19,6 +187,7 @@
             <img src="{{ url_for('static', filename='img/' + avatar_id|string + '.jpg') }}" alt="User" class="user-image">
             <div class="user-details">
                 <p class="user-name">{{ username }}</p>
+                <p class="points">{{ points }} puntos</p>
                 <a href="{{ url_for('student.configuracion') }}" class="user-config">Configuración</a>
             </div>
             <a href="{{ url_for('control.logout') }}" class="logout-btn">Salir</a> <!-- Botón de Salir -->

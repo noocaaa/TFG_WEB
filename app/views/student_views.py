@@ -126,6 +126,7 @@ def principal():
     show_modal = not bool(current_user.avatar_id)
     avatar_id = current_user.avatar_id
     username = current_user.first_name
+    points = current_user.score
 
     modules = Module.query.order_by(Module.id).all()
     modules_progress = []
@@ -193,7 +194,7 @@ def principal():
         if module_id <= last_module_completely_done: 
             module_prog['available'] = True
 
-    return render_template('principal.html', show_modal=show_modal, avatar_id=avatar_id, username=username, modules_progress=modules_progress)
+    return render_template('principal.html', show_modal=show_modal, avatar_id=avatar_id, points=points, username=username, modules_progress=modules_progress)
 
 
 
