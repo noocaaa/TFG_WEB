@@ -677,46 +677,34 @@
             }
         }
 
+        function hideAll() {
+            let elementsToHide = ['moduleForm', 'exerciseForm', 'cardModules', 'cardExercises', 'deleteModuleForm',
+                'deleteExerciseForm', 'teacherForm', 'teacherList', 'deleteTeacherForm', 'editModules', 
+                'editExercises', 'editTeacher', 'theoryAddForm', 'theoryListForm', 'editTheory', 
+                'deleteTheoryForm', 'globalOrderForm'];
+
+            let tabsToRemoveActive = ['globalOrderTab', 'moduleTab', 'exerciseTab', 'listModule', 
+                'listExercise', 'deleteModuleTab', 'deleteExerciseTab', 'teacherTab', 'listTeachers', 
+                'deleteTeacherTab', 'editModulesTab', 'editExercisesTab', 'editTeacherTab', 
+                'theoryTab', 'listTheory', 'editTheoryTab', 'deleteTheoryTab'];
+
+            elementsToHide.forEach(el => {
+                document.getElementById(el).style.display = 'none';
+            });
+
+            tabsToRemoveActive.forEach(tab => {
+                document.getElementById(tab).classList.remove('active');
+            });
+        }
+
+
         function showModuleForm() {
             event.preventDefault(); // Prevent default behaviour
 
+            hideAll();
+
             document.getElementById('moduleForm').style.display = 'block';
-            document.getElementById('exerciseForm').style.display = 'none';
-            document.getElementById('cardModules').style.display = 'none';
-            document.getElementById('cardExercises').style.display = 'none';
-            document.getElementById('deleteModuleForm').style.display = 'none';
-            document.getElementById('deleteExerciseForm').style.display = 'none';
-            document.getElementById('teacherForm').style.display = 'none';
-            document.getElementById('teacherList').style.display = 'none';
-            document.getElementById('deleteTeacherForm').style.display = 'none';
-            document.getElementById('editModules').style.display = 'none';
-            document.getElementById('editExercises').style.display = 'none';
-            document.getElementById('editTeacher').style.display = 'none';
-            document.getElementById('theoryAddForm').style.display = 'none';
-            document.getElementById('theoryListForm').style.display = 'none';
-            document.getElementById('editTheory').style.display = 'none';
-            document.getElementById('deleteTheoryForm').style.display = 'none';
-            document.getElementById('globalOrderForm').style.display = 'none';
-
-
-            document.getElementById('globalOrderTab').classList.remove('active');
             document.getElementById('moduleTab').classList.add('active');
-            document.getElementById('exerciseTab').classList.remove('active');
-            document.getElementById('listModule').classList.remove('active');
-            document.getElementById('listExercise').classList.remove('active');
-            document.getElementById('deleteModuleTab').classList.remove('active');
-            document.getElementById('deleteExerciseTab').classList.remove('active');
-            document.getElementById('teacherTab').classList.remove('active');
-            document.getElementById('listTeachers').classList.remove('active');
-            document.getElementById('deleteTeacherTab').classList.remove('active');
-            document.getElementById('editModulesTab').classList.remove('active');
-            document.getElementById('editExercisesTab').classList.remove('active');
-            document.getElementById('editTeacherTab').classList.remove('active');  
-            document.getElementById('theoryTab').classList.remove('active');
-            document.getElementById('listTheory').classList.remove('active');
-            document.getElementById('editTheoryTab').classList.remove('active');
-            document.getElementById('deleteTheoryTab').classList.remove('active');
-
 
             hideError();
         }
@@ -724,43 +712,10 @@
         function showExerciseForm() {
             event.preventDefault(); // Prevent default behaviour
 
-            document.getElementById('moduleForm').style.display = 'none';
+            hideAll();
+
             document.getElementById('exerciseForm').style.display = 'block';
-            document.getElementById('cardModules').style.display = 'none';
-            document.getElementById('cardExercises').style.display = 'none';
-            document.getElementById('deleteModuleForm').style.display = 'none';
-            document.getElementById('deleteExerciseForm').style.display = 'none';
-            document.getElementById('teacherForm').style.display = 'none';
-            document.getElementById('teacherList').style.display = 'none';
-            document.getElementById('deleteTeacherForm').style.display = 'none';
-            document.getElementById('editModules').style.display = 'none';
-            document.getElementById('editExercises').style.display = 'none';
-            document.getElementById('editTeacher').style.display = 'none';
-            document.getElementById('theoryAddForm').style.display = 'none';
-            document.getElementById('theoryListForm').style.display = 'none';
-            document.getElementById('editTheory').style.display = 'none';
-            document.getElementById('deleteTheoryForm').style.display = 'none';
-            document.getElementById('globalOrderForm').style.display = 'none';
-
-            
-            document.getElementById('globalOrderTab').classList.remove('active');
-            document.getElementById('moduleTab').classList.remove('active');
             document.getElementById('exerciseTab').classList.add('active');
-            document.getElementById('listModule').classList.remove('active');
-            document.getElementById('listExercise').classList.remove('active');
-            document.getElementById('deleteModuleTab').classList.remove('active');
-            document.getElementById('deleteExerciseTab').classList.remove('active');
-            document.getElementById('teacherTab').classList.remove('active');
-            document.getElementById('listTeachers').classList.remove('active');
-            document.getElementById('deleteTeacherTab').classList.remove('active');
-            document.getElementById('editModulesTab').classList.remove('active');
-            document.getElementById('editExercisesTab').classList.remove('active');
-            document.getElementById('editTeacherTab').classList.remove('active');   
-            document.getElementById('theoryTab').classList.remove('active');
-            document.getElementById('listTheory').classList.remove('active');
-            document.getElementById('editTheoryTab').classList.remove('active');
-            document.getElementById('deleteTheoryTab').classList.remove('active');
-
 
             hideError();
         }
@@ -768,43 +723,10 @@
         function showListModule() {
             event.preventDefault(); // Prevent default behaviour
 
-            document.getElementById('moduleForm').style.display = 'none';
-            document.getElementById('exerciseForm').style.display = 'none';
+            hideAll();
+
             document.getElementById('cardModules').style.display = 'block';
-            document.getElementById('cardExercises').style.display = 'none';
-            document.getElementById('deleteModuleForm').style.display = 'none';
-            document.getElementById('deleteExerciseForm').style.display = 'none';
-            document.getElementById('teacherForm').style.display = 'none';
-            document.getElementById('teacherList').style.display = 'none';
-            document.getElementById('deleteTeacherForm').style.display = 'none';
-            document.getElementById('editModules').style.display = 'none';
-            document.getElementById('editExercises').style.display = 'none';
-            document.getElementById('editTeacher').style.display = 'none';
-            document.getElementById('theoryAddForm').style.display = 'none';
-            document.getElementById('theoryListForm').style.display = 'none';
-            document.getElementById('editTheory').style.display = 'none';
-            document.getElementById('deleteTheoryForm').style.display = 'none';
-            document.getElementById('globalOrderForm').style.display = 'none';
-
-            
-            document.getElementById('globalOrderTab').classList.remove('active');
-            document.getElementById('moduleTab').classList.remove('active');
-            document.getElementById('exerciseTab').classList.remove('active');
             document.getElementById('listModule').classList.add('active');
-            document.getElementById('listExercise').classList.remove('active');
-            document.getElementById('deleteModuleTab').classList.remove('active');
-            document.getElementById('deleteExerciseTab').classList.remove('active');
-            document.getElementById('teacherTab').classList.remove('active');
-            document.getElementById('listTeachers').classList.remove('active');
-            document.getElementById('deleteTeacherTab').classList.remove('active');
-            document.getElementById('editModulesTab').classList.remove('active');
-            document.getElementById('editExercisesTab').classList.remove('active');
-            document.getElementById('editTeacherTab').classList.remove('active');   
-            document.getElementById('theoryTab').classList.remove('active');
-            document.getElementById('listTheory').classList.remove('active'); 
-            document.getElementById('editTheoryTab').classList.remove('active');
-            document.getElementById('deleteTheoryTab').classList.remove('active');
-
 
             hideError();
         }
@@ -812,87 +734,21 @@
         function showListExercise() {
             event.preventDefault(); // Prevent default behaviour
 
-            document.getElementById('moduleForm').style.display = 'none';
-            document.getElementById('exerciseForm').style.display = 'none';
-            document.getElementById('cardModules').style.display = 'none';
+            hideAll();
+
             document.getElementById('cardExercises').style.display = 'block';
-            document.getElementById('deleteModuleForm').style.display = 'none';
-            document.getElementById('deleteExerciseForm').style.display = 'none';
-            document.getElementById('teacherForm').style.display = 'none';
-            document.getElementById('teacherList').style.display = 'none';
-            document.getElementById('deleteTeacherForm').style.display = 'none';
-            document.getElementById('editModules').style.display = 'none';
-            document.getElementById('editExercises').style.display = 'none';
-            document.getElementById('editTeacher').style.display = 'none';
-            document.getElementById('theoryAddForm').style.display = 'none';
-            document.getElementById('theoryListForm').style.display = 'none';
-            document.getElementById('editTheory').style.display = 'none';
-            document.getElementById('deleteTheoryForm').style.display = 'none';
-            document.getElementById('globalOrderForm').style.display = 'none';
-
-            
-            document.getElementById('globalOrderTab').classList.remove('active');
-            document.getElementById('moduleTab').classList.remove('active');
-            document.getElementById('exerciseTab').classList.remove('active');
-            document.getElementById('listModule').classList.remove('active');
             document.getElementById('listExercise').classList.add('active');
-            document.getElementById('deleteModuleTab').classList.remove('active');
-            document.getElementById('deleteExerciseTab').classList.remove('active');
-            document.getElementById('teacherTab').classList.remove('active');
-            document.getElementById('listTeachers').classList.remove('active');
-            document.getElementById('deleteTeacherTab').classList.remove('active');
-            document.getElementById('editModulesTab').classList.remove('active');
-            document.getElementById('editExercisesTab').classList.remove('active');
-            document.getElementById('editTeacherTab').classList.remove('active');  
-            document.getElementById('theoryTab').classList.remove('active');
-            document.getElementById('listTheory').classList.remove('active');  
-            document.getElementById('editTheoryTab').classList.remove('active');
-            document.getElementById('deleteTheoryTab').classList.remove('active');
-
-
+  
             hideError();
         }
 
         function showDeleteModuleForm(event) {
             event.preventDefault(); // Prevent default behaviour
 
-            document.getElementById('moduleForm').style.display = 'none';
-            document.getElementById('exerciseForm').style.display = 'none';
-            document.getElementById('cardModules').style.display = 'none';
-            document.getElementById('cardExercises').style.display = 'none';
+            hideAll();
+
             document.getElementById('deleteModuleForm').style.display = 'block';
-            document.getElementById('deleteExerciseForm').style.display = 'none';
-            document.getElementById('teacherForm').style.display = 'none';
-            document.getElementById('teacherList').style.display = 'none';
-            document.getElementById('deleteTeacherForm').style.display = 'none';
-            document.getElementById('editModules').style.display = 'none';
-            document.getElementById('editExercises').style.display = 'none';
-            document.getElementById('editTeacher').style.display = 'none';
-            document.getElementById('theoryAddForm').style.display = 'none';
-            document.getElementById('theoryListForm').style.display = 'none';
-            document.getElementById('editTheory').style.display = 'none';
-            document.getElementById('deleteTheoryForm').style.display = 'none';
-            document.getElementById('globalOrderForm').style.display = 'none';
-
-            
-            document.getElementById('globalOrderTab').classList.remove('active');
-            document.getElementById('moduleTab').classList.remove('active');
-            document.getElementById('exerciseTab').classList.remove('active');
-            document.getElementById('listModule').classList.remove('active');
-            document.getElementById('listExercise').classList.remove('active');
             document.getElementById('deleteModuleTab').classList.add('active');
-            document.getElementById('deleteExerciseTab').classList.remove('active');
-            document.getElementById('teacherTab').classList.remove('active');
-            document.getElementById('listTeachers').classList.remove('active');
-            document.getElementById('deleteTeacherTab').classList.remove('active');
-            document.getElementById('editModulesTab').classList.remove('active');
-            document.getElementById('editExercisesTab').classList.remove('active');
-            document.getElementById('editTeacherTab').classList.remove('active');   
-            document.getElementById('theoryTab').classList.remove('active');
-            document.getElementById('listTheory').classList.remove('active'); 
-            document.getElementById('editTheoryTab').classList.remove('active');
-            document.getElementById('deleteTheoryTab').classList.remove('active');
-
 
             hideError();
         }
@@ -900,87 +756,21 @@
         function showDeleteExerciseForm(event) {
             event.preventDefault(); // Prevent default behaviour
 
-            document.getElementById('moduleForm').style.display = 'none';
-            document.getElementById('exerciseForm').style.display = 'none';
-            document.getElementById('cardModules').style.display = 'none';
-            document.getElementById('cardExercises').style.display = 'none';
-            document.getElementById('deleteModuleForm').style.display = 'none';
+            hideAll();
+
             document.getElementById('deleteExerciseForm').style.display = 'block';
-            document.getElementById('teacherForm').style.display = 'none';
-            document.getElementById('teacherList').style.display = 'none';
-            document.getElementById('deleteTeacherForm').style.display = 'none';
-            document.getElementById('editModules').style.display = 'none';
-            document.getElementById('editExercises').style.display = 'none';
-            document.getElementById('editTeacher').style.display = 'none';
-            document.getElementById('theoryAddForm').style.display = 'none';
-            document.getElementById('theoryListForm').style.display = 'none';
-            document.getElementById('editTheory').style.display = 'none';
-            document.getElementById('deleteTheoryForm').style.display = 'none';
-            document.getElementById('globalOrderForm').style.display = 'none';
-
-            
-            document.getElementById('globalOrderTab').classList.remove('active');
-            document.getElementById('moduleTab').classList.remove('active');
-            document.getElementById('exerciseTab').classList.remove('active');
-            document.getElementById('listModule').classList.remove('active');
-            document.getElementById('listExercise').classList.remove('active');
-            document.getElementById('deleteModuleTab').classList.remove('active');
             document.getElementById('deleteExerciseTab').classList.add('active');
-            document.getElementById('teacherTab').classList.remove('active');
-            document.getElementById('listTeachers').classList.remove('active');
-            document.getElementById('deleteTeacherTab').classList.remove('active');
-            document.getElementById('editModulesTab').classList.remove('active');
-            document.getElementById('editExercisesTab').classList.remove('active');
-            document.getElementById('editTeacherTab').classList.remove('active');    
-            document.getElementById('theoryTab').classList.remove('active');
-            document.getElementById('listTheory').classList.remove('active');
-            document.getElementById('editTheoryTab').classList.remove('active');
-            document.getElementById('deleteTheoryTab').classList.remove('active');
-
-
+    
             hideError();
         }
 
         function showTeacherForm(event) {
             event.preventDefault(); // Prevent default behaviour
 
-            document.getElementById('moduleForm').style.display = 'none';
-            document.getElementById('exerciseForm').style.display = 'none';
-            document.getElementById('cardModules').style.display = 'none';
-            document.getElementById('cardExercises').style.display = 'none';
-            document.getElementById('deleteModuleForm').style.display = 'none';
-            document.getElementById('deleteExerciseForm').style.display = 'none';
+            hideAll();
+
             document.getElementById('teacherForm').style.display = 'block';
-            document.getElementById('teacherList').style.display = 'none';
-            document.getElementById('deleteTeacherForm').style.display = 'none';
-            document.getElementById('editModules').style.display = 'none';
-            document.getElementById('editExercises').style.display = 'none';
-            document.getElementById('editTeacher').style.display = 'none';
-            document.getElementById('theoryAddForm').style.display = 'none';
-            document.getElementById('theoryListForm').style.display = 'none';
-            document.getElementById('editTheory').style.display = 'none';
-            document.getElementById('deleteTheoryForm').style.display = 'none';
-            document.getElementById('globalOrderForm').style.display = 'none';
-
-            
-            document.getElementById('globalOrderTab').classList.remove('active');
-            document.getElementById('moduleTab').classList.remove('active');
-            document.getElementById('exerciseTab').classList.remove('active');
-            document.getElementById('listModule').classList.remove('active');
-            document.getElementById('listExercise').classList.remove('active');
-            document.getElementById('deleteModuleTab').classList.remove('active');
-            document.getElementById('deleteExerciseTab').classList.remove('active');
             document.getElementById('teacherTab').classList.add('active');
-            document.getElementById('listTeachers').classList.remove('active');
-            document.getElementById('deleteTeacherTab').classList.remove('active');
-            document.getElementById('editModulesTab').classList.remove('active');
-            document.getElementById('editExercisesTab').classList.remove('active');
-            document.getElementById('editTeacherTab').classList.remove('active'); 
-            document.getElementById('theoryTab').classList.remove('active');
-            document.getElementById('listTheory').classList.remove('active');   
-            document.getElementById('editTheoryTab').classList.remove('active');
-            document.getElementById('deleteTheoryTab').classList.remove('active');
-
 
             hideError();
         }
@@ -989,43 +779,10 @@
         function showTeacherList(event) {
             event.preventDefault(); // Prevent default behaviour
 
-            document.getElementById('moduleForm').style.display = 'none';
-            document.getElementById('exerciseForm').style.display = 'none';
-            document.getElementById('cardModules').style.display = 'none';
-            document.getElementById('cardExercises').style.display = 'none';
-            document.getElementById('deleteModuleForm').style.display = 'none';
-            document.getElementById('deleteExerciseForm').style.display = 'none';
-            document.getElementById('teacherForm').style.display = 'none';
+            hideAll();
+
             document.getElementById('teacherList').style.display = 'block';
-            document.getElementById('deleteTeacherForm').style.display = 'none';
-            document.getElementById('editModules').style.display = 'none';
-            document.getElementById('editExercises').style.display = 'none';
-            document.getElementById('editTeacher').style.display = 'none';
-            document.getElementById('theoryAddForm').style.display = 'none';
-            document.getElementById('theoryListForm').style.display = 'none';
-            document.getElementById('editTheory').style.display = 'none';
-            document.getElementById('deleteTheoryForm').style.display = 'none';
-            document.getElementById('globalOrderForm').style.display = 'none';
-
-            
-            document.getElementById('globalOrderTab').classList.remove('active');
-            document.getElementById('moduleTab').classList.remove('active');
-            document.getElementById('exerciseTab').classList.remove('active');
-            document.getElementById('listModule').classList.remove('active');
-            document.getElementById('listExercise').classList.remove('active');
-            document.getElementById('deleteModuleTab').classList.remove('active');
-            document.getElementById('deleteExerciseTab').classList.remove('active');
-            document.getElementById('teacherTab').classList.remove('active');
             document.getElementById('listTeachers').classList.add('active');
-            document.getElementById('deleteTeacherTab').classList.remove('active');
-            document.getElementById('editModulesTab').classList.remove('active');
-            document.getElementById('editExercisesTab').classList.remove('active');
-            document.getElementById('editTeacherTab').classList.remove('active');   
-            document.getElementById('theoryTab').classList.remove('active');
-            document.getElementById('listTheory').classList.remove('active'); 
-            document.getElementById('editTheoryTab').classList.remove('active');
-            document.getElementById('deleteTheoryTab').classList.remove('active');
-
 
             hideError();
         }
@@ -1034,43 +791,10 @@
         function showDeleteTeacherForm(event) {
             event.preventDefault(); // Prevent default behaviour
 
-            document.getElementById('moduleForm').style.display = 'none';
-            document.getElementById('exerciseForm').style.display = 'none';
-            document.getElementById('cardModules').style.display = 'none';
-            document.getElementById('cardExercises').style.display = 'none';
-            document.getElementById('deleteModuleForm').style.display = 'none';
-            document.getElementById('deleteExerciseForm').style.display = 'none';
-            document.getElementById('teacherForm').style.display = 'none';
-            document.getElementById('teacherList').style.display = 'none';
+            hideAll();
+
             document.getElementById('deleteTeacherForm').style.display = 'block';
-            document.getElementById('editModules').style.display = 'none';
-            document.getElementById('editExercises').style.display = 'none';
-            document.getElementById('editTeacher').style.display = 'none';
-            document.getElementById('theoryAddForm').style.display = 'none';
-            document.getElementById('theoryListForm').style.display = 'none';
-            document.getElementById('editTheory').style.display = 'none';
-            document.getElementById('deleteTheoryForm').style.display = 'none';
-            document.getElementById('globalOrderForm').style.display = 'none';
-
-            
-            document.getElementById('globalOrderTab').classList.remove('active');
-            document.getElementById('moduleTab').classList.remove('active');
-            document.getElementById('exerciseTab').classList.remove('active');
-            document.getElementById('listModule').classList.remove('active');
-            document.getElementById('listExercise').classList.remove('active');
-            document.getElementById('deleteModuleTab').classList.remove('active');
-            document.getElementById('deleteExerciseTab').classList.remove('active');
-            document.getElementById('teacherTab').classList.remove('active');
-            document.getElementById('listTeachers').classList.remove('active');
             document.getElementById('deleteTeacherTab').classList.add('active');
-            document.getElementById('editModulesTab').classList.remove('active');
-            document.getElementById('editExercisesTab').classList.remove('active');
-            document.getElementById('editTeacherTab').classList.remove('active');
-            document.getElementById('theoryTab').classList.remove('active');
-            document.getElementById('listTheory').classList.remove('active');    
-            document.getElementById('editTheoryTab').classList.remove('active');
-            document.getElementById('deleteTheoryTab').classList.remove('active');
-
 
             hideError();
         }
@@ -1078,87 +802,21 @@
         function showEditModules(event) {
             event.preventDefault(); // Prevent default behaviour
 
-            document.getElementById('moduleForm').style.display = 'none';
-            document.getElementById('exerciseForm').style.display = 'none';
-            document.getElementById('cardModules').style.display = 'none';
-            document.getElementById('cardExercises').style.display = 'none';
-            document.getElementById('deleteModuleForm').style.display = 'none';
-            document.getElementById('deleteExerciseForm').style.display = 'none';
-            document.getElementById('teacherForm').style.display = 'none';
-            document.getElementById('teacherList').style.display = 'none';
-            document.getElementById('deleteTeacherForm').style.display = 'none';
+            hideAll();
+
             document.getElementById('editModules').style.display = 'block';
-            document.getElementById('editExercises').style.display = 'none';
-            document.getElementById('editTeacher').style.display = 'none';
-            document.getElementById('theoryAddForm').style.display = 'none';
-            document.getElementById('theoryListForm').style.display = 'none';
-            document.getElementById('editTheory').style.display = 'none';
-            document.getElementById('deleteTheoryForm').style.display = 'none';
-            document.getElementById('globalOrderForm').style.display = 'none';
-
-            
-            document.getElementById('globalOrderTab').classList.remove('active');
-            document.getElementById('moduleTab').classList.remove('active');
-            document.getElementById('exerciseTab').classList.remove('active');
-            document.getElementById('listModule').classList.remove('active');
-            document.getElementById('listExercise').classList.remove('active');
-            document.getElementById('deleteModuleTab').classList.remove('active');
-            document.getElementById('deleteExerciseTab').classList.remove('active');
-            document.getElementById('teacherTab').classList.remove('active');
-            document.getElementById('listTeachers').classList.remove('active');
-            document.getElementById('deleteTeacherTab').classList.remove('active');
             document.getElementById('editModulesTab').classList.add('active');
-            document.getElementById('editExercisesTab').classList.remove('active');
-            document.getElementById('editTeacherTab').classList.remove('active');  
-            document.getElementById('theoryTab').classList.remove('active');
-            document.getElementById('listTheory').classList.remove('active');
-            document.getElementById('editTheoryTab').classList.remove('active');
-            document.getElementById('deleteTheoryTab').classList.remove('active');
-
-
+  
             hideError();
         }
 
         function showEditExercises(event) {
             event.preventDefault(); // Prevent default behaviour
 
-            document.getElementById('moduleForm').style.display = 'none';
-            document.getElementById('exerciseForm').style.display = 'none';
-            document.getElementById('cardModules').style.display = 'none';
-            document.getElementById('cardExercises').style.display = 'none';
-            document.getElementById('deleteModuleForm').style.display = 'none';
-            document.getElementById('deleteExerciseForm').style.display = 'none';
-            document.getElementById('teacherForm').style.display = 'none';
-            document.getElementById('teacherList').style.display = 'none';
-            document.getElementById('deleteTeacherForm').style.display = 'none';
-            document.getElementById('editModules').style.display = 'none';
+            hideAll();
+
             document.getElementById('editExercises').style.display = 'block';
-            document.getElementById('editTeacher').style.display = 'none';
-            document.getElementById('theoryAddForm').style.display = 'none';
-            document.getElementById('theoryListForm').style.display = 'none';
-            document.getElementById('editTheory').style.display = 'none';
-            document.getElementById('deleteTheoryForm').style.display = 'none';
-            document.getElementById('globalOrderForm').style.display = 'none';
-
-            
-            document.getElementById('globalOrderTab').classList.remove('active');
-            document.getElementById('moduleTab').classList.remove('active');
-            document.getElementById('exerciseTab').classList.remove('active');
-            document.getElementById('listModule').classList.remove('active');
-            document.getElementById('listExercise').classList.remove('active');
-            document.getElementById('deleteModuleTab').classList.remove('active');
-            document.getElementById('deleteExerciseTab').classList.remove('active');
-            document.getElementById('teacherTab').classList.remove('active');
-            document.getElementById('listTeachers').classList.remove('active');
-            document.getElementById('deleteTeacherTab').classList.remove('active');
-            document.getElementById('editModulesTab').classList.remove('active');
             document.getElementById('editExercisesTab').classList.add('active');
-            document.getElementById('editTeacherTab').classList.remove('active');    
-            document.getElementById('theoryTab').classList.remove('active');
-            document.getElementById('listTheory').classList.remove('active');
-            document.getElementById('editTheoryTab').classList.remove('active');
-            document.getElementById('deleteTheoryTab').classList.remove('active');
-
 
             hideError();
         }
@@ -1166,43 +824,10 @@
         function showEditTeachers(event) {
             event.preventDefault(); // Prevent default behaviour
 
-            document.getElementById('moduleForm').style.display = 'none';
-            document.getElementById('exerciseForm').style.display = 'none';
-            document.getElementById('cardModules').style.display = 'none';
-            document.getElementById('cardExercises').style.display = 'none';
-            document.getElementById('deleteModuleForm').style.display = 'none';
-            document.getElementById('deleteExerciseForm').style.display = 'none';
-            document.getElementById('teacherForm').style.display = 'none';
-            document.getElementById('teacherList').style.display = 'none';
-            document.getElementById('deleteTeacherForm').style.display = 'none';
-            document.getElementById('editModules').style.display = 'none';
-            document.getElementById('editExercises').style.display = 'none';
+            hideAll();
+
             document.getElementById('editTeacher').style.display = 'block';
-            document.getElementById('theoryAddForm').style.display = 'none';
-            document.getElementById('theoryListForm').style.display = 'none';
-            document.getElementById('editTheory').style.display = 'none';
-            document.getElementById('deleteTheoryForm').style.display = 'none';
-            document.getElementById('globalOrderForm').style.display = 'none';
-
-            
-            document.getElementById('globalOrderTab').classList.remove('active');
-            document.getElementById('moduleTab').classList.remove('active');
-            document.getElementById('exerciseTab').classList.remove('active');
-            document.getElementById('listModule').classList.remove('active');
-            document.getElementById('listExercise').classList.remove('active');
-            document.getElementById('deleteModuleTab').classList.remove('active');
-            document.getElementById('deleteExerciseTab').classList.remove('active');
-            document.getElementById('teacherTab').classList.remove('active');
-            document.getElementById('listTeachers').classList.remove('active');
-            document.getElementById('deleteTeacherTab').classList.remove('active');
-            document.getElementById('editModulesTab').classList.remove('active');
-            document.getElementById('editExercisesTab').classList.remove('active');
             document.getElementById('editTeacherTab').classList.add('active');  
-            document.getElementById('theoryTab').classList.remove('active');
-            document.getElementById('listTheory').classList.remove('active');
-            document.getElementById('editTheoryTab').classList.remove('active');
-            document.getElementById('deleteTheoryTab').classList.remove('active');
-
 
             hideError();
         }
@@ -1210,43 +835,10 @@
         function showAddTheory(event) {
             event.preventDefault(); // Prevent default behaviour
 
-            document.getElementById('moduleForm').style.display = 'none';
-            document.getElementById('exerciseForm').style.display = 'none';
-            document.getElementById('cardModules').style.display = 'none';
-            document.getElementById('cardExercises').style.display = 'none';
-            document.getElementById('deleteModuleForm').style.display = 'none';
-            document.getElementById('deleteExerciseForm').style.display = 'none';
-            document.getElementById('teacherForm').style.display = 'none';
-            document.getElementById('teacherList').style.display = 'none';
-            document.getElementById('deleteTeacherForm').style.display = 'none';
-            document.getElementById('editModules').style.display = 'none';
-            document.getElementById('editExercises').style.display = 'none';
-            document.getElementById('editTeacher').style.display = 'none';
-            document.getElementById('theoryAddForm').style.display = 'block';
-            document.getElementById('theoryListForm').style.display = 'none';
-            document.getElementById('editTheory').style.display = 'none';
-            document.getElementById('deleteTheoryForm').style.display = 'none';
-            document.getElementById('globalOrderForm').style.display = 'none';
+            hideAll();
 
-            
-            document.getElementById('globalOrderTab').classList.remove('active');
-            document.getElementById('moduleTab').classList.remove('active');
-            document.getElementById('exerciseTab').classList.remove('active');
-            document.getElementById('listModule').classList.remove('active');
-            document.getElementById('listExercise').classList.remove('active');
-            document.getElementById('deleteModuleTab').classList.remove('active');
-            document.getElementById('deleteExerciseTab').classList.remove('active');
-            document.getElementById('teacherTab').classList.remove('active');
-            document.getElementById('listTeachers').classList.remove('active');
-            document.getElementById('deleteTeacherTab').classList.remove('active');
-            document.getElementById('editModulesTab').classList.remove('active');
-            document.getElementById('editExercisesTab').classList.remove('active');
-            document.getElementById('editTeacherTab').classList.remove('active');    
+            document.getElementById('theoryAddForm').style.display = 'block'; 
             document.getElementById('theoryTab').classList.add('active');
-            document.getElementById('listTheory').classList.remove('active');
-            document.getElementById('editTheoryTab').classList.remove('active');
-            document.getElementById('deleteTheoryTab').classList.remove('active');
-
 
             hideError();
         }
@@ -1254,43 +846,10 @@
         function showListTheory(event) {
             event.preventDefault(); // Prevent default behaviour
 
-            document.getElementById('moduleForm').style.display = 'none';
-            document.getElementById('exerciseForm').style.display = 'none';
-            document.getElementById('cardModules').style.display = 'none';
-            document.getElementById('cardExercises').style.display = 'none';
-            document.getElementById('deleteModuleForm').style.display = 'none';
-            document.getElementById('deleteExerciseForm').style.display = 'none';
-            document.getElementById('teacherForm').style.display = 'none';
-            document.getElementById('teacherList').style.display = 'none';
-            document.getElementById('deleteTeacherForm').style.display = 'none';
-            document.getElementById('editModules').style.display = 'none';
-            document.getElementById('editExercises').style.display = 'none';
-            document.getElementById('editTeacher').style.display = 'none';
-            document.getElementById('theoryAddForm').style.display = 'none';
+            hideAll();
+
             document.getElementById('theoryListForm').style.display = 'block';
-            document.getElementById('editTheory').style.display = 'none';
-            document.getElementById('deleteTheoryForm').style.display = 'none';
-            document.getElementById('globalOrderForm').style.display = 'none';
-
-            
-            document.getElementById('globalOrderTab').classList.remove('active');
-            document.getElementById('moduleTab').classList.remove('active');
-            document.getElementById('exerciseTab').classList.remove('active');
-            document.getElementById('listModule').classList.remove('active');
-            document.getElementById('listExercise').classList.remove('active');
-            document.getElementById('deleteModuleTab').classList.remove('active');
-            document.getElementById('deleteExerciseTab').classList.remove('active');
-            document.getElementById('teacherTab').classList.remove('active');
-            document.getElementById('listTeachers').classList.remove('active');
-            document.getElementById('deleteTeacherTab').classList.remove('active');
-            document.getElementById('editModulesTab').classList.remove('active');
-            document.getElementById('editExercisesTab').classList.remove('active');
-            document.getElementById('editTeacherTab').classList.remove('active');    
-            document.getElementById('theoryTab').classList.remove('active');
             document.getElementById('listTheory').classList.add('active');
-            document.getElementById('editTheoryTab').classList.remove('active');
-            document.getElementById('deleteTheoryTab').classList.remove('active');
-
 
             hideError();
         }
@@ -1299,43 +858,10 @@
         function showEditTheory(event) {
             event.preventDefault(); // Prevent default behaviour
 
-            document.getElementById('moduleForm').style.display = 'none';
-            document.getElementById('exerciseForm').style.display = 'none';
-            document.getElementById('cardModules').style.display = 'none';
-            document.getElementById('cardExercises').style.display = 'none';
-            document.getElementById('deleteModuleForm').style.display = 'none';
-            document.getElementById('deleteExerciseForm').style.display = 'none';
-            document.getElementById('teacherForm').style.display = 'none';
-            document.getElementById('teacherList').style.display = 'none';
-            document.getElementById('deleteTeacherForm').style.display = 'none';
-            document.getElementById('editModules').style.display = 'none';
-            document.getElementById('editExercises').style.display = 'none';
-            document.getElementById('editTeacher').style.display = 'none';
-            document.getElementById('theoryAddForm').style.display = 'none';
-            document.getElementById('theoryListForm').style.display = 'none';
+            hideAll();
+
             document.getElementById('editTheory').style.display = 'block';
-            document.getElementById('deleteTheoryForm').style.display = 'none';
-            document.getElementById('globalOrderForm').style.display = 'none';
-
-            
-            document.getElementById('globalOrderTab').classList.remove('active');
-            document.getElementById('moduleTab').classList.remove('active');
-            document.getElementById('exerciseTab').classList.remove('active');
-            document.getElementById('listModule').classList.remove('active');
-            document.getElementById('listExercise').classList.remove('active');
-            document.getElementById('deleteModuleTab').classList.remove('active');
-            document.getElementById('deleteExerciseTab').classList.remove('active');
-            document.getElementById('teacherTab').classList.remove('active');
-            document.getElementById('listTeachers').classList.remove('active');
-            document.getElementById('deleteTeacherTab').classList.remove('active');
-            document.getElementById('editModulesTab').classList.remove('active');
-            document.getElementById('editExercisesTab').classList.remove('active');
-            document.getElementById('editTeacherTab').classList.remove('active');    
-            document.getElementById('theoryTab').classList.remove('active');
-            document.getElementById('listTheory').classList.remove('active');
             document.getElementById('editTheoryTab').classList.add('active');
-            document.getElementById('deleteTheoryTab').classList.remove('active');
-
 
             hideError();
         }
@@ -1344,41 +870,9 @@
         function showDeleteTheory(event) {
             event.preventDefault(); // Prevent default behaviour
 
-            document.getElementById('moduleForm').style.display = 'none';
-            document.getElementById('exerciseForm').style.display = 'none';
-            document.getElementById('cardModules').style.display = 'none';
-            document.getElementById('cardExercises').style.display = 'none';
-            document.getElementById('deleteModuleForm').style.display = 'none';
-            document.getElementById('deleteExerciseForm').style.display = 'none';
-            document.getElementById('teacherForm').style.display = 'none';
-            document.getElementById('teacherList').style.display = 'none';
-            document.getElementById('deleteTeacherForm').style.display = 'none';
-            document.getElementById('editModules').style.display = 'none';
-            document.getElementById('editExercises').style.display = 'none';
-            document.getElementById('editTeacher').style.display = 'none';
-            document.getElementById('theoryAddForm').style.display = 'none';
-            document.getElementById('theoryListForm').style.display = 'none';
-            document.getElementById('editTheory').style.display = 'none';
-            document.getElementById('deleteTheoryForm').style.display = 'block';
-            document.getElementById('globalOrderForm').style.display = 'none';
+            hideAll();
 
-            
-            document.getElementById('globalOrderTab').classList.remove('active');
-            document.getElementById('moduleTab').classList.remove('active');
-            document.getElementById('exerciseTab').classList.remove('active');
-            document.getElementById('listModule').classList.remove('active');
-            document.getElementById('listExercise').classList.remove('active');
-            document.getElementById('deleteModuleTab').classList.remove('active');
-            document.getElementById('deleteExerciseTab').classList.remove('active');
-            document.getElementById('teacherTab').classList.remove('active');
-            document.getElementById('listTeachers').classList.remove('active');
-            document.getElementById('deleteTeacherTab').classList.remove('active');
-            document.getElementById('editModulesTab').classList.remove('active');
-            document.getElementById('editExercisesTab').classList.remove('active');
-            document.getElementById('editTeacherTab').classList.remove('active');    
-            document.getElementById('theoryTab').classList.remove('active');
-            document.getElementById('listTheory').classList.remove('active');
-            document.getElementById('editTheoryTab').classList.remove('active');
+            document.getElementById('deleteTheoryForm').style.display = 'block';
             document.getElementById('deleteTheoryTab').classList.add('active');
 
 
@@ -1389,43 +883,10 @@
         function showGlobalOrder(event) {
             event.preventDefault(); // Prevent default behaviour
 
-            document.getElementById('moduleForm').style.display = 'none';
-            document.getElementById('exerciseForm').style.display = 'none';
-            document.getElementById('cardModules').style.display = 'none';
-            document.getElementById('cardExercises').style.display = 'none';
-            document.getElementById('deleteModuleForm').style.display = 'none';
-            document.getElementById('deleteExerciseForm').style.display = 'none';
-            document.getElementById('teacherForm').style.display = 'none';
-            document.getElementById('teacherList').style.display = 'none';
-            document.getElementById('deleteTeacherForm').style.display = 'none';
-            document.getElementById('editModules').style.display = 'none';
-            document.getElementById('editExercises').style.display = 'none';
-            document.getElementById('editTeacher').style.display = 'none';
-            document.getElementById('theoryAddForm').style.display = 'none';
-            document.getElementById('theoryListForm').style.display = 'none';
-            document.getElementById('editTheory').style.display = 'none';
-            document.getElementById('deleteTheoryForm').style.display = 'none';
+            hideAll();
+
             document.getElementById('globalOrderForm').style.display = 'block';
-
-            
             document.getElementById('globalOrderTab').classList.add('active');
-            document.getElementById('moduleTab').classList.remove('active');
-            document.getElementById('exerciseTab').classList.remove('active');
-            document.getElementById('listModule').classList.remove('active');
-            document.getElementById('listExercise').classList.remove('active');
-            document.getElementById('deleteModuleTab').classList.remove('active');
-            document.getElementById('deleteExerciseTab').classList.remove('active');
-            document.getElementById('teacherTab').classList.remove('active');
-            document.getElementById('listTeachers').classList.remove('active');
-            document.getElementById('deleteTeacherTab').classList.remove('active');
-            document.getElementById('editModulesTab').classList.remove('active');
-            document.getElementById('editExercisesTab').classList.remove('active');
-            document.getElementById('editTeacherTab').classList.remove('active');    
-            document.getElementById('theoryTab').classList.remove('active');
-            document.getElementById('listTheory').classList.remove('active');
-            document.getElementById('editTheoryTab').classList.remove('active');
-            document.getElementById('deleteTheoryTab').classList.remove('active');
-
 
             hideError();
         }
