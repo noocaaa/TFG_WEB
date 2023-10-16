@@ -572,11 +572,11 @@ def update_global_order():
         content_exists = Theory.query.get(content_id)
     else:
         error_msg = 'Tipo de contenido no válido.'
-        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory_all, error=error_msg)
+        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory_all, error=error_msg, global_orders=global_orders_updated)
 
     if not content_exists:
         error_msg = 'El ID para el tipo seleccionado no existe.'
-        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory_all, error=error_msg)
+        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory_all, error=error_msg, global_orders=global_orders_updated)
 
     # Consulta el registro que actualmente tiene el global_order que deseas
     existing_order = GlobalOrder.query.filter_by(global_order=new_order).first()
