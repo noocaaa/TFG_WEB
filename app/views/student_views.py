@@ -144,6 +144,10 @@ def principal():
 
         completed_exercises = StudentProgress.query.filter_by(student_id=current_user.id, status="completed").join(Exercises).filter_by(module_id=module.id).count()
 
+        completed_theory = StudentActivity.query.filter_by(student_id=current_user.id, content_type="Theory").count()
+
+        total_theory = Theory.query.filter_by(module_id=module.id).count()
+
         extra_exercises_count = (
             db.session.query(ExtraExercises)
             .join(Exercises, ExtraExercises.exercise_id == Exercises.id)
@@ -167,7 +171,7 @@ def principal():
         )
 
         if total_exercises > 0:
-            progress = (completed_exercises + skipped_count) / (total_exercises + extra_exercises_count) * 100
+            progress = (completed_exercises + skipped_count + completed_theory) / (total_exercises + extra_exercises_count + total_theory) * 100
         else:
             progress = 0
 
@@ -181,7 +185,7 @@ def principal():
         })
 
     if last_module_completely_done == None:
-        last_module_completely_done = 12 # el primer modulo q tenemos en la BBDD
+        last_module_completely_done = 14 # el primer modulo q tenemos en la BBDD
 
     for module_prog in modules_progress:
         module_id = module_prog['module'].id
