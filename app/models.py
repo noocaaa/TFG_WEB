@@ -30,30 +30,6 @@ class Users(db.Model, UserMixin):
 
     extra_exercises = db.relationship('ExtraExercises', back_populates='student')
 
-
-class Exercises(db.Model):    
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    solution = db.Column(db.Text, nullable=False)
-    module_id = db.Column(db.Integer, db.ForeignKey('modules.id'), nullable=False)
-    test_verification = db.Column(db.JSON)
-    language = db.Column(db.Enum('LOGO', 'PYTHON', 'C++', 'JAVA', 'WEB'))
-    requirements = db.Column(db.Text)
-    requires_manual_review = db.Column(db.Boolean, default=False)
-
-    assigned_exercises = db.relationship('ExtraExercises', back_populates='exercise')
-
-
-class Module(db.Model):
-    __tablename__ = 'modules'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text)
-    exercises = db.relationship('Exercises', backref='module', lazy=True) # Clase Ejercicios ya definida
-
-
 class StudentProgress(db.Model):
     __tablename__ = 'student_progress'
     
@@ -135,18 +111,6 @@ class GlobalOrder(db.Model):
     # Agregar restricción única para content_id y content_type
     __table_args__ = (db.UniqueConstraint('content_id', 'content_type', name='unique_content'),)
     
-
-class Theory(db.Model):
-    __tablename__ = 'theory'
-
-    id = db.Column(db.Integer, primary_key=True)
-    module_id = db.Column(db.Integer, db.ForeignKey('modules.id'), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    image_path = db.Column(db.String, nullable=True)
-
-    module = db.relationship('Module', backref='theories', lazy=True)
-
-
 class Notification(db.Model):
     __tablename__ = 'notifications'
     
@@ -171,3 +135,76 @@ class ExtraExercises(db.Model):
     
     student = db.relationship('Users', back_populates='extra_exercises')
     exercise = db.relationship('Exercises', back_populates='assigned_exercises')
+
+
+class Requirement(db.Model):
+    __tablename__ = 'requisitos'
+
+    id_requisito = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False, unique=True)
+
+class TheoryRequirement(db.Model):
+    __tablename__ = 'theoryrequirements'
+
+    id_theory = db.Column(db.Integer, db.ForeignKey('theory.id'), primary_key=True)
+    id_requirement = db.Column(db.Integer, db.ForeignKey('requisitos.id_requisito'), primary_key=True)
+
+    requirement = db.relationship('Requirement', backref=db.backref('theoryrequirements', cascade='all, delete-orphan'))
+    theory = db.relationship('Theory', backref=db.backref('theoryrequirements', cascade='all, delete-orphan'))
+
+class Theory(db.Model):
+    __tablename__ = 'theory'
+
+    id = db.Column(db.Integer, primary_key=True)
+    module_id = db.Column(db.Integer, db.ForeignKey('modules.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    image_path = db.Column(db.String, nullable=True)
+
+    module = db.relationship('Module', backref='theories', lazy=True)
+
+    requirements = db.relationship(
+        'Requirement',
+        secondary='theoryrequirements',
+        backref='theories',
+        overlaps="requirement,theoryrequirements"
+    )
+
+class ExerciseRequirement(db.Model):
+    __tablename__ = 'exerciserequirements'
+
+    exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'), primary_key=True)
+    requirement_id = db.Column(db.Integer, db.ForeignKey('requisitos.id_requisito'), primary_key=True)
+
+    requirement = db.relationship('Requirement', backref=db.backref('exerciserequirements', cascade='all, delete-orphan'))
+    exercise = db.relationship('Exercises', backref=db.backref('exerciserequirements', cascade='all, delete-orphan'))
+
+
+class Exercises(db.Model):    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    solution = db.Column(db.Text, nullable=False)
+    module_id = db.Column(db.Integer, db.ForeignKey('modules.id'), nullable=False)
+    test_verification = db.Column(db.JSON)
+    language = db.Column(db.Enum('LOGO', 'PYTHON', 'C++', 'JAVA', 'WEB'))
+    requires_manual_review = db.Column(db.Boolean, default=False)
+
+    requirements = db.relationship(
+        'Requirement',
+        secondary='exerciserequirements',
+        primaryjoin='Exercises.id==ExerciseRequirement.exercise_id',
+        secondaryjoin='ExerciseRequirement.requirement_id==Requirement.id_requisito',
+        backref='exercises'
+    )
+
+    assigned_exercises = db.relationship('ExtraExercises', back_populates='exercise')
+
+
+class Module(db.Model):
+    __tablename__ = 'modules'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text)
+
+    exercises = db.relationship('Exercises', backref='module', lazy=True) # Clase Ejercicios ya definida

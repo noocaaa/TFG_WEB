@@ -2,7 +2,7 @@ from flask import Blueprint
 
 from collections import defaultdict
 
-from app.models import StudentProgress, Exercises, GlobalOrder, StudentActivity
+from app.models import StudentProgress, Exercises, GlobalOrder, StudentActivity, ExerciseRequirement, Requirement
 
 from sqlalchemy import and_, func, asc
 
@@ -15,9 +15,15 @@ module_blueprint = Blueprint('module', __name__)
 
 # Número de ejercicios extra basándose en el rendimiento del estudiante.
 def determine_number_of_extra_exercises(student_id, requirement, recent_num=5, max_extra_exercises=6, failure_rate_threshold=0.2):
+    requirement_obj = Requirement.query.filter_by(name=requirement).first()
+    
+    if not requirement_obj:
+        return 0
+
     # Identificar el primer ejercicio que NO está en la StudentActivity para este estudiante.
     next_exercise = (
         Exercises.query
+        .join(ExerciseRequirement, Exercises.id == ExerciseRequirement.exercise_id)
         .join(GlobalOrder, Exercises.id == GlobalOrder.content_id)
         .outerjoin(
             StudentActivity, 
@@ -28,6 +34,7 @@ def determine_number_of_extra_exercises(student_id, requirement, recent_num=5, m
         )
         .filter(
             GlobalOrder.content_type == 'Exercises',
+            ExerciseRequirement.requirement_id == requirement_obj.id,
             StudentActivity.id == None  # No existe un registro correspondiente en StudentActivity.
         )
         .order_by(asc(GlobalOrder.global_order))  # Ordenar para obtener el próximo ejercicio.
@@ -45,9 +52,10 @@ def determine_number_of_extra_exercises(student_id, requirement, recent_num=5, m
         recent_exercises = (
             StudentProgress.query
             .join(Exercises, StudentProgress.exercise_id == Exercises.id)
+            .join(ExerciseRequirement, Exercises.id == ExerciseRequirement.exercise_id)
             .filter(and_(
                 StudentProgress.student_id == student_id,
-                Exercises.requirements.ilike(f"%{requirement}%"),
+                ExerciseRequirement.requirement_id == requirement_obj.id,
                 Exercises.module_id == current_module_id  # Añadir este filtro
             ))
             .order_by(StudentProgress.completion_date.desc())
@@ -104,32 +112,40 @@ def determine_number_of_extra_exercises(student_id, requirement, recent_num=5, m
 # Obtención de ejercicios adicionales en base a los ejercicios fallados por el estudiante, y que tengan requerimientos similares no identicos.
 def get_extra_exercises(student_id):
     difficulty_areas_counts = {}
-    
+
     # Paso 1: Identificar Áreas de Dificultad y contar ocurrencias
     failed_exercises = StudentProgress.query.filter_by(student_id=student_id, status='failed').all()
 
     for progress in failed_exercises:
-        exercise = Exercises.query.get(progress.exercise_id)
+        exercise_requirements = ExerciseRequirement.query.filter_by(exercise_id=progress.exercise_id).all()
 
-        if exercise and exercise.requirements:
-            requirements = exercise.requirements.split(' ')
-            for requirement in requirements:
-                difficulty_areas_counts[requirement] = difficulty_areas_counts.get(requirement, 0) + 1
+        for ex_req in exercise_requirements:
+            requirement = Requirement.query.get(ex_req.requirement_id)
+            if requirement:
+                difficulty_areas_counts[requirement.name] = difficulty_areas_counts.get(requirement.name, 0) + 1
 
     # Seleccionar el requirement que ha sido fallado más veces
     primary_requirement = max(difficulty_areas_counts, key=difficulty_areas_counts.get, default=None)
-    
+
     if not primary_requirement:
         return []
 
     # Paso 2: Buscar Ejercicios Adicionales
-    potential_extra_exercises = Exercises.query.filter(
-        Exercises.requirements.ilike(f"%{primary_requirement}%")
-    ).all()
+    primary_requirement_obj = Requirement.query.filter_by(name=primary_requirement).first()
+
+    if not primary_requirement_obj:
+        return []
+
+    potential_extra_exercises = (
+        Exercises.query
+        .join(ExerciseRequirement, Exercises.id == ExerciseRequirement.exercise_id)
+        .filter(ExerciseRequirement.requirement_id == primary_requirement_obj.id)
+        .all()
+    )
 
     attempted_exercise_ids = {progress.exercise_id for progress in StudentProgress.query.filter_by(student_id=student_id).all()}
     extra_exercises = [exercise for exercise in potential_extra_exercises if exercise.id not in attempted_exercise_ids]
-    
+
     num_extra_exercises = determine_number_of_extra_exercises(student_id, primary_requirement)
 
     # Paso 3: Recomendar Ejercicios
@@ -149,6 +165,8 @@ def get_extra_exercises(student_id):
 
 # --------- AVANZAR EJERCICIOS ---------
 
+
+
 # Funcion que evalua el tiempo, para que no sea extremadamente pequeño ni grande,  y premie un tiempo medio o un poco inferior.
 def time_score(actual_time, min_time, max_time):
     # Asegurando que min_time < max_time para evitar división por cero.
@@ -162,7 +180,6 @@ def time_score(actual_time, min_time, max_time):
     score = min(max(normalized_time, 0), 1)
     
     return score
-
 
 
 # Devuelve el numero de ejercicios que se podrían saltar del estudiante, , basado en su historial reciente.
@@ -198,10 +215,12 @@ def determine_number_of_skipped_exercises(student_id, primary_requirement, recen
         recent_exercises = (
             StudentProgress.query
             .join(Exercises, StudentProgress.exercise_id == Exercises.id)
+            .join(ExerciseRequirement, ExerciseRequirement.exercise_id == Exercises.id)  # Únete a la tabla de relación
+            .join(Requirement, ExerciseRequirement.requirement_id == Requirement.id)  # Luego, únete a la tabla de requisitos
             .filter(and_(
                 StudentProgress.student_id == student_id,
-                Exercises.requirements.ilike(f"%{primary_requirement}%"),
-                Exercises.module_id == current_module_id  # Añadir este filtro
+                Requirement.name == primary_requirement,  # Filtra por el nombre del requisito
+                Exercises.module_id == current_module_id
             ))
             .order_by(StudentProgress.completion_date.desc())
             .limit(recent_num)
@@ -279,11 +298,13 @@ def get_advanced_exercises(student_id, min_successes=5, min_success_rate=0.8):
     for progress in passed_exercises:
         exercise = Exercises.query.get(progress.exercise_id)
 
-        if exercise and exercise.requirements:
-            for area in exercise.requirements.split(', '):
+        if exercise:
+            for requirement in exercise.requirements:
+                area = requirement.name 
                 area_attempt_counts[area] += 1
                 if progress.status == 'completed':
                     area_success_counts[area] += 1
+
 
     most_successful_area = None
     max_successes = 0
@@ -304,15 +325,17 @@ def get_advanced_exercises(student_id, min_successes=5, min_success_rate=0.8):
     if primary_requirement:
         potential_advanced_exercises = (Exercises.query
             .join(GlobalOrder, Exercises.id == GlobalOrder.content_id)
+            .join(ExerciseRequirement, Exercises.id == ExerciseRequirement.exercise_id)  # Únete a la tabla de relación
+            .join(Requirement, ExerciseRequirement.requirement_id == Requirement.id)  # Luego, únete a la tabla de requisitos
             .filter(
                 GlobalOrder.content_type == 'Exercises',
-                func.trim(Exercises.requirements) == primary_requirement.strip()
+                Requirement.name == primary_requirement  # Filtra por el nombre del requisito
             )
             .order_by(GlobalOrder.global_order)
             .all())
     else:
         potential_advanced_exercises = []
-        
+
     # Filtrar los ejercicios avanzados para incluir solo aquellos que el estudiante no ha intentado
     attempted_exercise_ids = {activity.content_id for activity in StudentActivity.query.filter_by(student_id=student_id, done=True).all()}
     advanced_exercises = [exercise for exercise in potential_advanced_exercises if exercise.id not in attempted_exercise_ids]

@@ -236,7 +236,7 @@
                                     <td>{{ exercise.module_id }}</td>
                                     <td>{{ exercise.name }}</td>
                                     <td>{{ exercise.language }}</td>
-                                    <td>{{ exercise.requirements }}</td>
+                                    <td>{{ ', '.join(exercise.requirements) }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -462,7 +462,7 @@
                                     <input type="text" name="test_verification_{{ exercise.id }}" value="{{ exercise.test_verification }}">
                                     
                                     <label>Requerimientos:</label>
-                                    <input type="text" name="requirements_{{ exercise.id }}" value="{{ exercise.requirements }}">
+                                    <input type="text" name="requirements_{{ exercise.id }}" value="{{ ', '.join(exercise.requirements) }}">
                                     
                                     <label>Lenguaje:</label>
                                     <select name="language_{{ exercise.id }}">

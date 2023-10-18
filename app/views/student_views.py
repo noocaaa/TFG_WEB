@@ -810,8 +810,8 @@ def mark_notification_read(notification_id):
 
 def check_requirements(source_code, requirements):
     for req in requirements:
-        if req not in source_code:
-            return False, f"El código fuente no cumple con el requisito: {req}"
+        if req.name not in source_code: 
+            return False, f"El código fuente no cumple con el requisito: {req.name}"
     return True, "Todos los requisitos satisfechos"
 
 
@@ -853,10 +853,7 @@ def correct_exercise():
     if not exercise:
         return jsonify({"status": "error", "message": "El ejercicio no existe."})
 
-    if exercise.requirements and exercise.requirements != "None":
-        requirements = exercise.requirements.split(' ')
-    else:
-        requirements = []
+    requirements = exercise.requirements if exercise.requirements else []
 
     is_requirements_satisfied, requirements_message = check_requirements(source_code, requirements)
 

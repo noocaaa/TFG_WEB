@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import current_user, login_required
 
 from app import db, bcrypt
-from app.models import Users, Exercises, Module, Theory, GlobalOrder, StudentActivity
+from app.models import Users, Exercises, Module, Theory, GlobalOrder, Requirement, ExerciseRequirement
 
 from werkzeug.utils import secure_filename
 
@@ -13,7 +13,6 @@ import json, os, uuid
 admin_blueprint = Blueprint('admin', __name__)
 
 ALLOWED_EXTENSIONS_img = {'png', 'jpg', 'jpeg', 'gif'}
-
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS_img
@@ -63,14 +62,13 @@ def admin_dashboard():
 # ---------- ADD ----------
 
 
-
 @admin_blueprint.route('/admin/add_exercise', methods=['POST'])
 @login_required
 def add_exercise():
     # Comprobar si el usuario está loggeado
-    if not current_user.is_authenticated:  
+    if not current_user.is_authenticated:
         return redirect(url_for('control.login'))
-    
+
     title = request.form['title']
     module_id = request.form['module_id']
     language = request.form['language']
@@ -83,28 +81,26 @@ def add_exercise():
     theory = Theory.query.all()
     global_orders = GlobalOrder.query.order_by(GlobalOrder.global_order).all()
 
-
     # Comprobar si el ejercicio ya existe
     existing_exercise = Exercises.query.filter_by(name=title, module_id=module_id).first()
     if existing_exercise:
         error_msg = 'Ya existe un ejercicio con ese nombre en el módulo seleccionado.'
-        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders,  error=error_msg)
+        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders, error=error_msg)
 
     test_vf = request.form['test_verification']
 
-    #Por si el ID del modulo no esta
+    # Por si el ID del modulo no está
     module = Module.query.get(module_id)
     if not module:
         error_msg = 'El ID del módulo introducido no es correcto.'
         return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders, error=error_msg)
-
 
     # Intenta decodificar el JSON
     if not is_valid_json(test_vf):
         error_msg = 'El campo SOLUTION no contiene un JSON válido.'
         return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders, error=error_msg)
 
-    # Crear el nuevo ejercicio con los nuevos campos
+    # Crear el nuevo ejercicio sin el campo de requisitos por ahora
     exercise = Exercises(
         name=title,
         content=request.form['content'],
@@ -112,16 +108,30 @@ def add_exercise():
         module_id=module_id,
         test_verification=test_vf,
         language=language,
-        requirements=requirements,
     )
 
     db.session.add(exercise)
+    db.session.flush()  # Esto es necesario para que el ejercicio obtenga su ID después de ser agregado a la sesión
+
+    # Dividir la cadena de requisitos en una lista y añadirlos a la tabla ExerciseRequirement
+    requirement_names = requirements.split()  # Suponiendo que están separados por espacios
+    for req_name in requirement_names:
+        requirement_obj = Requirement.query.filter_by(name=req_name).first()
+        # Si el requisito no existe, créalo
+        if not requirement_obj:
+            requirement_obj = Requirement(name=req_name)
+            db.session.add(requirement_obj)
+            db.session.flush()
+
+        # Añadir la relación entre el ejercicio y el requisito
+        exercise_requirement = ExerciseRequirement(exercise_id=exercise.id, requirement_id=requirement_obj.id)
+        db.session.add(exercise_requirement)
+
     db.session.commit()
 
     exercises = Exercises.query.all()
 
     return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders)
-
 
 @admin_blueprint.route('/admin/add_module', methods=['POST'])
 @login_required
@@ -307,7 +317,7 @@ def update_module():
 @login_required
 def update_exercise():
     if not current_user.is_authenticated:
-        return redirect(url_for('ccontrol.login'))
+        return redirect(url_for('control.login'))
 
     prefixes = ["name_", "content_", "solution_", "test_verification_", "requirements_", "language_"]
 
@@ -325,7 +335,23 @@ def update_exercise():
             elif key.startswith("test_verification_"):
                 exercise.test_verification = value
             elif key.startswith("requirements_"):
-                exercise.requirements = value
+                # Primero, borra todas las relaciones existentes de requisitos para este ejercicio
+                ExerciseRequirement.query.filter_by(exercise_id=exercise_id).delete()
+
+                # Luego, crea y añade las nuevas relaciones
+                requirement_names = value.split()  # Suponiendo que están separados por espacios
+                for req_name in requirement_names:
+                    requirement_obj = Requirement.query.filter_by(name=req_name).first()
+                    # Si el requisito no existe, créalo
+                    if not requirement_obj:
+                        requirement_obj = Requirement(name=req_name)
+                        db.session.add(requirement_obj)
+                        db.session.flush()
+
+                    # Añadir la relación entre el ejercicio y el requisito
+                    exercise_requirement = ExerciseRequirement(exercise_id=exercise.id, requirement_id=requirement_obj.id)
+                    db.session.add(exercise_requirement)
+
             elif key.startswith("language_"):
                 exercise.language = value
 
@@ -337,9 +363,7 @@ def update_exercise():
     theory = Theory.query.all()
     global_orders = GlobalOrder.query.order_by(GlobalOrder.global_order).all()
 
-
-    return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders)
-
+    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders)
 
 @admin_blueprint.route('/admin/update_teacher', methods=['POST'])
 @login_required
