@@ -228,3 +228,17 @@ class ModuleRequirementOrder(db.Model):
     order_position = db.Column(db.Integer, nullable=False)
 
     requirement = db.relationship("Requirement", backref="module_orders")
+
+class UserRequirementsCompleted(db.Model):
+    __tablename__ = 'UserRequirementsCompleted'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    requirement_id = db.Column(db.Integer, db.ForeignKey('requisitos.id_requisito'), nullable=False)
+    module_id = db.Column(db.Integer, db.ForeignKey('modules.id'), nullable=False)
+    completion_date = db.Column(db.Date, nullable=False, default=datetime.utcnow)
+
+    # Si deseas relaciones para acceder a la información relacionada, puedes agregarlas así:
+    user = db.relationship('Users', backref=db.backref('completed_requirements', lazy=True))
+    requirement = db.relationship('Requirement', backref=db.backref('completed_users', lazy=True))
+    module = db.relationship('Module', backref=db.backref('completed_users', lazy=True))
