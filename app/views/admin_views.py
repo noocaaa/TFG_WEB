@@ -56,7 +56,7 @@ def admin_dashboard():
 
     edit_mode = request.args.get('editMode') == 'true'
 
-    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, requirements=requirements,  edit_mode=edit_mode, global_orders=global_orders)
+    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, requirements=requirements, edit_mode=edit_mode, global_orders=global_orders)
 
 
 
@@ -131,8 +131,9 @@ def add_exercise():
     db.session.commit()
 
     exercises = Exercises.query.all()
+    requirements = Requirement.query.all()
 
-    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders)
+    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, global_orders=global_orders)
 
 @admin_blueprint.route('/admin/add_module', methods=['POST'])
 @login_required
@@ -163,8 +164,9 @@ def add_module():
     db.session.commit()
 
     modules = Module.query.all()
+    requirements = Requirement.query.all()
 
-    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders)
+    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, global_orders=global_orders)
 
 
 @admin_blueprint.route('/admin/add_teacher', methods=['POST'])
@@ -223,9 +225,10 @@ def add_teacher():
     db.session.commit()
 
     teachers = Users.query.filter_by(type_user="X").all()
+    requirements = Requirement.query.all()
 
     flash('Profesor añadido con éxito', 'success')
-    return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders)
+    return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, global_orders=global_orders)
 
 
 @admin_blueprint.route('/admin/add_theory', methods=['POST'])
@@ -240,17 +243,18 @@ def add_theory():
     teachers = Users.query.filter_by(type_user="X").all()
     theory = Theory.query.all()
     global_orders = GlobalOrder.query.order_by(GlobalOrder.global_order).all()
+    requirements = Requirement.query.all()
 
     #Por si el ID del modulo no esta
     module = Module.query.get(module_id)
     if not module:
         error_msg = 'El ID del módulo introducido no es correcto.'
-        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders, error=error_msg)
+        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, global_orders=global_orders, error=error_msg)
 
     # Validar datos (puedes añadir más validaciones según lo necesites)
     if not module_id or not content:
         error_msg = 'Todos los campos son obligatorios.'
-        return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders, error=error_msg)
+        return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, global_orders=global_orders, error=error_msg)
 
     image = request.files.get('image')
 
@@ -258,7 +262,7 @@ def add_theory():
         # Asegúrate de que el archivo es una imagen
         if not allowed_file(image.filename):
             error_msg = 'Tipo de archivo no permitido. Asegúrate de subir una imagen.'
-            return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders, error=error_msg)
+            return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, global_orders=global_orders, error=error_msg)
 
         # Obtener la extensión del archivo
         file_ext = os.path.splitext(image.filename)[1]
@@ -284,8 +288,9 @@ def add_theory():
     db.session.commit()
 
     theory = Theory.query.all()
+    requirements = Requirement.query.all()
 
-    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders)
+    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, global_orders=global_orders)
 
 
 
@@ -316,9 +321,10 @@ def update_module():
     teachers = Users.query.filter_by(type_user="X").all()
     theory = Theory.query.all()
     global_orders = GlobalOrder.query.order_by(GlobalOrder.global_order).all()
+    requirements = Requirement.query.all()
 
 
-    return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders)
+    return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, global_orders=global_orders)
 
 
 @admin_blueprint.route('/admin/update_exercise', methods=['POST'])
@@ -370,8 +376,9 @@ def update_exercise():
     teachers = Users.query.filter_by(type_user="X").all()
     theory = Theory.query.all()
     global_orders = GlobalOrder.query.order_by(GlobalOrder.global_order).all()
+    requirements = Requirement.query.all()
 
-    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders)
+    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, requirements=requirements, teachers=teachers, theory=theory, global_orders=global_orders)
 
 @admin_blueprint.route('/admin/update_teacher', methods=['POST'])
 @login_required
@@ -408,9 +415,10 @@ def update_teacher():
     teachers = Users.query.filter_by(type_user="X").all()
     theory = Theory.query.all()
     global_orders = GlobalOrder.query.order_by(GlobalOrder.global_order).all()
+    requirements = Requirement.query.all()
 
 
-    return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders)
+    return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, global_orders=global_orders)
 
 
 @admin_blueprint.route('/admin/update_theory/<int:theory_id>', methods=['POST'])
@@ -422,13 +430,14 @@ def update_theory(theory_id):
     teachers = Users.query.filter_by(type_user="X").all()
     theory_all = Theory.query.all()
     global_orders = GlobalOrder.query.order_by(GlobalOrder.global_order).all()
+    requirements = Requirement.query.all()
 
 
     # Obtener la teoría específica
     theory = Theory.query.get(theory_id)
     if not theory:
         error_msg = 'Teoría no encontrada.'
-        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory_all, global_orders=global_orders, error=error_msg)
+        return render_template('admin_dashboard.html', modules=modules, requirements=requirements, exercises=exercises, teachers=teachers, theory=theory_all, global_orders=global_orders, error=error_msg)
 
     # Recopilar datos desde el formulario
     content = request.form.get(f'content_{theory_id}')
@@ -436,13 +445,13 @@ def update_theory(theory_id):
     # Validar datos
     if not content:
         error_msg = 'El contenido es obligatorio.'
-        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory_all, global_orders=global_orders, error=error_msg)
+        return render_template('admin_dashboard.html', modules=modules, requirements=requirements, exercises=exercises, teachers=teachers, theory=theory_all, global_orders=global_orders, error=error_msg)
 
     # Actualizar y guardar los cambios en la base de datos
     theory.content = content
     db.session.commit()
 
-    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory_all, global_orders=global_orders,)
+    return render_template('admin_dashboard.html', modules=modules, requirements=requirements, exercises=exercises, teachers=teachers, theory=theory_all, global_orders=global_orders,)
 
 
 # ------------------- DELETE -------------------
@@ -455,7 +464,14 @@ def delete_module():
     # Comprobar si el usuario está loggeado
     if not current_user.is_authenticated:  
         return redirect(url_for('control.login'))
-        
+    
+    modules = Module.query.all()
+    exercises = Exercises.query.all()
+    teachers = Users.query.filter_by(type_user="X").all()
+    theory = Theory.query.all()
+    global_orders = GlobalOrder.query.order_by(GlobalOrder.global_order).all()
+    requirements = Requirement.query.all()
+
     module_id = request.form.get('module_id')
     if module_id:
         # Obtiene el módulo por ID
@@ -467,21 +483,13 @@ def delete_module():
             db.session.commit()
         else:
             error_msg = 'Módulo no encontrado'
-            return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders, error=error_msg)
+            return  render_template('admin_dashboard.html', modules=modules, requirements=requirements, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders, error=error_msg)
 
     else:
         error_msg = 'Error al eliminar el módulo'
-        return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders, error=error_msg)
+        return  render_template('admin_dashboard.html', modules=modules, requirements=requirements, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders, error=error_msg)
 
-
-    modules = Module.query.all()
-    exercises = Exercises.query.all()
-    teachers = Users.query.filter_by(type_user="X").all()
-    theory = Theory.query.all()
-    global_orders = GlobalOrder.query.order_by(GlobalOrder.global_order).all()
-
-
-    return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders,)
+    return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, requirements=requirements, teachers=teachers, theory=theory, global_orders=global_orders,)
 
 
 @admin_blueprint.route('/admin/delete_exercise', methods=['POST'])
@@ -498,7 +506,7 @@ def delete_exercise():
     teachers = Users.query.filter_by(type_user="X").all()
     theory = Theory.query.all()
     global_orders = GlobalOrder.query.order_by(GlobalOrder.global_order).all()
-
+    requirements = Requirement.query.all()
 
     if exercise_id:
         # Obtiene el ejercicio por ID
@@ -510,14 +518,14 @@ def delete_exercise():
             db.session.commit()
         else:
             error_msg = 'Ejercicio no encontrado'
-            return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders, error=error_msg)
+            return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, global_orders=global_orders, error=error_msg)
     else:
         error_msg = 'Error al eliminar el ejercicio'
-        return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders, error=error_msg)
+        return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, global_orders=global_orders, error=error_msg)
 
     exercises = Exercises.query.all()
 
-    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders,)
+    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, global_orders=global_orders,)
 
 
 @admin_blueprint.route('/admin/delete_teacher', methods=['POST'])
@@ -540,18 +548,18 @@ def delete_teacher():
     teachers = Users.query.filter_by(type_user="X").all()
     theory = Theory.query.all()
     global_orders = GlobalOrder.query.order_by(GlobalOrder.global_order).all()
-
+    requirements = Requirement.query.all()
 
     if not teacher:
         error_msg = 'Profesor no encontrado'
-        return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders, error=error_msg)
+        return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, global_orders=global_orders, error=error_msg)
 
     db.session.delete(teacher)
     db.session.commit()
 
     teachers = Users.query.filter_by(type_user="X").all()
 
-    return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, global_orders=global_orders, theory=theory)
+    return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, global_orders=global_orders, theory=theory)
 
 
 @admin_blueprint.route('/admin/delete_theory', methods=['POST'])
@@ -567,12 +575,12 @@ def delete_theory():
     teachers = Users.query.filter_by(type_user="X").all()
     all_theory = Theory.query.all()
     global_orders = GlobalOrder.query.order_by(GlobalOrder.global_order).all()
-
+    requirements = Requirement.query.all()
 
     if not theory:
         error_msg = 'Teoría no encontrada.'
 
-        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=all_theory, global_orders=global_orders, error=error_msg)
+        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=all_theory, global_orders=global_orders, error=error_msg)
 
     # Eliminar la teoría y guardar los cambios en la base de datos
     db.session.delete(theory)
@@ -581,7 +589,73 @@ def delete_theory():
     # Recargar la página con las teorías actualizadas
     all_theory = Theory.query.all()
 
-    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=all_theory, global_orders=global_orders,)
+    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=all_theory, global_orders=global_orders,)
+
+@admin_blueprint.route('/admin/add_requirement', methods=['POST'])
+@login_required
+def add_requirement():
+    # Recopilar datos desde el formulario
+    requirement_name = request.form.get('requirement_name')
+
+    # Intentar obtener la teoría usando el ID
+    modules = Module.query.all()
+    exercises = Exercises.query.all()
+    teachers = Users.query.filter_by(type_user="X").all()
+    all_theory = Theory.query.all()
+    global_orders = GlobalOrder.query.order_by(GlobalOrder.global_order).all()
+    requirements = Requirement.query.all()
+
+    # Validar datos
+    if not requirement_name:
+        flash('El nombre del requisito es obligatorio.', 'error')
+        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=all_theory, requirements=requirements, global_orders=global_orders,)
+
+    # Verificar si el requisito ya existe
+    existing_requirement = Requirement.query.filter_by(name=requirement_name).first()
+    if existing_requirement:
+        flash('El requisito ya existe.', 'error')
+        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=all_theory, requirements=requirements, global_orders=global_orders,)
+
+    # Crear y guardar el nuevo requisito en la base de datos
+    new_requirement = Requirement(name=requirement_name)
+    db.session.add(new_requirement)
+    db.session.commit()
+
+    requirements = Requirement.query.all()
+
+    flash('Requisito añadido exitosamente.', 'success')
+    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=all_theory, global_orders=global_orders,)
+
+
+@admin_blueprint.route('/admin/delete_requirement', methods=['POST'])
+@login_required
+def delete_requirement():
+    # Recopilar ID del requisito desde el formulario
+    requirement_id = request.form.get('requirement_id')
+
+    modules = Module.query.all()
+    exercises = Exercises.query.all()
+    teachers = Users.query.filter_by(type_user="X").all()
+    all_theory = Theory.query.all()
+    global_orders = GlobalOrder.query.order_by(GlobalOrder.global_order).all()
+    requirements = Requirement.query.all()
+
+    # Buscar el requisito en la base de datos
+    requirement_to_delete = Requirement.query.get(requirement_id)
+    
+    if not requirement_to_delete:
+        flash('Requisito no encontrado.', 'error')
+        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=all_theory, global_orders=global_orders)
+
+    # Eliminar el requisito de la base de datos
+    db.session.delete(requirement_to_delete)
+    db.session.commit()
+
+    requirements = Requirement.query.all()
+    
+    flash('Requisito eliminado exitosamente.', 'success')
+    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=all_theory, global_orders=global_orders)
+
 
 @admin_blueprint.route('/admin/update_global_order', methods=['POST'])
 @login_required
@@ -591,6 +665,7 @@ def update_global_order():
     exercises = Exercises.query.all()
     teachers = Users.query.filter_by(type_user="X").all()
     theory_all = Theory.query.all()
+    requirements = Requirement.query.all()
 
     # Recopilar datos desde el formulario
     content_type = request.form.get('content_type')
@@ -604,11 +679,11 @@ def update_global_order():
         content_exists = Theory.query.get(content_id)
     else:
         error_msg = 'Tipo de contenido no válido.'
-        return render_template('aadmin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory_all, error=error_msg, global_orders=global_orders_updated)
+        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory_all, error=error_msg, global_orders=global_orders_updated)
 
     if not content_exists:
         error_msg = 'El ID para el tipo seleccionado no existe.'
-        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory_all, error=error_msg, global_orders=global_orders_updated)
+        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory_all, error=error_msg, global_orders=global_orders_updated)
 
     # Consulta el registro que actualmente tiene el global_order que deseas
     existing_order = GlobalOrder.query.filter_by(global_order=new_order).first()
@@ -634,4 +709,4 @@ def update_global_order():
     # En la función update_global_order
     global_orders_updated = GlobalOrder.query.order_by(GlobalOrder.global_order).all()
 
-    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory_all, global_orders=global_orders_updated)
+    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory_all, global_orders=global_orders_updated)

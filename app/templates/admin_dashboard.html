@@ -80,6 +80,7 @@
                     <a href="#" class="list-group-item list-group-item-action" id="moduleTab" onclick="showModuleForm(event)">Añadir Módulo</a>
                     <a href="#" class="list-group-item list-group-item-action" id="exerciseTab" onclick="showExerciseForm(event)">Añadir Ejercicio</a>
                     <a href="#" class="list-group-item list-group-item-action" id="theoryTab" onclick="showAddTheory(event)">Añadir Teoria</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="addRequirementTab" onclick="showAddRequirement(event)">Añadir Requisitos</a>
                     <a href="#" class="list-group-item list-group-item-action" id="teacherTab" onclick="showTeacherForm(event)">Añadir Profesor</a>
                     
                     <a href="#" class="list-group-item list-group-item-action" id="listModule" onclick="showListModule(event)">Consultar Módulos</a>
@@ -97,7 +98,7 @@
                     <a href="#" class="list-group-item list-group-item-action" id="deleteExerciseTab" onclick="showDeleteExerciseForm(event)">Eliminar Ejercicio</a>
                     <a href="#" class="list-group-item list-group-item-action" id="deleteTheoryTab" onclick="showDeleteTheory(event)">Eliminar Teoria</a>
                     <a href="#" class="list-group-item list-group-item-action" id="deleteTeacherTab" onclick="showDeleteTeacherForm(event)">Eliminar Profesor</a>
-
+                    <a href="#" class="list-group-item list-group-item-action" id="deleteRequirementTab" onclick="showDeleteRequirementForm(event)">Eliminar Requisito</a>
                     <a href="#" class="list-group-item list-group-item-action" id="globalOrderTab" onclick="showGlobalOrder(event)">Orden Global</a>
                 </div>
             </div>
@@ -672,6 +673,43 @@
                     </div>
                 </div>
 
+                <!-- Formulario para añadir requisitos -->
+                <div id="addRequirementForm" class="card mb-4" style="display:none;">
+                    <div class="card-header">
+                        Añadir Requisito
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/add_requirement" method="post">
+                            <div class="form-group">
+                                <label for="requirement_name">Nombre del Requisito:</label>
+                                <input type="text" name="requirement_name" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Añadir</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Formulario para eliminar requisitos -->
+                <div id="deleteRequirementForm" class="card mb-4" style="display:none;">
+                    <div class="card-header">
+                        Eliminar Requisito
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/delete_requirement" method="post">
+                            <div class="form-group">
+                                <label for="requirement_id">Selecciona el Requisito:</label>
+                                <select name="requirement_id" class="form-control" required>
+                                    {% for req in requirements %}
+                                        <option value="{{ req.id_requisito }}">{{ req.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </div>
+                </div>
+
+
                 <!-- Formulario para Orden Global -->
                 <div class="card mb-4" id="globalOrderForm" style="display:none;">
                     <div class="card-header">
@@ -746,12 +784,12 @@
             let elementsToHide = ['moduleForm', 'exerciseForm', 'cardModules', 'cardExercises', 'deleteModuleForm',
                 'deleteExerciseForm', 'teacherForm', 'teacherList', 'deleteTeacherForm', 'editModules', 
                 'editExercises', 'editTeacher', 'theoryAddForm', 'theoryListForm', 'editTheory', 
-                'deleteTheoryForm', 'globalOrderForm', 'requirementsForm'];
+                'deleteTheoryForm', 'globalOrderForm', 'requirementsForm', 'addRequirementForm', 'deleteRequirementForm'];
 
             let tabsToRemoveActive = ['globalOrderTab', 'moduleTab', 'exerciseTab', 'listModule', 
                 'listExercise', 'deleteModuleTab', 'deleteExerciseTab', 'teacherTab', 'listTeachers', 
                 'deleteTeacherTab', 'editModulesTab', 'editExercisesTab', 'editTeacherTab', 
-                'theoryTab', 'listTheory', 'editTheoryTab', 'deleteTheoryTab', 'requirementsTab'];
+                'theoryTab', 'listTheory', 'editTheoryTab', 'deleteTheoryTab', 'requirementsTab', 'addRequirementTab', 'deleteRequirementTab'];
 
             elementsToHide.forEach(el => {
                 document.getElementById(el).style.display = 'none';
@@ -966,6 +1004,31 @@
 
             hideError();
         }
+
+
+        function showAddRequirement(event) {
+            event.preventDefault(); // Prevent default behaviour
+
+            hideAll();
+
+            document.getElementById('addRequirementForm').style.display = 'block';
+            document.getElementById('addRequirementTab').classList.add('active');
+
+            hideError();
+        }
+
+
+        function showDeleteRequirementForm(event) {
+            event.preventDefault(); // Prevent default behaviour
+
+            hideAll();
+
+            document.getElementById('deleteRequirementForm').style.display = 'block';
+            document.getElementById('deleteRequirementTab').classList.add('active');
+
+            hideError();
+        }
+
 
     </script>
 
