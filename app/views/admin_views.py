@@ -102,14 +102,6 @@ def add_exercise():
         error_msg = 'El campo SOLUTION no contiene un JSON válido.'
         return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders, error=error_msg)
 
-    # Dividir la cadena de requisitos en una lista y añadirlos a la tabla ExerciseRequirement
-    # Aquí asociamos los requisitos seleccionados con la teoría
-    requirements = request.form.getlist('requirements')
-    for req_id in requirements:
-        req = Requirement.query.get(req_id)
-        if req:
-            exercise.requirements.append(req)
-
     # Crear el nuevo ejercicio sin el campo de requisitos por ahora
     exercise = Exercises(
         name=title,
@@ -118,9 +110,16 @@ def add_exercise():
         module_id=module_id,
         test_verification=test_vf,
         language=language,
-        requirements=requirements, 
         is_key_exercise=is_evaluation
     )
+
+    # Dividir la cadena de requisitos en una lista y añadirlos a la tabla ExerciseRequirement
+    # Aquí asociamos los requisitos seleccionados con la teoría
+    requirements = request.form.getlist('requirements')
+    for req_id in requirements:
+        req = Requirement.query.get(req_id)
+        if req:
+            exercise.requirements.append(req)
 
     db.session.add(exercise)
     db.session.flush()  # Esto es necesario para que el ejercicio obtenga su ID después de ser agregado a la sesión

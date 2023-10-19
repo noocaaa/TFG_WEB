@@ -34,7 +34,7 @@ def determine_number_of_extra_exercises(student_id, requirement, recent_num=5, m
         )
         .filter(
             GlobalOrder.content_type == 'Exercises',
-            ExerciseRequirement.requirement_id == requirement_obj.id,
+            ExerciseRequirement.requirement_id == requirement_obj.id_requisito,
             StudentActivity.id == None  # No existe un registro correspondiente en StudentActivity.
         )
         .order_by(asc(GlobalOrder.global_order))  # Ordenar para obtener el próximo ejercicio.
@@ -55,7 +55,7 @@ def determine_number_of_extra_exercises(student_id, requirement, recent_num=5, m
             .join(ExerciseRequirement, Exercises.id == ExerciseRequirement.exercise_id)
             .filter(and_(
                 StudentProgress.student_id == student_id,
-                ExerciseRequirement.requirement_id == requirement_obj.id,
+                ExerciseRequirement.requirement_id == requirement_obj.id_requisito,
                 Exercises.module_id == current_module_id  # Añadir este filtro
             ))
             .order_by(StudentProgress.completion_date.desc())
@@ -139,7 +139,7 @@ def get_extra_exercises(student_id):
     potential_extra_exercises = (
         Exercises.query
         .join(ExerciseRequirement, Exercises.id == ExerciseRequirement.exercise_id)
-        .filter(ExerciseRequirement.requirement_id == primary_requirement_obj.id)
+        .filter(ExerciseRequirement.requirement_id == primary_requirement_obj.id_requisito)
         .all()
     )
 
@@ -216,7 +216,7 @@ def determine_number_of_skipped_exercises(student_id, primary_requirement, recen
             StudentProgress.query
             .join(Exercises, StudentProgress.exercise_id == Exercises.id)
             .join(ExerciseRequirement, ExerciseRequirement.exercise_id == Exercises.id)  # Únete a la tabla de relación
-            .join(Requirement, ExerciseRequirement.requirement_id == Requirement.id)  # Luego, únete a la tabla de requisitos
+            .join(Requirement, ExerciseRequirement.requirement_id == Requirement.id_requisito)  # Luego, únete a la tabla de requisitos
             .filter(and_(
                 StudentProgress.student_id == student_id,
                 Requirement.name == primary_requirement,  # Filtra por el nombre del requisito
@@ -326,7 +326,7 @@ def get_advanced_exercises(student_id, min_successes=5, min_success_rate=0.8):
         potential_advanced_exercises = (Exercises.query
             .join(GlobalOrder, Exercises.id == GlobalOrder.content_id)
             .join(ExerciseRequirement, Exercises.id == ExerciseRequirement.exercise_id)  # Únete a la tabla de relación
-            .join(Requirement, ExerciseRequirement.requirement_id == Requirement.id)  # Luego, únete a la tabla de requisitos
+            .join(Requirement, ExerciseRequirement.requirement_id == Requirement.id_requisito)  # Luego, únete a la tabla de requisitos
             .filter(
                 GlobalOrder.content_type == 'Exercises',
                 Requirement.name == primary_requirement  # Filtra por el nombre del requisito
