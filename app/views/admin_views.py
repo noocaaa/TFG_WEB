@@ -74,6 +74,7 @@ def add_exercise():
     module_id = request.form['module_id']
     language = request.form['language']
     requirements = request.form['requirements']
+    is_evaluation = 'evaluationExercise' in request.form  # Esto devolverá True si el checkbox está marcado, de lo contrario, False.
 
     # Variables comunes para el renderizado
     modules = Module.query.all()
@@ -109,6 +110,7 @@ def add_exercise():
         module_id=module_id,
         test_verification=test_vf,
         language=language,
+        is_key_exercise=is_evaluation
     )
 
     db.session.add(exercise)
@@ -652,7 +654,7 @@ def delete_requirement():
     db.session.commit()
 
     requirements = Requirement.query.all()
-    
+
     flash('Requisito eliminado exitosamente.', 'success')
     return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=all_theory, global_orders=global_orders)
 

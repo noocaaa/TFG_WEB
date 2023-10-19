@@ -198,6 +198,7 @@ class Exercises(db.Model):
     test_verification = db.Column(db.JSON)
     language = db.Column(db.Enum('LOGO', 'PYTHON', 'C++', 'JAVA', 'WEB'))
     requires_manual_review = db.Column(db.Boolean, default=False)
+    is_key_exercise = db.Column(db.Boolean, default=False)
 
     requirements = db.relationship(
         'Requirement',
