@@ -69,6 +69,30 @@ Configuración
         overflow: hidden;
     }
 
+    #avatarModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    #avatarModal .avatars {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    #avatarModal img {
+        width: 120px;
+        height: 120px;
+        cursor: pointer;
+    }
 </style>
 {% endblock %}
 
@@ -96,6 +120,61 @@ Configuración
 
 {% endblock %}
 
+
+{% block avatar %}
+    <div id="avatarModal" style="display:none;">
+        <h2 class="nameTitle">Elige tu avatar</h2>
+        <div class="avatars">
+            <img src="{{ url_for('static', filename='img/1.jpg') }}" data-id="1" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/2.jpg') }}" data-id="2" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/3.jpg') }}" data-id="3" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/4.jpg') }}" data-id="4" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/5.jpg') }}" data-id="5" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/6.jpg') }}" data-id="6" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/7.jpg') }}" data-id="7" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/8.jpg') }}" data-id="8" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/9.jpg') }}" data-id="9" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/10.jpg') }}" data-id="10" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/11.jpg') }}" data-id="11" onclick="selectAvatar(this)">
+            <img src="{{ url_for('static', filename='img/12.jpg') }}" data-id="12" onclick="selectAvatar(this)">
+        </div>
+    </div>
+
+    <!-- Formulario oculto para almacenar que avatar prefiere el estudiante -->
+    <form id="avatarForm" method="POST" action="{{ url_for('student.almacenar_avatar') }}" style="display: none;">
+        <input type="hidden" id="avatarElegido" name="avatar_elegido">
+    </form>
+{% endblock %}
+
 {% block scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let showModal = "{{ show_modal|lower }}";  // Convertimos el valor booleano de Python a un booleano de JavaScript
+            
+            if (showModal === "true") {
+                $('#avatarModal').show();
+            }
+
+            // Cerrar el modal cuando se hace clic fuera de la ventana del modal
+            $('#avatarModal').on('click', function(event) {
+                if ($(event.target).closest(".avatars, .nameTitle").length === 0) {
+                    $('#avatarModal').hide();
+                }
+            });
+            
+        });
+
+        function showAvatarModal() {
+            $('#avatarModal').show();
+        }
+
+        function selectAvatar(element) {
+            const avatarId = element.getAttribute("data-id");
+            $('#avatarModal').hide(); // <- Añade esta línea
+            document.getElementById("avatarElegido").value = avatarId;
+            document.getElementById("avatarForm").submit();
+        }
+
+    </script>
 {% endblock %}
