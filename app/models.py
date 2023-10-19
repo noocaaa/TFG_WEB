@@ -218,3 +218,13 @@ class Module(db.Model):
     description = db.Column(db.Text)
 
     exercises = db.relationship('Exercises', backref='module', lazy=True) # Clase Ejercicios ya definida
+
+class ModuleRequirementOrder(db.Model):
+    __tablename__ = 'module_requirements_order'
+
+    id = db.Column(db.Integer, primary_key=True)
+    module_id = db.Column(db.Integer, nullable=False)
+    requirement_id = db.Column(db.Integer, db.ForeignKey('requisitos.id_requisito'), nullable=False)
+    order_position = db.Column(db.Integer, nullable=False)
+
+    requirement = db.relationship("Requirement", backref="module_orders")
