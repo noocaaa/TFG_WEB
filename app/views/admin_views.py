@@ -102,6 +102,14 @@ def add_exercise():
         error_msg = 'El campo SOLUTION no contiene un JSON válido.'
         return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, global_orders=global_orders, error=error_msg)
 
+    # Dividir la cadena de requisitos en una lista y añadirlos a la tabla ExerciseRequirement
+    # Aquí asociamos los requisitos seleccionados con la teoría
+    requirements = request.form.getlist('requirements')
+    for req_id in requirements:
+        req = Requirement.query.get(req_id)
+        if req:
+            exercise.requirements.append(req)
+
     # Crear el nuevo ejercicio sin el campo de requisitos por ahora
     exercise = Exercises(
         name=title,
@@ -110,25 +118,12 @@ def add_exercise():
         module_id=module_id,
         test_verification=test_vf,
         language=language,
+        requirements=requirements, 
         is_key_exercise=is_evaluation
     )
 
     db.session.add(exercise)
     db.session.flush()  # Esto es necesario para que el ejercicio obtenga su ID después de ser agregado a la sesión
-
-    # Dividir la cadena de requisitos en una lista y añadirlos a la tabla ExerciseRequirement
-    requirement_names = requirements.split()  # Suponiendo que están separados por espacios
-    for req_name in requirement_names:
-        requirement_obj = Requirement.query.filter_by(name=req_name).first()
-        # Si el requisito no existe, créalo
-        if not requirement_obj:
-            requirement_obj = Requirement(name=req_name)
-            db.session.add(requirement_obj)
-            db.session.flush()
-
-        # Añadir la relación entre el ejercicio y el requisito
-        exercise_requirement = ExerciseRequirement(exercise_id=exercise.id, requirement_id=requirement_obj.id)
-        db.session.add(exercise_requirement)
 
     db.session.commit()
 
@@ -354,20 +349,17 @@ def update_exercise():
                 # Primero, borra todas las relaciones existentes de requisitos para este ejercicio
                 ExerciseRequirement.query.filter_by(exercise_id=exercise_id).delete()
 
-                # Luego, crea y añade las nuevas relaciones
-                requirement_names = value.split()  # Suponiendo que están separados por espacios
-                for req_name in requirement_names:
-                    requirement_obj = Requirement.query.filter_by(name=req_name).first()
-                    # Si el requisito no existe, créalo
-                    if not requirement_obj:
-                        requirement_obj = Requirement(name=req_name)
-                        db.session.add(requirement_obj)
-                        db.session.flush()
+                requirement_ids = request.form.getlist(f'requirements_{exercise_id}') 
+                requirement_ids = [rid for rid in requirement_ids if rid and rid.isdigit()]
 
-                    # Añadir la relación entre el ejercicio y el requisito
-                    exercise_requirement = ExerciseRequirement(exercise_id=exercise.id, requirement_id=requirement_obj.id)
-                    db.session.add(exercise_requirement)
-
+                for req_id in requirement_ids:
+                    # Asegura que req_id no esté vacío y sea un número
+                    if req_id and req_id.isdigit():  
+                        requirement_obj = Requirement.query.get(req_id)
+                        # Añadir la relación entre el ejercicio y el requisito
+                        if requirement_obj: 
+                            exercise_requirement = ExerciseRequirement(exercise_id=exercise.id, requirement_id=requirement_obj.id_requisito)
+                            db.session.add(exercise_requirement)
             elif key.startswith("language_"):
                 exercise.language = value
 

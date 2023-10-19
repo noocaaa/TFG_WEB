@@ -165,9 +165,15 @@
                                 <textarea name="content" class="form-control" rows="3" required></textarea>
                             </div>
                             
+                            <!-- Sección para seleccionar los requisitos -->
                             <div class="form-group">
                                 <label for="requirements">Requisitos:</label>
-                                <textarea name="requirements" class="form-control" rows="3"></textarea>
+                                <select name="requirements" id="requirements" class="form-control" multiple>
+                                    {% for req in requirements %}
+                                        <option value="{{ req.id_requisito }}">{{ req.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <small class="form-text text-muted">Mantenga presionado Ctrl (o Command en Mac) para seleccionar múltiples requisitos.</small>
                             </div>
 
                             <div class="form-group">
@@ -234,6 +240,7 @@
                                     <th>Nombre del Ejercicio</th>
                                     <th>Lenguaje</th>
                                     <th>Requisitos</th>
+                                    <th>¿Es un ejercicio clave?</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -250,6 +257,7 @@
                                         {% endfor %}
                                         {{ req_names|join(', ') }}
                                     </td>
+                                    <td>{{ exercise.is_key_exercise }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -475,8 +483,16 @@
                                     <input type="text" name="test_verification_{{ exercise.id }}" value="{{ exercise.test_verification }}">
                                     
                                     <label>Requerimientos:</label>
-                                    <input type="text" name="requirements_{{ exercise.id }}" value="{% for req in exercise.requirements %}{{ req.name }}{% if not loop.last %}, {% endif %}{% endfor %}">
-                                    
+                                    <div class="form-group">
+                                        <label for="requirements">Requisitos:</label>
+                                        <select name="requirements_{{ exercise.id }}" id="requirements_{{ exercise.id }}" class="form-control" multiple>
+                                            {% for req in requirements %}
+                                                <option value="{{ req.id_requisito }}">{{ req.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <small class="form-text text-muted">Mantenga presionado Ctrl (o Command en Mac) para seleccionar múltiples requisitos.</small>
+                                    </div>                                    
+
                                     <label>Lenguaje:</label>
                                     <select name="language_{{ exercise.id }}">
                                         <option value="LOGO" {% if exercise.language == "LOGO" %}selected{% endif %}>LOGO</option>
@@ -555,23 +571,9 @@
                             <div class="form-group">
                                 <label for="requirements">Requisitos:</label>
                                 <select name="requirements" id="requirements" class="form-control" multiple>
-                                    <option value="4">Intro</option>
-                                    <option value="5">Basic-Operators</option>
-                                    <option value="6">Logical-Operators</option>
-                                    <option value="7">If-Else</option>
-                                    <option value="8">Switch</option>
-                                    <option value="9">While</option>
-                                    <option value="10">For</option>
-                                    <option value="11">Functions-Basics</option>
-                                    <option value="12">Functions-Advanced</option>
-                                    <option value="13">Classes</option>
-                                    <option value="14">Inheritance</option>
-                                    <option value="15">Styles</option>
-                                    <option value="16">Interactivity</option>
-                                    <option value="17">DOM-Basics</option>
-                                    <option value="18">DOM-Advanced</option>
-                                    <option value="19">Lists</option>
-                                    <option value="20">Dictionaries</option>
+                                    {% for req in requirements %}
+                                        <option value="{{ req.id_requisito }}">{{ req.name }}</option>
+                                    {% endfor %}
                                 </select>
                                 <small class="form-text text-muted">Mantenga presionado Ctrl (o Command en Mac) para seleccionar múltiples requisitos.</small>
                             </div>
