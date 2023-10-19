@@ -85,6 +85,7 @@
                     <a href="#" class="list-group-item list-group-item-action" id="listModule" onclick="showListModule(event)">Consultar Módulos</a>
                     <a href="#" class="list-group-item list-group-item-action" id="listExercise" onclick="showListExercise(event)">Consultar Ejercicios</a>
                     <a href="#" class="list-group-item list-group-item-action" id="listTheory" onclick="showListTheory(event)">Consultar Teoria</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="requirementsTab" onclick="showListRequirements(event)">Consultar Requisitos</a>
                     <a href="#" class="list-group-item list-group-item-action" id="listTeachers" onclick="showTeacherList(event)">Consultar Profesores</a>
 
                     <a href="#" class="list-group-item list-group-item-action" id="editModulesTab" onclick="showEditModules(event)">Editar Modulos</a>
@@ -236,7 +237,13 @@
                                     <td>{{ exercise.module_id }}</td>
                                     <td>{{ exercise.name }}</td>
                                     <td>{{ exercise.language }}</td>
-                                    <td>{{ ', '.join(exercise.requirements) }}</td>
+                                    <td>
+                                        {% set req_names = [] %}
+                                        {% for req in exercise.requirements %}
+                                            {% set _ = req_names.append(req.name) %}
+                                        {% endfor %}
+                                        {{ req_names|join(', ') }}
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -462,7 +469,7 @@
                                     <input type="text" name="test_verification_{{ exercise.id }}" value="{{ exercise.test_verification }}">
                                     
                                     <label>Requerimientos:</label>
-                                    <input type="text" name="requirements_{{ exercise.id }}" value="{{ ', '.join(exercise.requirements) }}">
+                                    <input type="text" name="requirements_{{ exercise.id }}" value="{% for req in exercise.requirements %}{{ req.name }}{% if not loop.last %}, {% endif %}{% endfor %}">
                                     
                                     <label>Lenguaje:</label>
                                     <select name="language_{{ exercise.id }}">
@@ -537,8 +544,58 @@
                                 <label for="image">Imagen:</label>
                                 <input type="file" name="image">
                             </div>
+
+                            <!-- Sección para seleccionar los requisitos -->
+                            <div class="form-group">
+                                <label for="requirements">Requisitos:</label>
+                                <select name="requirements" id="requirements" class="form-control" multiple>
+                                    <option value="4">Intro</option>
+                                    <option value="5">Basic-Operators</option>
+                                    <option value="6">Logical-Operators</option>
+                                    <option value="7">If-Else</option>
+                                    <option value="8">Switch</option>
+                                    <option value="9">While</option>
+                                    <option value="10">For</option>
+                                    <option value="11">Functions-Basics</option>
+                                    <option value="12">Functions-Advanced</option>
+                                    <option value="13">Classes</option>
+                                    <option value="14">Inheritance</option>
+                                    <option value="15">Styles</option>
+                                    <option value="16">Interactivity</option>
+                                    <option value="17">DOM-Basics</option>
+                                    <option value="18">DOM-Advanced</option>
+                                    <option value="19">Lists</option>
+                                    <option value="20">Dictionaries</option>
+                                </select>
+                                <small class="form-text text-muted">Mantenga presionado Ctrl (o Command en Mac) para seleccionar múltiples requisitos.</small>
+                            </div>
+
                             <input type="submit" value="Añadir Teoría" class="btn btn-primary">
                         </form>
+                    </div>
+                </div>
+
+                <div class="card mb-3" id="requirementsForm" style="display:none;">
+                    <div class="card-header">
+                        Consultar Requisitos
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for req in requirements %}
+                                <tr>
+                                    <td>{{ req.id_requisito }}</td>
+                                    <td>{{ req.name }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -554,6 +611,7 @@
                                     <th>ID</th>
                                     <th>ID del Módulo</th>
                                     <th>Contenido</th>
+                                    <th>Requisitos</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -562,6 +620,13 @@
                                     <td>{{ the.id }}</td>
                                     <td>{{ the.module_id }}</td>
                                     <td>{{ the.content }}</td>
+                                    <td>
+                                        {% set req_names = [] %}
+                                        {% for req in the.requirements %}
+                                            {% set _ = req_names.append(req.name) %}
+                                        {% endfor %}
+                                        {{ req_names|join(', ') }}
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -681,12 +746,12 @@
             let elementsToHide = ['moduleForm', 'exerciseForm', 'cardModules', 'cardExercises', 'deleteModuleForm',
                 'deleteExerciseForm', 'teacherForm', 'teacherList', 'deleteTeacherForm', 'editModules', 
                 'editExercises', 'editTeacher', 'theoryAddForm', 'theoryListForm', 'editTheory', 
-                'deleteTheoryForm', 'globalOrderForm'];
+                'deleteTheoryForm', 'globalOrderForm', 'requirementsForm'];
 
             let tabsToRemoveActive = ['globalOrderTab', 'moduleTab', 'exerciseTab', 'listModule', 
                 'listExercise', 'deleteModuleTab', 'deleteExerciseTab', 'teacherTab', 'listTeachers', 
                 'deleteTeacherTab', 'editModulesTab', 'editExercisesTab', 'editTeacherTab', 
-                'theoryTab', 'listTheory', 'editTheoryTab', 'deleteTheoryTab'];
+                'theoryTab', 'listTheory', 'editTheoryTab', 'deleteTheoryTab', 'requirementsTab'];
 
             elementsToHide.forEach(el => {
                 document.getElementById(el).style.display = 'none';
@@ -890,6 +955,18 @@
 
             hideError();
         }
+
+        function showListRequirements(event) {
+            event.preventDefault(); // Prevent default behaviour
+
+            hideAll();
+
+            document.getElementById('requirementsForm').style.display = 'block';
+            document.getElementById('requirementsTab').classList.add('active');
+
+            hideError();
+        }
+
     </script>
 
     <!-- Enlace a Bootstrap JS y Popper.js (opcional) -->

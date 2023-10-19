@@ -143,14 +143,25 @@ class Requirement(db.Model):
     id_requisito = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False, unique=True)
 
+    theories = db.relationship(
+        'Theory',
+        secondary='theoryrequirements',
+        back_populates='requirements'
+    )
+    exercises = db.relationship(
+        'Exercises',
+        secondary='exerciserequirements',
+        back_populates='requirements'
+    )
+
 class TheoryRequirement(db.Model):
     __tablename__ = 'theoryrequirements'
 
     id_theory = db.Column(db.Integer, db.ForeignKey('theory.id'), primary_key=True)
     id_requirement = db.Column(db.Integer, db.ForeignKey('requisitos.id_requisito'), primary_key=True)
 
-    requirement = db.relationship('Requirement', backref=db.backref('theoryrequirements', cascade='all, delete-orphan'))
-    theory = db.relationship('Theory', backref=db.backref('theoryrequirements', cascade='all, delete-orphan'))
+    requirement = db.relationship('Requirement', overlaps="theories")
+    theory = db.relationship('Theory', overlaps="requirements")
 
 class Theory(db.Model):
     __tablename__ = 'theory'
@@ -165,8 +176,8 @@ class Theory(db.Model):
     requirements = db.relationship(
         'Requirement',
         secondary='theoryrequirements',
-        backref='theories',
-        overlaps="requirement,theoryrequirements"
+        back_populates='theories',
+        overlaps="theoryrequirements"
     )
 
 class ExerciseRequirement(db.Model):
@@ -175,9 +186,8 @@ class ExerciseRequirement(db.Model):
     exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'), primary_key=True)
     requirement_id = db.Column(db.Integer, db.ForeignKey('requisitos.id_requisito'), primary_key=True)
 
-    requirement = db.relationship('Requirement', backref=db.backref('exerciserequirements', cascade='all, delete-orphan'))
-    exercise = db.relationship('Exercises', backref=db.backref('exerciserequirements', cascade='all, delete-orphan'))
-
+    requirement = db.relationship('Requirement', overlaps="exercises")
+    exercise = db.relationship('Exercises', overlaps="requirements")
 
 class Exercises(db.Model):    
     id = db.Column(db.Integer, primary_key=True)
@@ -192,9 +202,8 @@ class Exercises(db.Model):
     requirements = db.relationship(
         'Requirement',
         secondary='exerciserequirements',
-        primaryjoin='Exercises.id==ExerciseRequirement.exercise_id',
-        secondaryjoin='ExerciseRequirement.requirement_id==Requirement.id_requisito',
-        backref='exercises'
+        back_populates='exercises',
+        overlaps="exerciserequirements"
     )
 
     assigned_exercises = db.relationship('ExtraExercises', back_populates='exercise')

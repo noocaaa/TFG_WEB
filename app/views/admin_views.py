@@ -52,10 +52,11 @@ def admin_dashboard():
     teachers = Users.query.filter_by(type_user="X").all()
     theory = Theory.query.all()
     global_orders = GlobalOrder.query.order_by(GlobalOrder.global_order).all()
+    requirements = Requirement.query.all()
 
     edit_mode = request.args.get('editMode') == 'true'
 
-    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, edit_mode=edit_mode, global_orders=global_orders)
+    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, requirements=requirements,  edit_mode=edit_mode, global_orders=global_orders)
 
 
 
@@ -270,6 +271,13 @@ def add_theory():
         new_theory = Theory(module_id=module_id, content=content, image_path=image_path)
     else:
         new_theory = Theory(module_id=module_id, content=content)
+
+    # Aquí asociamos los requisitos seleccionados con la teoría
+    requirements = request.form.getlist('requirements')
+    for req_id in requirements:
+        req = Requirement.query.get(req_id)
+        if req:
+            new_theory.requirements.append(req)
 
     # Crear y guardar la nueva entrada de teoría en la base de datos
     db.session.add(new_theory)
