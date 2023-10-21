@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, jsonify,
 from flask_login import login_user, current_user, logout_user, login_required
 
 from app import db, login_manager, bcrypt
-from app.models import Users, Exercises, StudentProgress, Module, Question, TheoryRequirement, StudentActivity, GlobalOrder, Theory, Notification, ExtraExercises
+from app.models import Users, Exercises, StudentProgress, Module, Question, StudentActivity, Theory, Notification, ExtraExercises
 
 from sqlalchemy import func, text, and_
 
@@ -133,54 +133,54 @@ def principal():
     last_module_completely_done = None
 
     for module in modules:
-        total_exercises = (
-            db.session.query(Exercises)
-            .join(GlobalOrder, Exercises.id == GlobalOrder.content_id)
-            .filter(
-                Exercises.module_id == module.id
-            )
-            .count()
-        )
+        # total_exercises = (
+        #     db.session.query(Exercises)
+        #     .join(GlobalOrder, Exercises.id == GlobalOrder.content_id)
+        #     .filter(
+        #         Exercises.module_id == module.id
+        #     )
+        #     .count()
+        # )
 
-        completed_exercises = StudentProgress.query.filter_by(student_id=current_user.id, status="completed").join(Exercises).filter_by(module_id=module.id).count()
+        # completed_exercises = StudentProgress.query.filter_by(student_id=current_user.id, status="completed").join(Exercises).filter_by(module_id=module.id).count()
 
-        completed_theory = StudentActivity.query.filter_by(student_id=current_user.id, content_type="Theory").count()
+        # completed_theory = StudentActivity.query.filter_by(student_id=current_user.id, content_type="Theory").count()
 
-        total_theory = Theory.query.filter_by(module_id=module.id).count()
+        # total_theory = Theory.query.filter_by(module_id=module.id).count()
 
-        extra_exercises_count = (
-            db.session.query(ExtraExercises)
-            .join(Exercises, ExtraExercises.exercise_id == Exercises.id)
-            .filter(
-                ExtraExercises.student_id == current_user.id,
-                ExtraExercises.status == "dCompleted",
-                Exercises.module_id == module.id
-            )
-            .count()
-        )
+        # extra_exercises_count = (
+        #     db.session.query(ExtraExercises)
+        #     .join(Exercises, ExtraExercises.exercise_id == Exercises.id)
+        #     .filter(
+        #         ExtraExercises.student_id == current_user.id,
+        #         ExtraExercises.status == "dCompleted",
+        #         Exercises.module_id == module.id
+        #     )
+        #     .count()
+        # )
 
-        skipped_count = (
-            db.session.query(StudentActivity)
-            .join (Exercises, Exercises.id == StudentActivity.content_id)
-            .filter(
-                StudentActivity.student_id == current_user.id,
-                StudentActivity.skipped == True,
-                Exercises.module_id == module.id
-            )
-            .count()
-        )
+        # skipped_count = (
+        #     db.session.query(StudentActivity)
+        #     .join (Exercises, Exercises.id == StudentActivity.content_id)
+        #     .filter(
+        #         StudentActivity.student_id == current_user.id,
+        #         StudentActivity.skipped == True,
+        #         Exercises.module_id == module.id
+        #     )
+        #     .count()
+        # )
 
-        if total_exercises > 0:
-            progress = (completed_exercises + skipped_count + completed_theory) / (total_exercises + extra_exercises_count + total_theory) * 100
-        else:
-            progress = 0
+        # if total_exercises > 0:
+        #     progress = (completed_exercises + skipped_count + completed_theory) / (total_exercises + extra_exercises_count + total_theory) * 100
+        # else:
+        #     progress = 0
 
-        if progress == 100:
-            last_module_completely_done = module.id + 1
+        # if progress == 100:
+        #     last_module_completely_done = module.id + 1
 
         modules_progress.append({
             'module': module,
-            'progress': progress,
+            'progress': 0,
             'available': False  # Inicialmente ponemos todos los módulos como no disponibles
         })
 
@@ -219,7 +219,6 @@ def module_exercise(module_id):
     # If there's a pending requirement in the module
     if next_req:
         next_theory_id = get_next_theory_for_user(current_user.id, next_req.requirement_id)
-
         if next_theory_id:
             theory = get_theory(next_theory_id)
             # Assuming you have a theory template to display theory content
@@ -229,12 +228,8 @@ def module_exercise(module_id):
         selected_exercise = select_exercise_for_user(current_user.id, next_req.requirement_id)
 
         if selected_exercise:
-            print("TUUUUUUUUUUUUUUUU")
             assign_exercise_to_student(current_user.id, selected_exercise)
-            print("SUUUUUUUUUUUUUUUU")
-
-            exercise = get_exercise(selected_exercise)
-            print("FUUU")
+            exercise = get_exercise(selected_exercise.id)
 
             return render_template('exercise.html', user=user, exercise=exercise, exercise_language=exercise.language)
 
@@ -249,20 +244,20 @@ def mark_theory_as_read(content_id):
     student_id = current_user.id
     
     # Obtener el order_global desde la tabla global_order
-    global_order_record = GlobalOrder.query.filter_by(content_id=content_id, content_type='Theory').first()
+    # global_order_record = GlobalOrder.query.filter_by(content_id=content_id, content_type='Theory').first()
 
-    if not global_order_record:
-        # manejar el error si no se encuentra el registro
-        flash('Error al marcar la teoría como leída.', 'danger')
-        return redirect(url_for('student.principal'))
+    # if not global_order_record:
+    #     # manejar el error si no se encuentra el registro
+    #     flash('Error al marcar la teoría como leída.', 'danger')
+    #     return redirect(url_for('student.principal'))
     
-    order_global = global_order_record.global_order
+    # order_global = global_order_record.global_order
     
     # Crear un nuevo registro en studentactivity
     activity = StudentActivity(
         student_id=student_id,
         content_id=content_id,
-        order_global=order_global,
+        order_global=1,
         done=True,
         content_type='Theory'
     )
@@ -675,32 +670,6 @@ def javascript_guide():
 #  -------------------------------------------------------------------------------------
 
 
-def find_next_content_id(user_id):
-    next_global_order = db.session.query(GlobalOrder.global_order).\
-        outerjoin(StudentActivity, and_(StudentActivity.content_id == GlobalOrder.content_id, StudentActivity.student_id == user_id)).\
-        filter(StudentActivity.id == None).\
-        order_by(GlobalOrder.global_order).\
-        first()
-    if not next_global_order:
-        return None
-    next_content = GlobalOrder.query.filter_by(global_order=next_global_order[0]).first()
-    if not next_content:
-        return None
-    return next_content.content_id
-
-def get_module_id_for_content(content_id, content_type):
-    # Dependiendo del tipo de contenido, consulta la tabla adecuada
-    if content_type == "Exercises":
-        content = Exercises.query.get(content_id)
-    elif content_type == "Theory":
-        content = Theory.query.get(content_id)
-    else:
-        return None
-    
-    # Si encontramos el contenido, devuelve el module_id, de lo contrario, None
-    return content.module_id if content else None
-
-
 @student_blueprint.route('/notifications', methods=['GET'])
 @login_required
 def get_notifications():
@@ -740,125 +709,129 @@ def check_requirements(source_code, requirements):
 @student_blueprint.route('/correct_exercise', methods=['POST'])
 @login_required
 def correct_exercise():
+    
     if not current_user.is_authenticated:  
         return redirect(url_for('control.login'))
 
-    source_code = request.form.get('source_code')
-    language = request.form.get('language')
-    content_id = request.form.get('exercise_id')
+    return redirect(url_for('control.login'))
 
-    start_time = int(request.form.get('start_time'))
-    start_time = datetime.fromtimestamp(start_time / 1000.0)
 
-    end_time = int(request.form.get('end_time'))
-    end_time = datetime.fromtimestamp(end_time / 1000.0)
+#     source_code = request.form.get('source_code')
+#     language = request.form.get('language')
+#     content_id = request.form.get('exercise_id')
 
-    extra_exercise = ExtraExercises.query.filter_by(exercise_id=content_id).first()
-    extra = extra_exercise is not None
+#     start_time = int(request.form.get('start_time'))
+#     start_time = datetime.fromtimestamp(start_time / 1000.0)
 
-    current_content = None if extra else GlobalOrder.query.filter_by(content_id=int(content_id)).first()
+#     end_time = int(request.form.get('end_time'))
+#     end_time = datetime.fromtimestamp(end_time / 1000.0)
+
+#     extra_exercise = ExtraExercises.query.filter_by(exercise_id=content_id).first()
+#     extra = extra_exercise is not None
+
+#     current_content = None if extra else GlobalOrder.query.filter_by(content_id=int(content_id)).first()
     
-    if not current_content and not extra:
-        return jsonify({"status": "error", "message": "El contenido no existe."})
+#     if not current_content and not extra:
+#         return jsonify({"status": "error", "message": "El contenido no existe."})
     
-    if current_content and current_content.content_type == "Theory":
-        student_activity = StudentActivity.query.filter_by(student_id=current_user.id, content_id=content_id).first()
-        if not student_activity:
-            new_activity = StudentActivity(student_id=current_user.id, content_id=content_id, order_global=current_content.global_order, done=True, content_type="Theory")
-            db.session.add(new_activity)
-            db.session.commit()
-        return jsonify({"status": "theory_completed"})
+#     if current_content and current_content.content_type == "Theory":
+#         student_activity = StudentActivity.query.filter_by(student_id=current_user.id, content_id=content_id).first()
+#         if not student_activity:
+#             new_activity = StudentActivity(student_id=current_user.id, content_id=content_id, order_global=current_content.global_order, done=True, content_type="Theory")
+#             db.session.add(new_activity)
+#             db.session.commit()
+#         return jsonify({"status": "theory_completed"})
     
-    exercise = Exercises.query.get(content_id)
-    if not exercise:
-        return jsonify({"status": "error", "message": "El ejercicio no existe."})
+#     exercise = Exercises.query.get(content_id)
+#     if not exercise:
+#         return jsonify({"status": "error", "message": "El ejercicio no existe."})
 
-    requirements = exercise.requirements if exercise.requirements else []
+#     requirements = exercise.requirements if exercise.requirements else []
 
-    is_requirements_satisfied, requirements_message = check_requirements(source_code, requirements)
+#     is_requirements_satisfied, requirements_message = check_requirements(source_code, requirements)
 
-    time_spent = (end_time - start_time).seconds  
+#     time_spent = (end_time - start_time).seconds  
 
-    if not is_requirements_satisfied:
-        new_progress = StudentProgress(
-            student_id=current_user.id, 
-            exercise_id=content_id, 
-            status="failed", 
-            solution_code=source_code,
-            start_date=start_time, 
-            completion_date=end_time, 
-            time_spent=time_spent
-        )
+#     if not is_requirements_satisfied:
+#         new_progress = StudentProgress(
+#             student_id=current_user.id, 
+#             exercise_id=content_id, 
+#             status="failed", 
+#             solution_code=source_code,
+#             start_date=start_time, 
+#             completion_date=end_time, 
+#             time_spent=time_spent
+#         )
 
-        db.session.add(new_progress)
+#         db.session.add(new_progress)
 
-        db.session.commit()
+#         db.session.commit()
 
-        return jsonify({"status": "incorrect", "message": requirements_message})
+#         return jsonify({"status": "incorrect", "message": requirements_message})
 
-    user_inputs = request.form.getlist('user_inputs[]')
+#     user_inputs = request.form.getlist('user_inputs[]')
 
-    try:
-        once_decoded = json.loads(exercise.test_verification)
-        test_verification = json.loads(once_decoded)
-    except ValueError:
-        return jsonify({"status": "error", "message": "Invalid test_verification format"})
+#     try:
+#         once_decoded = json.loads(exercise.test_verification)
+#         test_verification = json.loads(once_decoded)
+#     except ValueError:
+#         return jsonify({"status": "error", "message": "Invalid test_verification format"})
     
-    if list(test_verification.keys()) == ["A"] and test_verification["A"] == "B":
-        result = some_compile_function(source_code, language, user_inputs)
-        is_correct = (result.strip() == str(exercise.solution).strip())
-    else:
-        first_key = list(test_verification.keys())[0]
-        result = some_compile_function(source_code, language, first_key)
-        is_correct = (str(test_verification[first_key]).strip() == result.strip())
+#     if list(test_verification.keys()) == ["A"] and test_verification["A"] == "B":
+#         result = some_compile_function(source_code, language, user_inputs)
+#         is_correct = (result.strip() == str(exercise.solution).strip())
+#     else:
+#         first_key = list(test_verification.keys())[0]
+#         result = some_compile_function(source_code, language, first_key)
+#         is_correct = (str(test_verification[first_key]).strip() == result.strip())
     
-    if language == "html":
-        status = "under_review"
-    else:
-        status = "completed" if is_correct else "failed"
+#     if language == "html":
+#         status = "under_review"
+#     else:
+#         status = "completed" if is_correct else "failed"
 
-    new_progress = StudentProgress(
-        student_id=current_user.id, 
-        exercise_id=content_id, 
-        status=status, 
-        solution_code=source_code,
-        start_date=start_time, 
-        completion_date=end_time, 
-        time_spent=time_spent
-    )
+#     new_progress = StudentProgress(
+#         student_id=current_user.id, 
+#         exercise_id=content_id, 
+#         status=status, 
+#         solution_code=source_code,
+#         start_date=start_time, 
+#         completion_date=end_time, 
+#         time_spent=time_spent
+#     )
 
-    db.session.add(new_progress)
+#     db.session.add(new_progress)
     
-    if not extra:
-        student_activity = StudentActivity.query.filter_by(student_id=current_user.id, content_id=content_id).first()
-        if not student_activity:
-            new_activity = StudentActivity(student_id=current_user.id, content_id=content_id, order_global=current_content.global_order, done=True, content_type="Exercises")
-            db.session.add(new_activity)
-        else:
-            student_activity.done = True
-    else:
-        extra_exercise_entry = ExtraExercises.query.filter_by(student_id=current_user.id, exercise_id=content_id, status='Assigned').first()
-        if extra_exercise_entry:
-            extra_exercise_entry.status = "Completed"
-            extra_exercise_entry.completed_date = datetime.now()
+#     if not extra:
+#         student_activity = StudentActivity.query.filter_by(student_id=current_user.id, content_id=content_id).first()
+#         if not student_activity:
+#             new_activity = StudentActivity(student_id=current_user.id, content_id=content_id, order_global=current_content.global_order, done=True, content_type="Exercises")
+#             db.session.add(new_activity)
+#         else:
+#             student_activity.done = True
+#     else:
+#         extra_exercise_entry = ExtraExercises.query.filter_by(student_id=current_user.id, exercise_id=content_id, status='Assigned').first()
+#         if extra_exercise_entry:
+#             extra_exercise_entry.status = "Completed"
+#             extra_exercise_entry.completed_date = datetime.now()
     
-    db.session.commit()
+#     db.session.commit()
 
-    next_global_order = db.session.query(GlobalOrder.global_order).\
-        outerjoin(StudentActivity, and_(StudentActivity.content_id == GlobalOrder.content_id, StudentActivity.student_id == current_user.id)).\
-        filter(StudentActivity.id == None).\
-        order_by(GlobalOrder.global_order).\
-        first()
+#     next_global_order = db.session.query(GlobalOrder.global_order).\
+#         outerjoin(StudentActivity, and_(StudentActivity.content_id == GlobalOrder.content_id, StudentActivity.student_id == current_user.id)).\
+#         filter(StudentActivity.id == None).\
+#         order_by(GlobalOrder.global_order).\
+#         first()
 
-    if not next_global_order:
-        return jsonify({"status": status, "next_content_id": None})
+#     if not next_global_order:
+#         return jsonify({"status": status, "next_content_id": None})
     
-    next_content = GlobalOrder.query.filter_by(global_order=next_global_order[0]).first()
+#     next_content = GlobalOrder.query.filter_by(global_order=next_global_order[0]).first()
 
-    if not next_content:
-        return jsonify({"status": status, "next_content_id": None})
+#     if not next_content:
+#         return jsonify({"status": status, "next_content_id": None})
 
-    return jsonify({"status": status, "next_content_id": next_content.content_id})
+#     return jsonify({"status": status, "next_content_id": next_content.content_id})
 
 
 
