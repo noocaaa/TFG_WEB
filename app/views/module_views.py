@@ -6,7 +6,7 @@ from app.models import StudentProgress, Exercises, GlobalOrder, StudentActivity,
 
 from app import db
 
-from sqlalchemy import and_, func, asc
+from sqlalchemy import and_, asc
 
 import random
 
@@ -416,31 +416,33 @@ def get_current_module_and_next_requirement_for_user(user_id):
 def select_exercise_for_user(user_id, requirement_id):
     # 2.2.1: Obtener la lista de ejercicios para el requisito actual
     available_exercises = db.session.query(Exercises)\
-                                     .join(Exercises.requirements)\
-                                     .filter(Requirement.id_requisito == requirement_id)\
-                                     .all()
-
-    # 2.2.2: Filtrar ejercicios ya intentados por el estudiante (Completados y fallados)
-    completed_exercises = db.session.query(StudentProgress.exercise_id)\
-                                    .filter_by(student_id=user_id, status='completed')\
+                                    .join(Exercises.requirements)\
+                                    .filter(Requirement.id_requisito == requirement_id)\
                                     .all()
 
-    completed_exercise_ids = [exercise[0] for exercise in completed_exercises]
+    # 2.2.2: Obtener todos los registros de progreso del estudiante para los ejercicios relacionados con el requirement_id
+    student_progress_records = db.session.query(StudentProgress.exercise_id, StudentProgress.status)\
+                                        .filter_by(student_id=user_id)\
+                                        .all()
 
-    failed_exercises = db.session.query(StudentProgress.exercise_id)\
-                                .filter_by(student_id=user_id, status='failed')\
-                                .all()
+    completed_exercise_ids = [record[0] for record in student_progress_records if record[1] == 'completed']
+    failed_exercise_ids = [record[0] for record in student_progress_records if record[1] == 'failed']
 
-    failed_exercise_ids = [exercise[0] for exercise in failed_exercises]
+    # Eliminar de la lista de ejercicios fallados aquellos ejercicios que el estudiante ha completado posteriormente
+    failed_exercise_ids = [exercise_id for exercise_id in failed_exercise_ids if exercise_id not in completed_exercise_ids]
+
 
     # Filtramos la lista de ejercicios disponibles para excluir los completados y los fallados
     valid_exercises = [exercise for exercise in available_exercises if exercise.id not in completed_exercise_ids and exercise.id not in failed_exercise_ids]
+
+    if not (valid_exercises):
+        return random.choice(failed_exercise_ids)
 
     # 2.2.3: Identificar si hay algún ejercicio clave pendiente
     key_exercises = [exercise for exercise in valid_exercises if exercise.is_key_exercise]
 
     # 2.2.4: Si hay ejercicios clave pendientes y el estudiante ha completado al menos 4-5 ejercicios
-    completed_exercises_count = len(completed_exercises)
+    completed_exercises_count = len(completed_exercise_ids)
 
     if key_exercises and completed_exercises_count >= 4:
         failed_key_exercises = db.session.query(StudentProgress.exercise_id)\
@@ -484,8 +486,8 @@ def assign_exercise_to_student(user_id, exercise):
     # Siempre creamos una nueva entrada para este estudiante y ejercicio
     new_progress = StudentProgress(
         student_id=user_id,
-        exercise_id=exercise.id,
-        status='in progress',  # Cambiamos a 'in progress'
+        exercise_id=exercise,
+        status='in progress'
     )
     db.session.add(new_progress)
 

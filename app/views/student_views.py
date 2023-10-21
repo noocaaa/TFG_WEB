@@ -203,6 +203,13 @@ def module_exercise(module_id):
 
     user = current_user
     
+    # Functions to get queries
+    def get_exercise(exercise_id):
+        return Exercises.query.filter_by(id=exercise_id).first()
+
+    def get_theory(theory_id):
+        return Theory.query.filter_by(id=theory_id).first()
+
     # Comprobar si el estudiante ya tiene un ejercicio en progreso.
     in_progress_exercise = db.session.query(StudentProgress)\
                                     .filter_by(student_id=current_user.id, status='in progress')\
@@ -226,7 +233,8 @@ def module_exercise(module_id):
         # Si hay un ejercicio seleccionado, lo asignamos al estudiante
         if selected_exercise:
             assign_exercise_to_student(current_user.id, selected_exercise)
-            return render_template('exercise.html', user=user, exercise=selected_exercise, exercise_language=selected_exercise.language)
+            exercise = get_exercise(selected_exercise)
+            return render_template('exercise.html', user=user, exercise=exercise, exercise_language=exercise.language)
 
     # Redireccionar a principal si no se toma ninguna acción.
     return redirect(url_for('student.principal'))
