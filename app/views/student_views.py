@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, jsonify,
 from flask_login import login_user, current_user, logout_user, login_required
 
 from app import db, login_manager, bcrypt
-from app.models import Users, Exercises, StudentProgress, Module, Question, StudentActivity, GlobalOrder, Theory, Notification, ExtraExercises
+from app.models import Users, Exercises, StudentProgress, Module, Question, TheoryRequirement, StudentActivity, GlobalOrder, Theory, Notification, ExtraExercises
 
 from sqlalchemy import func, text, and_
 
@@ -12,7 +12,7 @@ from werkzeug.utils import secure_filename
 
 import os, subprocess, json, uuid, time, re
 
-from app.views.module_views import get_next_module_and_first_requirement_for_user, assign_exercise_to_student, get_current_module_and_next_requirement_for_user, select_exercise_for_user
+from app.views.module_views import assign_exercise_to_student, get_current_module_and_next_requirement_for_user, select_exercise_for_user, get_exercise, get_theory, get_next_theory_for_user
 
 student_blueprint = Blueprint('student', __name__)
 
@@ -202,42 +202,45 @@ def principal():
 def module_exercise(module_id):
 
     user = current_user
-    
-    # Functions to get queries
-    def get_exercise(exercise_id):
-        return Exercises.query.filter_by(id=exercise_id).first()
 
-    def get_theory(theory_id):
-        return Theory.query.filter_by(id=theory_id).first()
-
-    # Comprobar si el estudiante ya tiene un ejercicio en progreso.
+    # Check if there's an exercise in progress for the student.
     in_progress_exercise = db.session.query(StudentProgress)\
                                     .filter_by(student_id=current_user.id, status='in progress')\
                                     .first()
-    
-    # Si hay un ejercicio en progreso, muéstralo.
+
+    # If there's an exercise in progress, display it.
     if in_progress_exercise:
-        exercise = db.session.query(Exercises).filter_by(id=in_progress_exercise.exercise_id).first()
+        exercise = get_exercise(in_progress_exercise.exercise_id)
         return render_template('exercise.html', user=user, exercise=exercise, exercise_language=exercise.language)
 
-    # Obtener el módulo y requisito actuales
+    # Get the current module and next requirement
     _, next_req = get_current_module_and_next_requirement_for_user(current_user.id)
 
-    # Si hay un requisito pendiente en el módulo
+    # If there's a pending requirement in the module
     if next_req:
-        # Obtener el ejercicio para el usuario
+        next_theory_id = get_next_theory_for_user(current_user.id, next_req.requirement_id)
+
+        if next_theory_id:
+            theory = get_theory(next_theory_id)
+            # Assuming you have a theory template to display theory content
+            return render_template('theory.html', user=user, content=theory, content_id=theory.id)
+
+        # If there's no pending theory, proceed with exercise logic
         selected_exercise = select_exercise_for_user(current_user.id, next_req.requirement_id)
 
-        print(selected_exercise)
-
-        # Si hay un ejercicio seleccionado, lo asignamos al estudiante
         if selected_exercise:
+            print("TUUUUUUUUUUUUUUUU")
             assign_exercise_to_student(current_user.id, selected_exercise)
+            print("SUUUUUUUUUUUUUUUU")
+
             exercise = get_exercise(selected_exercise)
+            print("FUUU")
+
             return render_template('exercise.html', user=user, exercise=exercise, exercise_language=exercise.language)
 
-    # Redireccionar a principal si no se toma ninguna acción.
+    # Redirect to main if no action is taken.
     return redirect(url_for('student.principal'))
+
 
 
 @student_blueprint.route('/mark_theory_as_read/<int:content_id>', methods=['POST'])

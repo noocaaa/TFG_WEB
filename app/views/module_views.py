@@ -2,7 +2,7 @@ from flask import Blueprint
 
 from collections import defaultdict
 
-from app.models import StudentProgress, Exercises, GlobalOrder, StudentActivity, ExerciseRequirement, Requirement,  UserRequirementsCompleted, ModuleRequirementOrder
+from app.models import StudentProgress, Exercises, GlobalOrder, StudentActivity, TheoryRequirement, Theory, ExerciseRequirement, Requirement,  UserRequirementsCompleted, ModuleRequirementOrder
 
 from app import db
 
@@ -486,7 +486,7 @@ def assign_exercise_to_student(user_id, exercise):
     # Siempre creamos una nueva entrada para este estudiante y ejercicio
     new_progress = StudentProgress(
         student_id=user_id,
-        exercise_id=exercise,
+        exercise_id=exercise.id,
         status='in progress'
     )
     db.session.add(new_progress)
@@ -559,3 +559,33 @@ def get_next_module_and_first_requirement_for_user(user_id):
 
 
     return next_module.module_id, first_requirement.requirement
+
+
+def get_exercise(exercise_id):
+    return Exercises.query.filter_by(id=exercise_id).first()
+
+def get_theory(theory_id):
+    return Theory.query.filter_by(id=theory_id).first()
+
+# Check if there's any unseen theory for the user and requirement
+def get_next_theory_for_user(student_id, requirement_id):
+    last_theory = db.session.query(StudentActivity)\
+                            .filter_by(student_id=student_id, content_type='Theory')\
+                            .order_by(StudentActivity.content_id.desc())\
+                            .first()
+
+    if last_theory:
+        next_theory = db.session.query(TheoryRequirement)\
+                                .filter_by(id_requirement=requirement_id)\
+                                .filter(TheoryRequirement.id_theory > last_theory.content_id)\
+                                .first()
+        if next_theory:
+            return next_theory.id_theory
+    else:
+        # If the student hasn't seen any theory for the requirement yet
+        first_theory = db.session.query(TheoryRequirement)\
+                                    .filter_by(id_requirement=requirement_id)\
+                                    .first()
+        if first_theory:
+            return first_theory.id_theory
+    return None
