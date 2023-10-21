@@ -2,9 +2,13 @@ from flask import Blueprint
 
 from collections import defaultdict
 
-from app.models import StudentProgress, Exercises, GlobalOrder, StudentActivity, ExerciseRequirement, Requirement
+from app.models import StudentProgress, Exercises, GlobalOrder, StudentActivity, ExerciseRequirement, Requirement,  UserRequirementsCompleted, ModuleRequirementOrder
+
+from app import db
 
 from sqlalchemy import and_, func, asc
+
+import random
 
 module_blueprint = Blueprint('module', __name__)
 
@@ -349,3 +353,125 @@ def get_advanced_exercises(student_id, min_successes=5, min_success_rate=0.8):
 
     
     return recommended_exercises
+
+
+
+# --- CAMBIO DE ESTRUCTURA ---
+
+def get_current_module_and_next_requirement_for_user(user_id):
+    # Primero, obtenemos el último requisito completado para este usuario.
+    last_completed = db.session.query(UserRequirementsCompleted)\
+                               .filter_by(user_id=user_id)\
+                               .order_by(UserRequirementsCompleted.completion_date.desc())\
+                               .first()
+
+    # Si el usuario no ha completado ningún requisito, retorna el primer módulo y su primer requisito.
+    if not last_completed:
+        first_module = db.session.query(ModuleRequirementOrder.module_id).order_by(ModuleRequirementOrder.module_id).first()
+        if not first_module:
+            return None  # No se encontraron módulos.
+
+        first_requirement = db.session.query(ModuleRequirementOrder)\
+                                    .filter_by(module_id=first_module[0])\
+                                    .order_by(ModuleRequirementOrder.order_position)\
+                                    .first()
+        return first_module[0], first_requirement
+
+    current_module_id = last_completed.module_id
+    last_order_position = db.session.query(ModuleRequirementOrder.order_position)\
+                                    .filter_by(module_id=current_module_id, requirement_id=last_completed.requirement_id)\
+                                    .first()
+    
+    if not last_order_position:
+        return None  # No se encontró la posición de orden para el último requisito completado.
+
+    next_requirement = db.session.query(ModuleRequirementOrder)\
+                                .filter_by(module_id=current_module_id)\
+                                .filter(ModuleRequirementOrder.order_position > last_order_position[0])\
+                                .order_by(ModuleRequirementOrder.order_position)\
+                                .first()
+
+    # Si no hay un siguiente requisito en el módulo actual, movemos al usuario al siguiente módulo.
+    if not next_requirement:
+        next_module = db.session.query(ModuleRequirementOrder.module_id)\
+                                .filter(ModuleRequirementOrder.module_id > current_module_id)\
+                                .order_by(ModuleRequirementOrder.module_id)\
+                                .first()
+
+        # Si no hay un siguiente módulo, significa que el estudiante ha completado todos los módulos y requisitos.
+        if not next_module:
+            return None  # Todo completado.
+
+        # Buscamos el primer requisito del nuevo módulo.
+        first_requirement_in_next_module = db.session.query(ModuleRequirementOrder)\
+                                                .filter_by(module_id=next_module[0])\
+                                                .order_by(ModuleRequirementOrder.order_position)\
+                                                .first()
+        return next_module[0], first_requirement_in_next_module
+
+    # Retorna el módulo actual y el próximo requisito en ese módulo.
+    return current_module_id, next_requirement
+
+
+
+def select_exercise_for_user(user_id, requirement_id):
+    # 2.2.1: Obtener la lista de ejercicios para el requisito actual
+    available_exercises = db.session.query(Exercises)\
+                                     .join(Exercises.requirements)\
+                                     .filter(Requirement.id_requisito == requirement_id)\
+                                     .all()
+
+    # 2.2.2: Filtrar ejercicios ya intentados por el estudiante (Completados y fallados)
+    completed_exercises = db.session.query(StudentProgress.exercise_id)\
+                                    .filter_by(student_id=user_id, status='completed')\
+                                    .all()
+
+    completed_exercise_ids = [exercise[0] for exercise in completed_exercises]
+
+    failed_exercises = db.session.query(StudentProgress.exercise_id)\
+                                .filter_by(student_id=user_id, status='failed')\
+                                .all()
+
+    failed_exercise_ids = [exercise[0] for exercise in failed_exercises]
+
+    # Filtramos la lista de ejercicios disponibles para excluir los completados y los fallados
+    valid_exercises = [exercise for exercise in available_exercises if exercise.id not in completed_exercise_ids and exercise.id not in failed_exercise_ids]
+
+    # 2.2.3: Identificar si hay algún ejercicio clave pendiente
+    key_exercises = [exercise for exercise in valid_exercises if exercise.is_key_exercise]
+
+    # 2.2.4: Si hay ejercicios clave pendientes y el estudiante ha completado al menos 4-5 ejercicios
+    completed_exercises_count = len(completed_exercises)
+
+    if key_exercises and completed_exercises_count >= 4:
+        failed_key_exercises = db.session.query(StudentProgress.exercise_id)\
+                                         .filter_by(user_id=user_id, status='failed', is_key_exercise=True)\
+                                         .all()
+        if failed_key_exercises:
+            # Obtener la lista de ejercicios asignados después de fallar el ejercicio clave
+            assigned_exercises_after_fail = db.session.query(StudentProgress)\
+                                                      .filter_by(user_id=user_id)\
+                                                      .filter(StudentProgress.assigned_date > failed_key_exercises[0].assigned_date)\
+                                                      .all()
+
+            completed_after_fail = [exercise for exercise in assigned_exercises_after_fail if exercise.status == 'Completed']
+
+            # Si el estudiante ha completado 3 ejercicios después de fallar, reintroduce el ejercicio clave
+            if len(completed_after_fail) >= 3:
+                return random.choice(key_exercises)
+            else:
+                # Si no ha completado 3 ejercicios, proporciona ejercicios adicionales
+                non_key_exercises = [exercise for exercise in valid_exercises if not exercise.is_key_exercise]
+                if non_key_exercises:
+                    return random.choice(non_key_exercises)
+        else:
+            # Si no ha fallado, seleccionar un ejercicio clave
+            return random.choice(key_exercises)
+
+    # 2.2.5: Seleccionar un ejercicio adecuado
+    # Si no hay ejercicios válidos disponibles, devuelve None
+    if not valid_exercises:
+        return None
+
+    # En otros casos, simplemente seleccionar un ejercicio al azar
+    return random.choice(valid_exercises)

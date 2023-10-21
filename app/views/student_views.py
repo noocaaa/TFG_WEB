@@ -12,7 +12,7 @@ from werkzeug.utils import secure_filename
 
 import os, subprocess, json, uuid, time, re
 
-from app.views.module_views import get_extra_exercises, get_advanced_exercises
+from app.views.module_views import get_extra_exercises, get_advanced_exercises, get_current_module_and_next_requirement_for_user, select_exercise_for_user
 
 student_blueprint = Blueprint('student', __name__)
 
@@ -132,6 +132,12 @@ def principal():
 
     last_module_completely_done = None
 
+    requirements = get_current_module_and_next_requirement_for_user(current_user.id)[1]
+
+    id_req = requirements.requirement_id
+
+    select_exercise_for_user(current_user.id, id_req)
+
     for module in modules:
         total_exercises = (
             db.session.query(Exercises)
@@ -153,7 +159,7 @@ def principal():
             .join(Exercises, ExtraExercises.exercise_id == Exercises.id)
             .filter(
                 ExtraExercises.student_id == current_user.id,
-                ExtraExercises.status == "Completed",
+                ExtraExercises.status == "dCompleted",
                 Exercises.module_id == module.id
             )
             .count()

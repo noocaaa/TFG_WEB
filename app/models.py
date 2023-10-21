@@ -230,7 +230,7 @@ class ModuleRequirementOrder(db.Model):
     requirement = db.relationship("Requirement", backref="module_orders")
 
 class UserRequirementsCompleted(db.Model):
-    __tablename__ = 'UserRequirementsCompleted'
+    __tablename__ = 'userrequirementscompleted'
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
