@@ -12,7 +12,7 @@ from werkzeug.utils import secure_filename
 
 import os, subprocess, json, uuid, time, re
 
-from app.views.module_views import get_extra_exercises, get_advanced_exercises, get_current_module_and_next_requirement_for_user, select_exercise_for_user
+from app.views.module_views import get_next_module_and_first_requirement_for_user, assign_exercise_to_student, get_current_module_and_next_requirement_for_user, select_exercise_for_user
 
 student_blueprint = Blueprint('student', __name__)
 
@@ -132,12 +132,6 @@ def principal():
 
     last_module_completely_done = None
 
-    requirements = get_current_module_and_next_requirement_for_user(current_user.id)[1]
-
-    id_req = requirements.requirement_id
-
-    select_exercise_for_user(current_user.id, id_req)
-
     for module in modules:
         total_exercises = (
             db.session.query(Exercises)
@@ -208,125 +202,34 @@ def principal():
 def module_exercise(module_id):
 
     user = current_user
-
-    # Functions to get queries
-    def get_exercise(exercise_id):
-        return Exercises.query.filter_by(id=exercise_id).first()
-
-    def get_theory(theory_id):
-        return Theory.query.filter_by(id=theory_id).first()
     
-    # Extra Exercises Logic
-    recommended_exercises = get_extra_exercises(current_user.id)
-    pending_extra_exercise = ExtraExercises.query.filter_by(student_id=current_user.id, status='Assigned').first()
-
-    if recommended_exercises and not pending_extra_exercise:
-        for exercise in recommended_exercises:
-            new_extra_exercise = ExtraExercises(student_id=current_user.id, exercise_id=exercise.id)
-            db.session.add(new_extra_exercise)
-        db.session.commit()
-        exercise = get_exercise(recommended_exercises[0].id)
+    # Comprobar si el estudiante ya tiene un ejercicio en progreso.
+    in_progress_exercise = db.session.query(StudentProgress)\
+                                    .filter_by(student_id=current_user.id, status='in progress')\
+                                    .first()
+    
+    # Si hay un ejercicio en progreso, muéstralo.
+    if in_progress_exercise:
+        exercise = db.session.query(Exercises).filter_by(id=in_progress_exercise.exercise_id).first()
         return render_template('exercise.html', user=user, exercise=exercise, exercise_language=exercise.language)
 
-    elif pending_extra_exercise:
-        exercise = get_exercise(pending_extra_exercise.exercise_id)
-        return render_template('exercise.html', user=user, exercise=exercise, exercise_language=exercise.language)
+    # Obtener el módulo y requisito actuales
+    _, next_req = get_current_module_and_next_requirement_for_user(current_user.id)
 
-    # Skip Exercises Logic
-    advanced_exercises = get_advanced_exercises(current_user.id)
+    # Si hay un requisito pendiente en el módulo
+    if next_req:
+        # Obtener el ejercicio para el usuario
+        selected_exercise = select_exercise_for_user(current_user.id, next_req.requirement_id)
 
-    if advanced_exercises:
-        # Obtener las últimas n actividades del estudiante
-        recent_activities = (
-            StudentActivity.query
-            .filter_by(student_id=current_user.id)
-            .order_by(StudentActivity.order_global.desc())
-            .limit(MAX_CONSECUTIVE_SKIPS + MIN_EXERCISES_BETWEEN_SKIPS + 1)
-            .all()
-        )
+        print(selected_exercise)
 
-        # Contar ejercicios realizados y skips
-        exercise_count_since_last_skip = 0
-        skip_count = 0
+        # Si hay un ejercicio seleccionado, lo asignamos al estudiante
+        if selected_exercise:
+            assign_exercise_to_student(current_user.id, selected_exercise)
+            return render_template('exercise.html', user=user, exercise=selected_exercise, exercise_language=selected_exercise.language)
 
-        for activity in recent_activities:
-            if activity.skipped:
-                if exercise_count_since_last_skip < MIN_EXERCISES_BETWEEN_SKIPS:
-                    # No permitir otro skip
-                    return redirect(url_for('student.principal'))  # Redirigir o manejar como prefieras.
-                else:
-                    # Se ha realizado un nuevo skip, reiniciar el contador de ejercicios
-                    exercise_count_since_last_skip = 0
-                    skip_count += 1
-            else:
-                # Se ha completado un ejercicio, incrementar el contador
-                exercise_count_since_last_skip += 1
-
-        if skip_count < MAX_CONSECUTIVE_SKIPS:
-            for exercise in advanced_exercises:
-                existing_activity = (
-                    StudentActivity.query
-                    .filter_by(content_id=exercise.id, student_id=current_user.id, content_type="Exercises")
-                    .first()
-                )
-
-                if not existing_activity:
-                    global_order_entry = (
-                        GlobalOrder.query
-                        .filter_by(content_id=exercise.id, content_type="Exercises")
-                        .first()
-                    )
-
-                    if global_order_entry:
-                        new_activity = StudentActivity(
-                            student_id=current_user.id,
-                            content_id=exercise.id,
-                            order_global=global_order_entry.global_order,
-                            done=False,
-                            skipped=True,
-                            content_type="Exercises"
-                        )
-                        db.session.add(new_activity)
-            
-            db.session.commit()
-
-    # Next Exercise
-    existing_order_globals = (
-        db.session.query(StudentActivity.order_global)
-        .filter_by(student_id=current_user.id)
-    ).subquery()
-
-    next_global_order_entry = (
-        GlobalOrder.query
-        .filter(
-            GlobalOrder.content_type.in_(["Theory", "Exercises"]),
-            ~GlobalOrder.global_order.in_(existing_order_globals)
-        )
-        .order_by(GlobalOrder.global_order)
-        .first()
-    )
-
-    if not next_global_order_entry:
-        return redirect(url_for('student.principal'))
-
-    # Handle next content
-    if next_global_order_entry.content_type == "Theory":
-        theory = get_theory(next_global_order_entry.content_id)
-        if theory and theory.module_id == module_id:
-            return render_template('theory.html', user=user, content=theory, content_id=theory.id)
-
-    elif next_global_order_entry.content_type == "Exercises":
-        exercise = get_exercise(next_global_order_entry.content_id)
-        if exercise and exercise.module_id != module_id:
-            return redirect(url_for('student.module_exercise', module_id=exercise.module_id))
-        if exercise:
-            return render_template('exercise.html', user=user, exercise=exercise, exercise_language=exercise.language)
-
-    # Redirect to principal if no action is taken.
+    # Redireccionar a principal si no se toma ninguna acción.
     return redirect(url_for('student.principal'))
-
-
-
 
 
 @student_blueprint.route('/mark_theory_as_read/<int:content_id>', methods=['POST'])

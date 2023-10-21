@@ -413,7 +413,6 @@ def get_current_module_and_next_requirement_for_user(user_id):
     return current_module_id, next_requirement
 
 
-
 def select_exercise_for_user(user_id, requirement_id):
     # 2.2.1: Obtener la lista de ejercicios para el requisito actual
     available_exercises = db.session.query(Exercises)\
@@ -454,7 +453,7 @@ def select_exercise_for_user(user_id, requirement_id):
                                                       .filter(StudentProgress.assigned_date > failed_key_exercises[0].assigned_date)\
                                                       .all()
 
-            completed_after_fail = [exercise for exercise in assigned_exercises_after_fail if exercise.status == 'Completed']
+            completed_after_fail = [exercise for exercise in assigned_exercises_after_fail if exercise.status == 'completed']
 
             # Si el estudiante ha completado 3 ejercicios después de fallar, reintroduce el ejercicio clave
             if len(completed_after_fail) >= 3:
@@ -475,3 +474,86 @@ def select_exercise_for_user(user_id, requirement_id):
 
     # En otros casos, simplemente seleccionar un ejercicio al azar
     return random.choice(valid_exercises)
+
+
+def assign_exercise_to_student(user_id, exercise):
+    if not exercise:
+        # No hay ejercicio válido para asignar, por lo que no hacemos nada
+        return None
+
+    # Siempre creamos una nueva entrada para este estudiante y ejercicio
+    new_progress = StudentProgress(
+        student_id=user_id,
+        exercise_id=exercise.id,
+        status='in progress',  # Cambiamos a 'in progress'
+    )
+    db.session.add(new_progress)
+
+    # Finalmente, hacemos commit de los cambios en la base de datos
+    db.session.commit()
+
+    # Retorna el ejercicio asignado (por si lo necesitas para algo más)
+    return exercise
+
+
+def handle_all_exercises_completed_or_failed(user_id, requirement_id):
+    # Primero, verifica si todos los ejercicios para este requisito han sido completados o fallados
+    all_exercises_for_requirement = db.session.query(Exercises)\
+                                               .join(Exercises.requirements)\
+                                               .filter(Requirement.id_requisito == requirement_id)\
+                                               .all()
+
+    all_exercise_ids_for_requirement = [exercise.id for exercise in all_exercises_for_requirement]
+
+    completed_and_failed_exercise_ids = db.session.query(StudentProgress.exercise_id)\
+                                                  .filter_by(student_id=user_id)\
+                                                  .filter(StudentProgress.exercise_id.in_(all_exercise_ids_for_requirement))\
+                                                  .filter(or_(StudentProgress.status == 'completed', StudentProgress.status == 'failed'))\
+                                                  .all()
+
+    completed_and_failed_exercise_ids = [exercise[0] for exercise in completed_and_failed_exercise_ids]
+
+    # Si todos los ejercicios para este requisito han sido completados o fallados
+    # Considera reasignar un ejercicio que el estudiante haya fallado previamente
+    if set(all_exercise_ids_for_requirement) == set(completed_and_failed_exercise_ids):
+        failed_exercises = db.session.query(StudentProgress.exercise_id)\
+                                    .filter_by(student_id=user_id, status='failed')\
+                                    .all()
+        if failed_exercises:
+            return random.choice(failed_exercises)  # Devuelve un ejercicio fallado al azar para reintentarlo
+        
+        # O considera mover al estudiante al siguiente requisito
+        next_module, next_requirement = get_current_module_and_next_requirement_for_user(user_id)
+        if next_requirement:
+            # Selecciona un ejercicio para el nuevo requisito
+            return select_exercise_for_user(user_id, next_requirement.requirement_id)
+
+    return None  # Retorna None si no se toma ninguna acción
+
+
+def get_next_module_and_first_requirement_for_user(user_id):
+    # Obtenemos los módulos completados por el usuario
+    completed_modules = db.session.query(UserRequirementsCompleted.module_id
+                                        ).filter(UserRequirementsCompleted.user_id == user_id
+                                        ).distinct().all()
+    
+    completed_module_ids = [module[0] for module in completed_modules]
+
+    # Obtenemos el primer módulo que no haya sido completado por el usuario
+    next_module = db.session.query(ModuleRequirementOrder
+                                ).filter(~ModuleRequirementOrder.module_id.in_(completed_module_ids)
+                                ).order_by(ModuleRequirementOrder.module_id
+                                ).first()
+
+    if not next_module:
+        # El usuario ha completado todos los módulos
+        return None, None
+
+    # Obtenemos el primer requisito del módulo siguiente
+    first_requirement = db.session.query(ModuleRequirementOrder
+                                        ).filter(ModuleRequirementOrder.module_id == next_module.module_id
+                                        ).order_by(ModuleRequirementOrder.order_position
+                                        ).first()
+
+
+    return next_module.module_id, first_requirement.requirement
