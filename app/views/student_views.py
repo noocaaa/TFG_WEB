@@ -312,7 +312,7 @@ def some_compile_function(source_code, language, user_inputs):
 
     # Si la compilación fue exitosa, intentar ejecutar el código
     try:
-        input_data = '\n'.join(user_inputs)  # Combina todas las entradas con saltos de línea
+        input_data = '\n'.join([f"'{x}'" for x in user_inputs])
         if language == 'CPP':
             time.sleep(0.1)  # Agregar retraso de medio segundo
             process = subprocess.Popen(executable_name, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, text=True)
@@ -640,16 +640,6 @@ def mark_notification_read(notification_id):
 
 # ---------------------- CORRECIÓN EJERCICIO ----------------------
 
-
-def check_requirements(source_code, requirements):
-    for req in requirements:
-        if req.name not in source_code: 
-            return False, f"El código fuente no cumple con el requisito: {req.name}"
-    return True, "Todos los requisitos satisfechos"
-
-
-
-
 @student_blueprint.route('/correct_exercise', methods=['POST'])
 @login_required
 def correct_exercise():
@@ -681,23 +671,25 @@ def correct_exercise():
     except ValueError:
         return jsonify({"status": "error", "message": "Invalid test_verification format"})
     
-    if list(test_verification.keys()) == ["A"] and test_verification["A"] == "B":
-        result = some_compile_function(source_code, language, user_inputs)
-        is_correct = (result.strip() == str(exercise.solution).strip())
-    else:
-        print("entre")
-        first_key = list(test_verification.keys())[0]
-        print('FK: ', first_key)
-        result = some_compile_function(source_code, language, first_key)
-        print('R: ', result)
-        # Aquí verificamos si la solución coincide con alguna salida posible en el diccionario de soluciones esperadas
-        is_correct = result.strip() in test_verification.values()
-        print('IC: ', is_correct)
-    
-    if language == "html":
-        status = "under_review"
-    else:
+    if language != "html": 
+        if list(test_verification.keys()) == ["A"] and test_verification["A"] == "B":
+            result = some_compile_function(source_code, language, user_inputs)
+            is_correct = (result.strip() == str(exercise.solution).strip())
+        else:
+            print("entre")    
+            first_key = list(test_verification.keys())[0]
+            result = some_compile_function(source_code, language, [first_key])
+            is_correct = (str(test_verification[first_key]).strip() == result.strip())
+            print('FK: ', first_key)
+            print('R: ', result)
+            print('IC: ', is_correct)
+            print('S: ', test_verification[first_key])
+
         status = "completed" if is_correct else "failed"
+
+    else:        
+        status = "under_review"
+
 
     #Borramos la entrada de in progress, para que el proximo ejercicio se pueda almacenar bien
     in_progress_entry = StudentProgress.query.filter_by(student_id=current_user.id, exercise_id=content_id, status='in progress').first()
