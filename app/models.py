@@ -1,6 +1,7 @@
 from app import db
 from flask_login import UserMixin
 from datetime import datetime
+from sqlalchemy import Enum
 
 class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -87,30 +88,14 @@ class StudentActivity(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    content_id = db.Column(db.Integer, db.ForeignKey('global_order.id'), nullable=False)  # Agregada ForeignKey aquí
-    order_global = db.Column(db.Integer, nullable=False)
+    content_id = db.Column(db.Integer, nullable=False)  # Añadido content_id sin ForeignKey
     done = db.Column(db.Boolean, default=False)
-    content_type = db.Column(db.String(50))
+    content_type = db.Column(Enum('Theory', 'Exercise', name='content_types'), nullable=False)
     skipped = db.Column(db.Boolean, default=False)
-    
-    # Relaciones con ejercicios y/o teoria
-    content = db.relationship('GlobalOrder', backref=db.backref('student_activities', lazy=True))
     
     # Relación con el estudiante
     student = db.relationship('Users', backref='activities', lazy=True)
 
-
-class GlobalOrder(db.Model):
-    __tablename__ = 'global_order'
-
-    id = db.Column(db.Integer, primary_key=True)
-    content_type = db.Column(db.String(10), nullable=False)  # 'theory' o 'exercise'
-    content_id = db.Column(db.Integer, nullable=False)
-    global_order = db.Column(db.Integer, nullable=False)
-
-    # Agregar restricción única para content_id y content_type
-    __table_args__ = (db.UniqueConstraint('content_id', 'content_type', name='unique_content'),)
-    
 class Notification(db.Model):
     __tablename__ = 'notifications'
     

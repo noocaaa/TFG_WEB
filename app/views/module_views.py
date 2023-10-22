@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-from app.models import StudentProgress, Exercises, StudentActivity, TheoryRequirement, Theory, ExerciseRequirement, Requirement,  UserRequirementsCompleted, ModuleRequirementOrder
+from app.models import StudentProgress, Exercises, StudentActivity, TheoryRequirement, Theory, Requirement,  UserRequirementsCompleted, ModuleRequirementOrder
 
 from app import db
 
@@ -100,12 +100,14 @@ def select_exercise_for_user(user_id, requirement_id):
 
     if key_exercises and completed_exercises_count >= 4:
         failed_key_exercises = db.session.query(StudentProgress.exercise_id)\
-                                         .filter_by(user_id=user_id, status='failed', is_key_exercise=True)\
-                                         .all()
+                                        .join(Exercises, Exercises.id == StudentProgress.exercise_id)\
+                                        .filter(StudentProgress.student_id==user_id, StudentProgress.status=='failed', Exercises.is_key_exercise==True)\
+                                        .all()
+
         if failed_key_exercises:
             # Obtener la lista de ejercicios asignados después de fallar el ejercicio clave
             assigned_exercises_after_fail = db.session.query(StudentProgress)\
-                                                      .filter_by(user_id=user_id)\
+                                                      .filter_by(student_id=user_id)\
                                                       .filter(StudentProgress.assigned_date > failed_key_exercises[0].assigned_date)\
                                                       .all()
 

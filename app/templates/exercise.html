@@ -424,13 +424,14 @@ Ejercicio
                     if (result.status === "completed" || result.status === "under_review") {
                         alert("¡Ejercicio " + (result.status === "completed" ? "correcto" : "bajo revisión manual") + "!");
 
-                        if (result.next_content_id) {
+                        if (result.module_completed === "True") {
+                            alert("¡Has completado todos los ejercicios clave de este módulo!");
+                        } else {
                             let nextButton = `<button id="nextExercise">Siguiente Ejercicio</button>`;
                             $("#nextButtonContainer").html(nextButton);
                             nextContentId = result.next_content_id;
-                        } else {
-                            alert("¡Has completado todos los ejercicios de este módulo!");
                         }
+                        
                     } else if (result.status === "incorrect") {
                         alert("No has utilizado los requisitos necesarios para completar el ejercicio.")
                     } else {
@@ -445,11 +446,7 @@ Ejercicio
 
         // Listener del botón "Siguiente Ejercicio"
         $(document).on("click", "#nextExercise", function() {
-            if (nextContentId) {
-                window.location.href = "/module/" + moduleId + "/exercise";
-            } else {
-                alert("¡Has completado todos los ejercicios de este módulo!");
-            }
+            window.location.href = "/module/" + moduleId + "/exercise";
         });
     </script>
 {% endblock %}
