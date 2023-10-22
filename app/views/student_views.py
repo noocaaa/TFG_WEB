@@ -685,9 +685,14 @@ def correct_exercise():
         result = some_compile_function(source_code, language, user_inputs)
         is_correct = (result.strip() == str(exercise.solution).strip())
     else:
+        print("entre")
         first_key = list(test_verification.keys())[0]
+        print('FK: ', first_key)
         result = some_compile_function(source_code, language, first_key)
-        is_correct = (str(test_verification[first_key]).strip() == result.strip())
+        print('R: ', result)
+        # Aquí verificamos si la solución coincide con alguna salida posible en el diccionario de soluciones esperadas
+        is_correct = result.strip() in test_verification.values()
+        print('IC: ', is_correct)
     
     if language == "html":
         status = "under_review"

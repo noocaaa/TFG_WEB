@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import current_user, login_required
 
 from app import db, bcrypt
-from app.models import Users, Exercises, Module, Theory, Requirement, ExerciseRequirement
+from app.models import Users, Exercises, Module, Theory, Requirement, ExerciseRequirement, ModuleRequirementOrder
 
 from werkzeug.utils import secure_filename
 
@@ -23,6 +23,16 @@ def is_valid_json(data):
         return True
     except ValueError:
         return False
+
+def obtener_datos():
+    exercises = Exercises.query.all()
+    teachers = Users.query.filter_by(type_user="X").all()
+    theory = Theory.query.all()
+    requirements = Requirement.query.all()
+    modules = Module.query.all()
+    modulesRequirement = ModuleRequirementOrder.query.all()
+
+    return modules, exercises, teachers, theory, requirements, modulesRequirement
 
 @admin_blueprint.route('/admin_dashboard')
 @login_required
@@ -48,14 +58,12 @@ def admin_dashboard():
     if edit_filter_name:
         exercises_query = exercises_query.filter(Exercises.name.contains(edit_filter_name))
     
-    exercises = exercises_query.all()
-    teachers = Users.query.filter_by(type_user="X").all()
-    theory = Theory.query.all()
-    requirements = Requirement.query.all()
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
+
 
     edit_mode = request.args.get('editMode') == 'true'
 
-    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, requirements=requirements, edit_mode=edit_mode)
+    return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, theory=theory, requirements=requirements, edit_mode=edit_mode)
 
 
 
@@ -76,16 +84,14 @@ def add_exercise():
     is_evaluation = 'evaluationExercise' in request.form  # Esto devolverá True si el checkbox está marcado, de lo contrario, False.
 
     # Variables comunes para el renderizado
-    modules = Module.query.all()
-    exercises = Exercises.query.all()
-    teachers = Users.query.filter_by(type_user="X").all()
-    theory = Theory.query.all()
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
+
 
     # Comprobar si el ejercicio ya existe
     existing_exercise = Exercises.query.filter_by(name=title, module_id=module_id).first()
     if existing_exercise:
         error_msg = 'Ya existe un ejercicio con ese nombre en el módulo seleccionado.'
-        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, error=error_msg)
+        return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, theory=theory, requirements=requirements, error=error_msg)
 
     test_vf = request.form['test_verification']
 
@@ -93,12 +99,12 @@ def add_exercise():
     module = Module.query.get(module_id)
     if not module:
         error_msg = 'El ID del módulo introducido no es correcto.'
-        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, error=error_msg)
+        return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, theory=theory, requirements=requirements, error=error_msg)
 
     # Intenta decodificar el JSON
     if not is_valid_json(test_vf):
         error_msg = 'El campo SOLUTION no contiene un JSON válido.'
-        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, error=error_msg)
+        return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, theory=theory, requirements=requirements, error=error_msg)
 
     # Crear el nuevo ejercicio sin el campo de requisitos por ahora
     exercise = Exercises(
@@ -123,11 +129,11 @@ def add_exercise():
     db.session.flush()  # Esto es necesario para que el ejercicio obtenga su ID después de ser agregado a la sesión
 
     db.session.commit()
+    
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
-    exercises = Exercises.query.all()
-    requirements = Requirement.query.all()
 
-    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
+    return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
 
 @admin_blueprint.route('/admin/add_module', methods=['POST'])
 @login_required
@@ -138,15 +144,12 @@ def add_module():
     
     module_name = request.form['module_name']
 
-    modules = Module.query.all()
-    exercises = Exercises.query.all()
-    teachers = Users.query.filter_by(type_user="X").all()
-    theory = Theory.query.all()
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
     existing_module = Module.query.filter_by(name=module_name).first()
     if existing_module:
         error_msg = 'Ya existe un módulo con ese nombre.'
-        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, error=error_msg)
+        return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, theory=theory, requirements=requirements, error=error_msg)
 
     module = Module(
         name=module_name,
@@ -155,10 +158,9 @@ def add_module():
     db.session.add(module)
     db.session.commit()
 
-    modules = Module.query.all()
-    requirements = Requirement.query.all()
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
-    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
+    return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
 
 
 @admin_blueprint.route('/admin/add_teacher', methods=['POST'])
@@ -178,24 +180,21 @@ def add_teacher():
     email = request.form['email']
     password = request.form['password']
 
-    modules = Module.query.all()
-    exercises = Exercises.query.all()
-    teachers = Users.query.filter_by(type_user="X").all()
-    theory = Theory.query.all()
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
     # Verificar si el correo ya existe
     existing_user = Users.query.filter_by(email=email).first()
 
     if existing_user:
         error_msg = 'Ese correo ya está registrado'
-        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, error=error_msg)
+        return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, theory=theory, requirements=requirements, error=error_msg)
 
     # Verificar si el ID del profesor ya existe
     existing_teacher_id = Users.query.get(teacher_id)
 
     if existing_teacher_id:
         error_msg = 'El ID introducido ya está registrado'
-        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=theory, error=error_msg)
+        return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, theory=theory, requirements=requirements, error=error_msg)
 
     # Hash the password using Flask-Bcrypt
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -216,11 +215,10 @@ def add_teacher():
     db.session.add(new_teacher)
     db.session.commit()
 
-    teachers = Users.query.filter_by(type_user="X").all()
-    requirements = Requirement.query.all()
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
     flash('Profesor añadido con éxito', 'success')
-    return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
+    return  render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
 
 
 @admin_blueprint.route('/admin/add_theory', methods=['POST'])
@@ -230,22 +228,18 @@ def add_theory():
     module_id = request.form.get('module_id')
     content = request.form.get('content')
 
-    modules = Module.query.all()
-    exercises = Exercises.query.all()
-    teachers = Users.query.filter_by(type_user="X").all()
-    theory = Theory.query.all()
-    requirements = Requirement.query.all()
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
     #Por si el ID del modulo no esta
     module = Module.query.get(module_id)
     if not module:
         error_msg = 'El ID del módulo introducido no es correcto.'
-        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, error=error_msg)
+        return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, error=error_msg)
 
     # Validar datos (puedes añadir más validaciones según lo necesites)
     if not module_id or not content:
         error_msg = 'Todos los campos son obligatorios.'
-        return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, error=error_msg)
+        return  render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, error=error_msg)
 
     image = request.files.get('image')
 
@@ -253,7 +247,7 @@ def add_theory():
         # Asegúrate de que el archivo es una imagen
         if not allowed_file(image.filename):
             error_msg = 'Tipo de archivo no permitido. Asegúrate de subir una imagen.'
-            return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, error=error_msg)
+            return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, error=error_msg)
 
         # Obtener la extensión del archivo
         file_ext = os.path.splitext(image.filename)[1]
@@ -278,10 +272,9 @@ def add_theory():
     db.session.add(new_theory)
     db.session.commit()
 
-    theory = Theory.query.all()
-    requirements = Requirement.query.all()
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
-    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
+    return render_template('admin_dashboard.html', modules=modules, modules_requirements = modulesRequirement, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
 
 
 
@@ -307,14 +300,10 @@ def update_module():
 
     db.session.commit()
 
-    modules = Module.query.all()
-    exercises = Exercises.query.all()
-    teachers = Users.query.filter_by(type_user="X").all()
-    theory = Theory.query.all()
-    requirements = Requirement.query.all()
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
 
-    return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
+    return  render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
 
 
 @admin_blueprint.route('/admin/update_exercise', methods=['POST'])
@@ -358,13 +347,9 @@ def update_exercise():
 
     db.session.commit()
 
-    modules = Module.query.all()
-    exercises = Exercises.query.all()
-    teachers = Users.query.filter_by(type_user="X").all()
-    theory = Theory.query.all()
-    requirements = Requirement.query.all()
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
-    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, requirements=requirements, teachers=teachers, theory=theory)
+    return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, requirements=requirements, teachers=teachers, theory=theory)
 
 @admin_blueprint.route('/admin/update_teacher', methods=['POST'])
 @login_required
@@ -396,32 +381,22 @@ def update_teacher():
 
     db.session.commit()
 
-    modules = Module.query.all()
-    exercises = Exercises.query.all()
-    teachers = Users.query.filter_by(type_user="X").all()
-    theory = Theory.query.all()
-    requirements = Requirement.query.all()
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
-
-    return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
+    return  render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
 
 
 @admin_blueprint.route('/admin/update_theory/<int:theory_id>', methods=['POST'])
 @login_required
 def update_theory(theory_id):
     # Obtener todas las teorías, ejercicios y profesores para el template
-    modules = Module.query.all()
-    exercises = Exercises.query.all()
-    teachers = Users.query.filter_by(type_user="X").all()
-    theory_all = Theory.query.all()
-    requirements = Requirement.query.all()
-
+    modules, exercises, teachers, theory_all, requirements, modulesRequirement = obtener_datos()
 
     # Obtener la teoría específica
     theory = Theory.query.get(theory_id)
     if not theory:
         error_msg = 'Teoría no encontrada.'
-        return render_template('admin_dashboard.html', modules=modules, requirements=requirements, exercises=exercises, teachers=teachers, theory=theory_all, error=error_msg)
+        return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, requirements=requirements, exercises=exercises, teachers=teachers, theory=theory_all, error=error_msg)
 
     # Recopilar datos desde el formulario
     content = request.form.get(f'content_{theory_id}')
@@ -429,13 +404,14 @@ def update_theory(theory_id):
     # Validar datos
     if not content:
         error_msg = 'El contenido es obligatorio.'
-        return render_template('admin_dashboard.html', modules=modules, requirements=requirements, exercises=exercises, teachers=teachers, theory=theory_all, error=error_msg)
+        return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, requirements=requirements, exercises=exercises, teachers=teachers, theory=theory_all, error=error_msg)
 
     # Actualizar y guardar los cambios en la base de datos
     theory.content = content
+
     db.session.commit()
 
-    return render_template('admin_dashboard.html', modules=modules, requirements=requirements, exercises=exercises, teachers=teachers, theory=theory_all)
+    return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, requirements=requirements, exercises=exercises, teachers=teachers, theory=theory_all)
 
 
 # ------------------- DELETE -------------------
@@ -449,11 +425,7 @@ def delete_module():
     if not current_user.is_authenticated:  
         return redirect(url_for('control.login'))
     
-    modules = Module.query.all()
-    exercises = Exercises.query.all()
-    teachers = Users.query.filter_by(type_user="X").all()
-    theory = Theory.query.all()
-    requirements = Requirement.query.all()
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
     module_id = request.form.get('module_id')
     if module_id:
@@ -466,13 +438,13 @@ def delete_module():
             db.session.commit()
         else:
             error_msg = 'Módulo no encontrado'
-            return  render_template('admin_dashboard.html', modules=modules, requirements=requirements, exercises=exercises, teachers=teachers, theory=theory, error=error_msg)
+            return  render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, requirements=requirements, exercises=exercises, teachers=teachers, theory=theory, error=error_msg)
 
     else:
         error_msg = 'Error al eliminar el módulo'
-        return  render_template('admin_dashboard.html', modules=modules, requirements=requirements, exercises=exercises, teachers=teachers, theory=theory, error=error_msg)
+        return  render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, requirements=requirements, exercises=exercises, teachers=teachers, theory=theory, error=error_msg)
 
-    return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, requirements=requirements, teachers=teachers, theory=theory)
+    return  render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, requirements=requirements, teachers=teachers, theory=theory)
 
 
 @admin_blueprint.route('/admin/delete_exercise', methods=['POST'])
@@ -484,11 +456,7 @@ def delete_exercise():
     
     exercise_id = request.form.get('exercise_id')
 
-    modules = Module.query.all()
-    exercises = Exercises.query.all()
-    teachers = Users.query.filter_by(type_user="X").all()
-    theory = Theory.query.all()
-    requirements = Requirement.query.all()
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
     if exercise_id:
         # Obtiene el ejercicio por ID
@@ -500,14 +468,14 @@ def delete_exercise():
             db.session.commit()
         else:
             error_msg = 'Ejercicio no encontrado'
-            return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, error=error_msg)
+            return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, error=error_msg)
     else:
         error_msg = 'Error al eliminar el ejercicio'
-        return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory,  error=error_msg)
+        return  render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory,  error=error_msg)
 
     exercises = Exercises.query.all()
 
-    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
+    return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
 
 
 @admin_blueprint.route('/admin/delete_teacher', methods=['POST'])
@@ -525,22 +493,18 @@ def delete_teacher():
     teacher_id = request.form.get('teacher_id')
     teacher = Users.query.get(teacher_id)
 
-    modules = Module.query.all()
-    exercises = Exercises.query.all()
-    teachers = Users.query.filter_by(type_user="X").all()
-    theory = Theory.query.all()
-    requirements = Requirement.query.all()
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
     if not teacher:
         error_msg = 'Profesor no encontrado'
-        return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, error=error_msg)
+        return  render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, error=error_msg)
 
     db.session.delete(teacher)
     db.session.commit()
 
     teachers = Users.query.filter_by(type_user="X").all()
 
-    return  render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
+    return  render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
 
 
 @admin_blueprint.route('/admin/delete_theory', methods=['POST'])
@@ -551,16 +515,12 @@ def delete_theory():
     # Intentar obtener la teoría usando el ID
     theory = Theory.query.get(theory_id)
 
-    modules = Module.query.all()
-    exercises = Exercises.query.all()
-    teachers = Users.query.filter_by(type_user="X").all()
-    all_theory = Theory.query.all()
-    requirements = Requirement.query.all()
+    modules, exercises, teachers, all_theory, requirements, modulesRequirement = obtener_datos()
 
     if not theory:
         error_msg = 'Teoría no encontrada.'
 
-        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=all_theory, error=error_msg)
+        return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=all_theory, error=error_msg)
 
     # Eliminar la teoría y guardar los cambios en la base de datos
     db.session.delete(theory)
@@ -569,7 +529,7 @@ def delete_theory():
     # Recargar la página con las teorías actualizadas
     all_theory = Theory.query.all()
 
-    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=all_theory)
+    return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=all_theory)
 
 @admin_blueprint.route('/admin/add_requirement', methods=['POST'])
 @login_required
@@ -578,32 +538,28 @@ def add_requirement():
     requirement_name = request.form.get('requirement_name')
 
     # Intentar obtener la teoría usando el ID
-    modules = Module.query.all()
-    exercises = Exercises.query.all()
-    teachers = Users.query.filter_by(type_user="X").all()
-    all_theory = Theory.query.all()
-    requirements = Requirement.query.all()
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
     # Validar datos
     if not requirement_name:
         flash('El nombre del requisito es obligatorio.', 'error')
-        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=all_theory, requirements=requirements)
+        return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, theory=theory, requirements=requirements)
 
     # Verificar si el requisito ya existe
     existing_requirement = Requirement.query.filter_by(name=requirement_name).first()
     if existing_requirement:
         flash('El requisito ya existe.', 'error')
-        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, theory=all_theory, requirements=requirements)
+        return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, theory=theory, requirements=requirements)
 
     # Crear y guardar el nuevo requisito en la base de datos
     new_requirement = Requirement(name=requirement_name)
     db.session.add(new_requirement)
     db.session.commit()
 
-    requirements = Requirement.query.all()
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
     flash('Requisito añadido exitosamente.', 'success')
-    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=all_theory)
+    return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
 
 
 @admin_blueprint.route('/admin/delete_requirement', methods=['POST'])
@@ -612,25 +568,21 @@ def delete_requirement():
     # Recopilar ID del requisito desde el formulario
     requirement_id = request.form.get('requirement_id')
 
-    modules = Module.query.all()
-    exercises = Exercises.query.all()
-    teachers = Users.query.filter_by(type_user="X").all()
-    all_theory = Theory.query.all()
-    requirements = Requirement.query.all()
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
     # Buscar el requisito en la base de datos
     requirement_to_delete = Requirement.query.get(requirement_id)
     
     if not requirement_to_delete:
         flash('Requisito no encontrado.', 'error')
-        return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=all_theory)
+        return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
 
     # Eliminar el requisito de la base de datos
     db.session.delete(requirement_to_delete)
     db.session.commit()
 
-    requirements = Requirement.query.all()
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
     flash('Requisito eliminado exitosamente.', 'success')
-    return render_template('admin_dashboard.html', modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=all_theory)
+    return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
 
