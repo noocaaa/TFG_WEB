@@ -217,7 +217,7 @@ class ModuleRequirementOrder(db.Model):
 class UserRequirementsCompleted(db.Model):
     __tablename__ = 'userrequirementscompleted'
     
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     requirement_id = db.Column(db.Integer, db.ForeignKey('requisitos.id_requisito'), nullable=False)
     module_id = db.Column(db.Integer, db.ForeignKey('modules.id'), nullable=False)

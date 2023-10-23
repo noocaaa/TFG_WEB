@@ -33,7 +33,7 @@ def load_user(user_id):
 def favicon():
     return '', 204
 
-@control_blueprint.route('/control.logout')
+@control_blueprint.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('control.login'))

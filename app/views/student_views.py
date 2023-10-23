@@ -12,45 +12,9 @@ from werkzeug.utils import secure_filename
 
 import os, subprocess, json, uuid, time, re
 
-from app.views.module_views import assign_exercise_to_student, get_current_module_and_next_requirement_for_user, select_exercise_for_user, get_exercise, get_theory, get_next_theory_for_user
+from app.views.module_views import assign_exercise_to_student, mark_requirement_as_completed, get_current_module_and_next_requirement_for_user, select_exercise_for_user, get_exercise, all_exercises_completed_for_requirement, get_theory, get_next_theory_for_user
 
 student_blueprint = Blueprint('student', __name__)
-
-# con tal de evitar que haya skips consecutivos
-MIN_EXERCISES_BETWEEN_SKIPS = 3
-MAX_CONSECUTIVE_SKIPS = 1
-
-def is_valid_json(data):
-    try:
-        json.loads(data)
-        return True
-    except ValueError:
-        return False
-
-
-
-@student_blueprint.before_request
-def update_last_seen():
-    if current_user.is_authenticated:
-        current_user.last_seen = datetime.utcnow()
-        db.session.commit()
-
-
-# --- GENERAL ---
-
-@login_manager.user_loader
-def load_user(user_id):
-    return Users.query.get(int(user_id))
-
-@student_blueprint.route('/favicon.ico')
-def favicon():
-    return '', 204
-
-@student_blueprint.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('control.login'))
-
 
 # --- USUARIO ---
 
@@ -171,6 +135,10 @@ def module_exercise(module_id):
     # Get the current module and next requirement
     _, next_req = get_current_module_and_next_requirement_for_user(current_user.id)
 
+    if all_exercises_completed_for_requirement(current_user.id, next_req.requirement_id):
+            mark_requirement_as_completed(current_user.id, next_req.requirement_id, module_id)
+            _, next_req = get_current_module_and_next_requirement_for_user(current_user.id)
+
     # If there's a pending requirement in the module
     if next_req:
         next_theory_id = get_next_theory_for_user(current_user.id, next_req.requirement_id)
@@ -279,8 +247,6 @@ def extract_classname(source_code):
         return match.group(1)
     return None
 
-
-
 def some_compile_function(source_code, language, user_inputs):
     # Guardar el código en un archivo temporal
     filename = 'temp_code'
@@ -312,7 +278,11 @@ def some_compile_function(source_code, language, user_inputs):
 
     # Si la compilación fue exitosa, intentar ejecutar el código
     try:
-        input_data = '\n'.join([f"'{x}'" for x in user_inputs])
+        if all(len(ui) == 1 for ui in user_inputs):
+            input_data = '"' + ''.join(user_inputs) + '"'
+        else:
+            input_data = '\n'.join(['"' + ui + '"' for ui in user_inputs])
+
         if language == 'CPP':
             time.sleep(0.1)  # Agregar retraso de medio segundo
             process = subprocess.Popen(executable_name, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, text=True)
@@ -678,7 +648,7 @@ def correct_exercise():
         else:
             print("entre")    
             first_key = list(test_verification.keys())[0]
-            result = some_compile_function(source_code, language, [first_key])
+            result = some_compile_function(source_code, language, first_key)
             is_correct = (str(test_verification[first_key]).strip() == result.strip())
             print('FK: ', first_key)
             print('R: ', result)
