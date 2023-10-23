@@ -435,7 +435,8 @@ Ejercicio
                     } else if (result.status === "incorrect") {
                         alert("No has utilizado los requisitos necesarios para completar el ejercicio.")
                     } else {
-                        alert("Resultado incorrecto. Por favor, inténtalo de nuevo.");
+                        alert("Resultado incorrecto. ¡Prueba con otro ejercicio!");
+                        window.location.href = "/module/" + moduleId + "/exercise";
                     }
                 },
                 error: function(error) {

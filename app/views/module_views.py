@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-from app.models import StudentProgress, Exercises, StudentActivity, TheoryRequirement, Theory, Requirement,  UserRequirementsCompleted, ModuleRequirementOrder
+from app.models import StudentProgress, Exercises, ExerciseRequirement, StudentActivity, TheoryRequirement, Theory, Requirement,  UserRequirementsCompleted, ModuleRequirementOrder
 
 from app import db
 
@@ -70,17 +70,16 @@ def get_current_module_and_next_requirement_for_user(user_id):
 def select_exercise_for_user(user_id, requirement_id):
     # 2.2.1: Obtener la lista de ejercicios para el requisito actual
     available_exercises = db.session.query(Exercises)\
-                                    .join(Exercises.requirements)\
-                                    .filter(Requirement.id_requisito == requirement_id)\
+                                    .join(ExerciseRequirement, ExerciseRequirement.exercise_id == Exercises.id)\
+                                    .filter(ExerciseRequirement.requirement_id == requirement_id)\
                                     .all()
 
     # 2.2.2: Obtener todos los registros de progreso del estudiante para los ejercicios relacionados con el requirement_id
     student_progress_records = db.session.query(StudentProgress.exercise_id, StudentProgress.status)\
                                         .join(Exercises, Exercises.id == StudentProgress.exercise_id)\
-                                        .join(Requirement, Requirement.id_requisito == Exercises.requirement_id)\
-                                        .filter(StudentProgress.student_id == user_id, Requirement.id_requisito == requirement_id)\
+                                        .join(ExerciseRequirement, ExerciseRequirement.exercise_id == Exercises.id)\
+                                        .filter(StudentProgress.student_id == user_id, ExerciseRequirement.requirement_id == requirement_id)\
                                         .all()
-
 
     completed_exercise_ids = [record[0] for record in student_progress_records if record[1] == 'completed']
     failed_exercise_ids = [record[0] for record in student_progress_records if record[1] == 'failed']
@@ -91,11 +90,11 @@ def select_exercise_for_user(user_id, requirement_id):
     # Filtramos la lista de ejercicios disponibles para excluir los completados y los fallados
     valid_exercises = [exercise for exercise in available_exercises if exercise.id not in completed_exercise_ids and exercise.id not in failed_exercise_ids]
 
-    if not (valid_exercises):
+    if not valid_exercises:
         failed_exercise = db.session.query(Exercises)\
                                     .filter(Exercises.id.in_(failed_exercise_ids), Exercises.requirement_id == requirement_id)\
                                     .all()
-        return random.choice(failed_exercise)
+        return random.choice(failed_exercise) if failed_exercise else None
 
     # 2.2.3: Identificar si hay algún ejercicio clave pendiente
     key_exercises = [exercise for exercise in valid_exercises if exercise.is_key_exercise]
@@ -109,7 +108,7 @@ def select_exercise_for_user(user_id, requirement_id):
                                         .filter(StudentProgress.student_id == user_id, 
                                                 StudentProgress.status == 'failed', 
                                                 Exercises.is_key_exercise == True,
-                                                Exercises.requirement_id == requirement_id)\
+                                                ExerciseRequirement.requirement_id == requirement_id)\
                                         .all()
 
         if failed_key_exercises:
@@ -117,7 +116,7 @@ def select_exercise_for_user(user_id, requirement_id):
             assigned_exercises_after_fail = db.session.query(StudentProgress)\
                                                     .join(Exercises, Exercises.id == StudentProgress.exercise_id)\
                                                     .filter(StudentProgress.student_id == user_id,
-                                                            Exercises.requirement_id == requirement_id,
+                                                            ExerciseRequirement.requirement_id == requirement_id,
                                                             StudentProgress.start_date > failed_key_exercises[0].start_date)\
                                                     .all()
 
