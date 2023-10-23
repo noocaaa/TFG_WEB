@@ -305,10 +305,10 @@ def calculate_score(style_feedback, complexity, loops_detected):
     
     # Deducción por problemas de estilo (por cada problema detectado, se restan 10 puntos)
     style_issues = style_feedback.count("\n")
-    score -= 10 * style_issues
+    score -= 5 * style_issues
     
-    # Deducción por complejidad ciclomática (si es mayor a un umbral)
-    if complexity > 10: # Por ejemplo, si consideras 10 como umbral
+    # Deducción por complejidad ciclomática
+    if complexity > 10:
         score -= 20
 
     # Deducción por detección de bucles
@@ -319,10 +319,10 @@ def calculate_score(style_feedback, complexity, loops_detected):
     return max(0, score)
 
 def all_checkings(source_code, language):
-    if language=='Python':
+    if language == 'PYTHON':
         # Evaluamos el estilo del código
         style_feedback = evaluate_code_style(source_code)
-        
+
         # Calculamos la complejidad ciclomática
         complexity = calculate_cyclomatic_complexity(source_code)
 
