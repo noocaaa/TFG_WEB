@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, jsonify,
 from flask_login import current_user, login_required
 
 from app import db, bcrypt
-from app.models import Exercises, StudentProgress, Module, Question, StudentActivity, Theory, Notification
+from app.models import Exercises, StudentProgress, Module, Question, Notification, ModuleRequirementOrder, ExerciseRequirement
 
 from sqlalchemy import func, text
 
@@ -18,6 +18,28 @@ student_blueprint = Blueprint('student', __name__)
 
 # --- USUARIO ---
 
+def get_completed_exercises_count_for_module(user_id, module_id):
+    # Primero, obtenemos todos los requisitos para el módulo
+    requirements = ModuleRequirementOrder.query.filter_by(module_id=module_id).all()
+    
+    total_completed = 0
+    extra = 0
+
+    for requirement in requirements:
+        count = db.session.query(StudentProgress)\
+                  .join(Exercises, Exercises.id == StudentProgress.exercise_id)\
+                  .join(ExerciseRequirement, ExerciseRequirement.exercise_id == Exercises.id)\
+                  .filter(StudentProgress.student_id == user_id,
+                          StudentProgress.status == "completed",
+                          ExerciseRequirement.requirement_id == requirement.requirement_id,
+                          Exercises.is_key_exercise == False)\
+                   .count()
+        if count > 4:
+            extra += count - 4
+        total_completed += count
+        
+    return total_completed, extra
+
 @student_blueprint.route('/principal')
 @login_required
 def principal():
@@ -25,29 +47,50 @@ def principal():
         return redirect(url_for('control.login'))
 
     show_modal = not bool(current_user.avatar_id)
-
     user = current_user
 
     modules = Module.query.order_by(Module.id).all()
     modules_progress = []
 
-    last_module_completely_done = None
+    current_module_found = False
 
     for module in modules:
+        # Número de ejercicios clave para el módulo
+        key_exercises = Exercises.query.filter_by(module_id=module.id, is_key_exercise=True).count()
+
+        # Requerimientos del módulo
+        module_requirements = ModuleRequirementOrder.query.filter_by(module_id=module.id).count()
+        print(module_requirements)
+
+        # Total de ejercicios completados por el estudiante en ese módulo
+        completed_exercises, extra = get_completed_exercises_count_for_module(user.id, module.id)
+
+        # Obtiene el porcentaje del progreso usando la fórmula dada.
+        if module_requirements + key_exercises == 0:
+            progress = 0
+        else:
+            progress = (completed_exercises / (module_requirements * 4 + key_exercises + extra)) * 100  
+
+       # Si el módulo tiene un progreso menor a 100% y no hemos encontrado un módulo actual, este es el módulo actual
+        if progress < 100 and not current_module_found:
+            current_module_found = True
+            available = True  # El módulo actual siempre debe estar disponible
+
+        # Si hemos encontrado un módulo actual y este módulo no es el módulo actual, entonces este es el módulo siguiente
+        elif current_module_found and progress == 0:
+            available = True
+            current_module_found = False  # Resetear esta variable para no marcar otros módulos como disponibles
+
+        else:
+            available = False
+
+
         modules_progress.append({
             'module': module,
-            'progress': 0,
-            'available': False  # Inicialmente ponemos todos los módulos como no disponibles
+            'progress': progress,  # Ahora progress es un porcentaje
+            'requirements': module_requirements,
+            'available': available
         })
-
-    if last_module_completely_done == None:
-        last_module_completely_done = 14 # el primer modulo q tenemos en la BBDD
-
-    for module_prog in modules_progress:
-        module_id = module_prog['module'].id
-
-        if module_id <= last_module_completely_done: 
-            module_prog['available'] = True
 
     return render_template('principal.html', show_modal=show_modal, user=user, modules_progress=modules_progress)
 
