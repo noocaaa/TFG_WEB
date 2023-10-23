@@ -4,7 +4,7 @@ from app.models import StudentProgress, Exercises, ExerciseRequirement, StudentA
 
 from app import db
 
-from sqlalchemy import and_, asc, or_
+from sqlalchemy import  or_
 
 import random
 

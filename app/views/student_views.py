@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, jsonify, request, current_app
-from flask_login import login_user, current_user, logout_user, login_required
+from flask_login import login_user, current_user, login_required
 
-from app import db, login_manager, bcrypt
-from app.models import Users, Exercises, StudentProgress, Module, Question, StudentActivity, Theory, Notification, ExtraExercises
+from app import db, bcrypt
+from app.models import Users, Exercises, StudentProgress, Module, Question, StudentActivity, Theory, Notification
 
-from sqlalchemy import func, text, and_
+from sqlalchemy import func, text
 
 from datetime import datetime, timedelta
 
