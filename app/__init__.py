@@ -27,19 +27,9 @@ def create_app():
     app.config['UPLOAD_FOLDER'] = os.getenv('UPLOAD_FOLDER')
     app.config['STATIC_FOLDER'] = os.getenv('STATIC_FOLDER')
 
-    # Configuración para enviar correos automaticamente
-    # app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
-    # app.config['MAIL_PORT'] = os.getenv('MAIL_PORT')
-    # app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
-    # app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
-    # app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS')
-    # app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL')
-
-
     # Crear la carpeta de subida si no existe
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
         os.makedirs(app.config['UPLOAD_FOLDER'])
-
 
     # Inicializar las extensiones con la app
     db.init_app(app)
@@ -51,12 +41,14 @@ def create_app():
     login_manager.login_message = "Please log in to access this page."
 
     # Importar y registrar las vistas (Blueprints) al final para evitar referencias circulares
-    from app.views import admin_blueprint, student_blueprint, teacher_blueprint, control_blueprint, module_blueprint
+    from app.views import admin_blueprint, student_blueprint, teacher_blueprint, control_blueprint, module_blueprint, general_blueprint, exercise_blueprint
     
     app.register_blueprint(admin_blueprint)
     app.register_blueprint(student_blueprint)
     app.register_blueprint(teacher_blueprint)
     app.register_blueprint(control_blueprint)
     app.register_blueprint(module_blueprint)
+    app.register_blueprint(general_blueprint)
+    app.register_blueprint(exercise_blueprint)
 
     return app

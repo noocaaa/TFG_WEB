@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, jsonify, request, current_app
-from flask_login import login_user, current_user, login_required
+from flask_login import current_user, login_required
 
 from app import db, bcrypt
-from app.models import Users, Exercises, StudentProgress, Module, Question, StudentActivity, Theory, Notification
+from app.models import Exercises, StudentProgress, Module, Question, StudentActivity, Theory, Notification
 
 from sqlalchemy import func, text
 
@@ -17,69 +17,6 @@ from app.views.module_views import assign_exercise_to_student, mark_requirement_
 student_blueprint = Blueprint('student', __name__)
 
 # --- USUARIO ---
-
-@student_blueprint.route('/', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        user = Users.query.filter_by(email=email).first()
-        if user and user.check_password(password, bcrypt):
-            login_user(user)
-            if user.type_user == 'T': #notación para admin
-                return redirect(url_for('admin.admin_dashboard'))
-            elif user.type_user == 'X': #notacion para profesores
-                return redirect(url_for('teacher.teacher_dashboard'))
-            else:
-                return redirect(url_for('student.principal'))
-        else:
-            return render_template('login.html', error="Usuario o contraseña incorrectos")
-    return render_template('login.html')
-
-@student_blueprint.route('/registro', methods=['GET', 'POST'])
-def registro():
-    if request.method == 'POST':
-        first_name = request.form.get('first_name')
-        last_name = request.form.get('last_name')
-        birth_date = request.form.get('birth_date')
-        city = request.form.get('city')
-        gender = request.form.get('gender')
-        email = request.form.get('email')
-        password = request.form.get('password')
-
-        # Verificar si el correo ya existe
-        existing_user = Users.query.filter_by(email=email).first()
-        if existing_user:
-            return render_template('registro.html', error="Ese correo ya está registrado")
-
-        # Verificar si la contraseña cumple con los requisitos
-        if not validate_password(password):
-            return render_template('registro.html', error="La contraseña no cumple con los requisitos")
-
-        # Hash the password using Flask-Bcrypt
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-
-        # --- Hay que quitar el current module_id no nos sirve para nada de lo implementado. 
-        new_user = Users(first_name=first_name, last_name=last_name, birth_date=birth_date, city=city, gender=gender, email=email, password=hashed_password, type_user="S", avatar_id=None, current_module_id="7")
-
-        db.session.add(new_user)
-        db.session.commit()
-
-        return redirect(url_for('control.login'))
-
-    return render_template('registro.html')
-
-def validate_password(password):
-    # Reglas que la contraseña debe cumplir
-    if len(password) < 8:
-        return False
-    if not any(char.isdigit() for char in password):
-        return False
-    if not any(char.isupper() for char in password):
-        return False
-    return True
-
-
 
 @student_blueprint.route('/principal')
 @login_required
@@ -160,36 +97,6 @@ def module_exercise(module_id):
     return redirect(url_for('student.principal'))
 
 
-
-@student_blueprint.route('/mark_theory_as_read/<int:content_id>', methods=['POST'])
-@login_required
-def mark_theory_as_read(content_id):
-    student_id = current_user.id
-    
-    # Crear un nuevo registro en studentactivity
-    activity = StudentActivity(
-        student_id=student_id,
-        content_id=content_id,
-        done=True,
-        content_type='Theory'
-    )
-    
-    db.session.add(activity)
-    db.session.commit()
-
-    # Obtener el module_id asociado al content_id
-    content_record = Theory.query.filter_by(id=content_id).first()
-
-    if not content_record:
-        flash('Error al obtener el módulo asociado.', 'danger')
-        return redirect(url_for('student.principal'))
-
-    module_id = content_record.module_id
-
-    return redirect(url_for('student.module_exercise', module_id=module_id))
-
-
-
 @student_blueprint.route('/almacenar_avatar', methods=['POST'])
 @login_required
 def almacenar_avatar():
@@ -240,138 +147,7 @@ def view_exercise(exercise_id):
         return redirect(url_for('student.principal'))
     return render_template('contenido.html', exercise=exercise, user=user)
 
-
-def extract_classname(source_code):
-    match = re.search(r'\bclass\s+(\w+)', source_code)
-    if match:
-        return match.group(1)
-    return None
-
-def some_compile_function(source_code, language, user_inputs):
-    # Guardar el código en un archivo temporal
-    filename = 'temp_code'
-    executable_name = None
-
-    if language == 'CPP':
-        filename += '.cpp'
-        executable_name = os.path.join(os.getcwd(), 'temp_output')
-    elif language == 'JAVA':
-        filename += '.java'
-    elif language == 'PYTHON':
-        filename += '.py'
-    elif language == 'HTML':
-        filename += '.html'
-    else:
-        return jsonify({"error": "Lenguaje no soportado"}), 400
-
-    with open(filename, 'w') as f:
-        f.write(source_code)
-
-    # Intentar compilar el código
-    try:
-        if language == 'CPP':
-            subprocess.check_output(['g++', filename, '-o', executable_name], stderr=subprocess.STDOUT)
-        elif language == 'JAVA':
-            subprocess.check_output(['javac', filename], stderr=subprocess.STDOUT)
-    except subprocess.CalledProcessError as e:
-        return e.output.decode('utf-8')
-
-    # Si la compilación fue exitosa, intentar ejecutar el código
-    try:
-        if all(len(ui) == 1 for ui in user_inputs):
-            input_data = '"' + ''.join(user_inputs) + '"'
-        else:
-            input_data = '\n'.join(['"' + ui + '"' for ui in user_inputs])
-
-        if language == 'CPP':
-            time.sleep(0.1)  # Agregar retraso de medio segundo
-            process = subprocess.Popen(executable_name, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, text=True)
-            output, error = process.communicate(input=input_data) # Aquí es donde pasas la entrada del usuario
-            if process.returncode != 0:  # Esto es para manejar errores en la ejecución
-                return error
-            return output
-        elif language == 'JAVA':
-            class_name = extract_classname(source_code)
-            if not class_name:
-                return "Error: No se pudo determinar el nombre de la clase en el código fuente."
-            time.sleep(0.1)  # Agregar retraso de medio segundo
-            process = subprocess.Popen(['java', '-cp', '.', class_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, text=True)
-            output, error = process.communicate(input=input_data) # Aquí es donde pasas la entrada del usuario
-            if process.returncode != 0:  # Esto es para manejar errores en la ejecución
-                return error
-            return output
-        elif language == 'PYTHON':
-            time.sleep(0.1)
-            process = subprocess.Popen(['python', filename], stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, text=True)
-            output, error = process.communicate(input=input_data)
-            if process.returncode != 0:
-                return error
-            return output
-        elif language == 'HTML':
-            # No se necesita ejecución para HTML, simplemente se devuelve el código fuente.
-            return source_code
-    except subprocess.CalledProcessError as e:
-        return e.output.decode('utf-8')
-    finally:
-        if os.path.exists(filename):
-            os.remove(filename)
-        if language == 'CPP' and os.path.exists(executable_name):
-            os.remove(executable_name)
-        elif language == 'JAVA' and os.path.exists(f'{class_name}.class'):
-            os.remove(f'{class_name}.class')
-
-
-
-@student_blueprint.route('/compile', methods=['POST'])
-@login_required
-def compile_code():
-    # Comprobar si el usuario está loggeado
-    if not current_user.is_authenticated:  
-        return redirect(url_for('control.login'))
-    
-    # Obtener el código y el lenguaje del cuerpo de la petición
-    source_code = request.form.get('source_code')
-    language = request.form.get('language')
-    
-    # Obtener las entradas del usuario
-    user_inputs = request.form.getlist('user_inputs[]') # Esto asume que las entradas se envían como una lista llamada 'user_inputs[]'
-    
-    # Compilación y ejecución del código con las entradas del usuario
-    result = some_compile_function(source_code, language, user_inputs)
-    
-    return jsonify({"output": result})
-
-
-
-def get_solution_for_exercise(exercise_name, module_id):
-    # Buscar en la base de datos el ejercicio por su nombre y módulo
-    try:
-        exercise = Exercises.query.filter(
-            func.trim(Exercises.name) == exercise_name.strip(),
-            Exercises.module_id == module_id
-        ).first()        
-        if exercise:
-            return exercise.solution
-        else:
-            return "No se encontró el ejercicio"
-    except Exception as e:
-        return str(e)
-
-
-
 # -----
-
-
-@student_blueprint.route('/biblioteca')
-@login_required
-def biblioteca():
-    # Comprobar si el usuario está loggeado
-    if not current_user.is_authenticated:  
-        return redirect(url_for('control.login'))
-        
-    user = current_user
-
-    return render_template('biblioteca.html', user=user)
   
 @student_blueprint.route('/preguntas')
 @login_required
@@ -470,16 +246,6 @@ def rankings():
 
     return render_template('rankings.html', user=current_user, daily_ranking=daily_ranking, weekly_ranking=weekly_ranking, monthly_ranking=monthly_ranking)
 
-
-@student_blueprint.route('/clanes')
-@login_required
-def clanes():
-    # Comprobar si el usuario está loggeado
-    if not current_user.is_authenticated:  
-        return redirect(url_for('control.login'))
-    
-    return render_template('clanes.html', user=current_user)
-
 @student_blueprint.route('/configuracion', methods=['GET', 'POST'])
 @login_required
 def configuracion():
@@ -505,83 +271,10 @@ def configuracion():
 
     return render_template('configuracion.html', user=current_user,)
 
-@student_blueprint.route('/logo_guide')
-@login_required
-def logo_guide():
-    # Comprobar si el usuario está loggeado
-    if not current_user.is_authenticated:  
-        return redirect(url_for('control.login'))
-    
-    return render_template('logo_guide.html', user=current_user)
-
-@student_blueprint.route('/cpp_guide')
-@login_required
-def cpp_guide():
-    # Comprobar si el usuario está loggeado
-    if not current_user.is_authenticated:  
-        return redirect(url_for('control.login'))
-
-    return render_template('cpp_guide.html', user=current_user)
-
-@student_blueprint.route('/python_guide')
-@login_required
-def python_guide():
-    # Comprobar si el usuario está loggeado
-    if not current_user.is_authenticated:  
-        return redirect(url_for('control.login'))
-    
-    return render_template('python_guide.html', user=current_user)
-
-@student_blueprint.route('/java_guide')
-@login_required
-def java_guide():
-    # Comprobar si el usuario está loggeado
-    if not current_user.is_authenticated:  
-        return redirect(url_for('control.login'))
-
-    return render_template('java_guide.html', user=current_user)
-
-@student_blueprint.route('/web_guide')
-@login_required
-def web_guide():
-    # Comprobar si el usuario está loggeado
-    if not current_user.is_authenticated:  
-        return redirect(url_for('control.login'))
-    
-    user=current_user
-
-    return render_template('web_guide.html')
-
-@student_blueprint.route('/web_guide/html')
-@login_required
-def html_guide():
-    # Comprobar si el usuario está loggeado
-    if not current_user.is_authenticated:  
-        return redirect(url_for('control.login'))
-    
-    return render_template('html_guide.html', user=current_user)
-
-@student_blueprint.route('/web_guide/css')
-@login_required
-def css_guide():
-    # Comprobar si el usuario está loggeado
-    if not current_user.is_authenticated:  
-        return redirect(url_for('control.login'))
-    
-    return render_template('css_guide.html', user=current_user)
-
-@student_blueprint.route('/web_guide/javascript')
-@login_required
-def javascript_guide():
-    # Comprobar si el usuario está loggeado
-    if not current_user.is_authenticated:  
-        return redirect(url_for('control.login'))
-    
-    return render_template('javascript_guide.html', user=current_user)
 
 
 
-#  -------------------------------------------------------------------------------------
+#  -------- NOTIFICATIONS --------
 
 
 @student_blueprint.route('/notifications', methods=['GET'])
@@ -605,134 +298,3 @@ def mark_notification_read(notification_id):
         notification.is_read = True
         db.session.commit()
     return '', 204  # No content
-
-
-
-# ---------------------- CORRECIÓN EJERCICIO ----------------------
-
-@student_blueprint.route('/correct_exercise', methods=['POST'])
-@login_required
-def correct_exercise():
-    
-    if not current_user.is_authenticated:  
-        return redirect(url_for('control.login'))
-
-    source_code = request.form.get('source_code')
-    language = request.form.get('language')
-    content_id = request.form.get('exercise_id')
-
-    start_time = int(request.form.get('start_time'))
-    start_time = datetime.fromtimestamp(start_time / 1000.0)
-
-    end_time = int(request.form.get('end_time'))
-    end_time = datetime.fromtimestamp(end_time / 1000.0)
-    
-    exercise = Exercises.query.get(content_id)
-    if not exercise:
-        return jsonify({"status": "error", "message": "El ejercicio no existe."})
-
-    time_spent = (end_time - start_time).seconds  
-
-    user_inputs = request.form.getlist('user_inputs[]')
-
-    try:
-        once_decoded = json.loads(exercise.test_verification)
-        test_verification = json.loads(once_decoded)
-    except ValueError:
-        return jsonify({"status": "error", "message": "Invalid test_verification format"})
-    
-    if language != "html": 
-        if list(test_verification.keys()) == ["A"] and test_verification["A"] == "B":
-            result = some_compile_function(source_code, language, user_inputs)
-            is_correct = (result.strip() == str(exercise.solution).strip())
-        else:
-            print("entre")    
-            first_key = list(test_verification.keys())[0]
-            result = some_compile_function(source_code, language, first_key)
-            is_correct = (str(test_verification[first_key]).strip() == result.strip())
-            print('FK: ', first_key)
-            print('R: ', result)
-            print('IC: ', is_correct)
-            print('S: ', test_verification[first_key])
-
-        status = "completed" if is_correct else "failed"
-
-    else:        
-        status = "under_review"
-
-
-    #Borramos la entrada de in progress, para que el proximo ejercicio se pueda almacenar bien
-    in_progress_entry = StudentProgress.query.filter_by(student_id=current_user.id, exercise_id=content_id, status='in progress').first()
-    if in_progress_entry:
-        db.session.delete(in_progress_entry)
-
-    new_progress = StudentProgress(
-        student_id=current_user.id, 
-        exercise_id=content_id, 
-        status=status, 
-        solution_code=source_code,
-        start_date=start_time, 
-        completion_date=end_time, 
-        time_spent=time_spent
-    )
-
-    db.session.add(new_progress)
-
-    student_activity = StudentActivity.query.filter_by(student_id=current_user.id, content_id=content_id).first()
-    if not student_activity:
-        new_activity = StudentActivity(student_id=current_user.id, content_id=content_id, done=True, content_type="Exercise")
-        db.session.add(new_activity)
-    else:
-        student_activity.done = True
-    
-    db.session.commit()
-
-    # Verificar si todos los ejercicios clave han sido completados correctamente por el estudiante
-    module_id = exercise.module_id
-    key_exercises = Exercises.query.filter_by(module_id=module_id, is_key_exercise=True).all()
-
-    module_completed = True
-    for key_exercise in key_exercises:
-        student_progress = StudentProgress.query.filter_by(student_id=current_user.id, exercise_id=key_exercise.id, status='completed').first()
-        if not student_progress:
-            module_completed = False
-            break
-
-
-    response_data = {"status": status, "module_completed": module_completed}
-
-    return jsonify(response_data)
-
-
-
-@student_blueprint.route('/time_out', methods=['POST'])
-@login_required
-def time_out():
-    source_code = request.form.get('source_code')
-    content_id = request.form.get('exercise_id')
-
-    start_time = int(request.form.get('start_time'))
-    start_time = datetime.fromtimestamp(start_time / 1000.0)
-
-    end_time = int(request.form.get('end_time'))
-    end_time = datetime.fromtimestamp(end_time / 1000.0)
-
-    time_spent = (end_time - start_time).seconds  
-
-    status = "failed"
-
-    new_progress = StudentProgress(
-        student_id=current_user.id, 
-        exercise_id=content_id, 
-        status=status, 
-        solution_code=source_code,
-        start_date=start_time, 
-        completion_date=end_time, 
-        time_spent=time_spent
-    )
-
-    db.session.add(new_progress)
-
-    db.session.commit()
-
-    return jsonify({"status": "done"})
