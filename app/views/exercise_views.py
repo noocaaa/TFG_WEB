@@ -184,39 +184,31 @@ def time_out():
 
     return jsonify({"status": "done"})
 
-@exercise_blueprint.route('/correct_exercise', methods=['POST'])
-@login_required
-def correct_exercise():
-    
-    if not current_user.is_authenticated:  
-        return redirect(url_for('control.login'))
 
+# --- FUNCIÓN Y FUNCIONES AUXILIARES PARA CORRECT_EXERCISE
+
+def gather_data():
     source_code = request.form.get('source_code')
     language = request.form.get('language')
     content_id = request.form.get('exercise_id')
-
-    start_time = int(request.form.get('start_time'))
-    start_time = datetime.fromtimestamp(start_time / 1000.0)
-
-    end_time = int(request.form.get('end_time'))
-    end_time = datetime.fromtimestamp(end_time / 1000.0)
-    
-    exercise = Exercises.query.get(content_id)
-    if not exercise:
-        return jsonify({"status": "error", "message": "El ejercicio no existe."})
-
-    time_spent = (end_time - start_time).seconds  
-
+    start_time = datetime.fromtimestamp(int(request.form.get('start_time')) / 1000.0)
+    end_time = datetime.fromtimestamp(int(request.form.get('end_time')) / 1000.0)
     user_inputs = request.form.getlist('user_inputs[]')
+    return source_code, language, content_id, start_time, end_time, user_inputs
+
+def compile_and_correct(content_id, source_code, language, user_inputs):
+    exercise = Exercises.query.get(content_id)
+    
+    if not exercise:
+        return "error", False
 
     try:
         once_decoded = json.loads(exercise.test_verification)
         test_verification = json.loads(once_decoded)
     except ValueError:
-        return jsonify({"status": "error", "message": "Invalid test_verification format"})
-    
-    if language != "html": 
+        return "error", False
 
+    if language != "html":
         if list(test_verification.keys()) == ["A"] and test_verification["A"] == "B":
             result = some_compile_function(source_code, language, user_inputs)
             is_correct = (result.strip() == str(exercise.solution).strip())
@@ -226,23 +218,23 @@ def correct_exercise():
             is_correct = (str(test_verification[first_key]).strip() == result.strip())
 
         status = "completed" if is_correct else "failed"
-
-    else:        
+    else:
         status = "under_review"
 
+    return status
 
-    #Borramos la entrada de in progress, para que el proximo ejercicio se pueda almacenar bien
+def update_student_progress_and_activity(content_id, source_code, start_time, end_time, time_spent, status):
     in_progress_entry = StudentProgress.query.filter_by(student_id=current_user.id, exercise_id=content_id, status='in progress').first()
     if in_progress_entry:
         db.session.delete(in_progress_entry)
 
     new_progress = StudentProgress(
-        student_id=current_user.id, 
-        exercise_id=content_id, 
-        status=status, 
+        student_id=current_user.id,
+        exercise_id=content_id,
+        status=status,
         solution_code=source_code,
-        start_date=start_time, 
-        completion_date=end_time, 
+        start_date=start_time,
+        completion_date=end_time,
         time_spent=time_spent
     )
 
@@ -254,21 +246,39 @@ def correct_exercise():
         db.session.add(new_activity)
     else:
         student_activity.done = True
-    
+
     db.session.commit()
 
-    # Verificar si todos los ejercicios clave han sido completados correctamente por el estudiante
+def check_module_completion(exercise):
     module_id = exercise.module_id
     key_exercises = Exercises.query.filter_by(module_id=module_id, is_key_exercise=True).all()
-
-    module_completed = True
     for key_exercise in key_exercises:
         student_progress = StudentProgress.query.filter_by(student_id=current_user.id, exercise_id=key_exercise.id, status='completed').first()
         if not student_progress:
-            module_completed = False
-            break
+            return False
+    return True
 
+@exercise_blueprint.route('/correct_exercise', methods=['POST'])
+@login_required
+def correct_exercise():
+    
+    if not current_user.is_authenticated:  
+        return redirect(url_for('control.login'))
+    
+    # Obtenemos los datos necesarios
+    source_code, language, content_id, start_time, end_time, user_inputs = gather_data()
 
-    response_data = {"status": status, "module_completed": module_completed}
+    exercise = Exercises.query.get(content_id)
 
-    return jsonify(response_data)
+    time_spent = (end_time - start_time).seconds  
+
+    # Comprobamos que la solución es correcta
+    status = compile_and_correct(content_id, source_code, language, user_inputs)
+
+    #Almacenamos la información en la BBDD
+    update_student_progress_and_activity(content_id, source_code, start_time, end_time, time_spent, status)
+
+    #Comprobamos si el modulo se ha completado
+    module_completed = check_module_completion(exercise)
+
+    return jsonify({"status": status, "module_completed": module_completed})
