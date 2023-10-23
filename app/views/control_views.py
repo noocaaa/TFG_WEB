@@ -54,7 +54,7 @@ def login():
                 return redirect(url_for('student.principal'))
         else:
             return render_template('login.html', error="Usuario o contraseña incorrectos")
-    return render_template('control.login.html')
+    return render_template('login.html')
 
 @control_blueprint.route('/registro', methods=['GET', 'POST'])
 def registro():
@@ -98,7 +98,7 @@ def registro():
             db.session.add(new_student_progress)
             db.session.commit()
 
-        return redirect(url_for('control.login'))
+        return redirect(url_for('login.html'))
 
     return render_template('registro.html')
 
