@@ -8,7 +8,9 @@ from sqlalchemy import func
 
 from datetime import datetime
 
-import os, subprocess, json, time, re
+import os, subprocess, json, time, re, tempfile, ast
+
+from radon.complexity import cc_visit
 
 exercise_blueprint = Blueprint('exercise', __name__)
 
@@ -258,6 +260,84 @@ def check_module_completion(exercise):
             return False
     return True
 
+
+def evaluate_code_style(source_code):
+    import pylint.epylint as lint
+
+    # Crear un archivo temporal
+    with tempfile.NamedTemporaryFile(suffix=".py", delete=False) as temp:
+        temp_name = temp.name
+        temp.write(source_code.encode())
+
+    try:
+        (pylint_stdout, _) = lint.py_run(f"{temp_name} --disable=missing-final-newline,missing-module-docstring", return_std=True)
+        feedback = pylint_stdout.getvalue()
+    finally:
+        os.remove(temp_name)
+
+    return feedback
+
+
+def calculate_cyclomatic_complexity(source_code):
+    blocks = cc_visit(source_code)
+    total_complexity = sum(block.complexity for block in blocks)
+    return total_complexity
+
+class LoopDetector(ast.NodeVisitor):
+    def __init__(self):
+        self.has_loops = False
+
+    def visit_For(self, node):
+        self.has_loops = True
+
+    def visit_While(self, node):
+        self.has_loops = True
+
+def has_loops(source_code):
+    tree = ast.parse(source_code)
+    detector = LoopDetector()
+    detector.visit(tree)
+    return detector.has_loops
+
+def calculate_score(style_feedback, complexity, loops_detected):
+    # Puntuación inicial
+    score = 100
+    
+    # Deducción por problemas de estilo (por cada problema detectado, se restan 10 puntos)
+    style_issues = style_feedback.count("\n")
+    score -= 10 * style_issues
+    
+    # Deducción por complejidad ciclomática (si es mayor a un umbral)
+    if complexity > 10: # Por ejemplo, si consideras 10 como umbral
+        score -= 20
+
+    # Deducción por detección de bucles
+    if loops_detected:
+        score -= 15
+
+    # Asegurarte de que la puntuación no caiga por debajo de 0
+    return max(0, score)
+
+def all_checkings(source_code, language):
+    if language=='Python':
+        # Evaluamos el estilo del código
+        style_feedback = evaluate_code_style(source_code)
+        
+        # Calculamos la complejidad ciclomática
+        complexity = calculate_cyclomatic_complexity(source_code)
+
+        # Detectamos bucles en el código
+        loops_detected = has_loops(source_code)
+
+        return style_feedback, complexity, loops_detected
+
+def update_score_user(user, score):
+    if user.score is None:
+        user.score = 0
+    user.score += score
+    db.session.commit()
+
+
 @exercise_blueprint.route('/correct_exercise', methods=['POST'])
 @login_required
 def correct_exercise():
@@ -274,6 +354,13 @@ def correct_exercise():
 
     # Comprobamos que la solución es correcta
     status = compile_and_correct(content_id, source_code, language, user_inputs)
+
+    if status == 'completed':
+        style_feedback, complexity, loops_detected = all_checkings(source_code, language)
+
+        score = calculate_score(style_feedback, complexity, loops_detected)
+    
+        update_score_user(current_user, score)
 
     #Almacenamos la información en la BBDD
     update_student_progress_and_activity(content_id, source_code, start_time, end_time, time_spent, status)

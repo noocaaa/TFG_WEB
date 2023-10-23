@@ -10,4 +10,5 @@ pycodestyle==2.11.1
 pyflakes==3.1.0
 pylint==2.5.3
 astroid==2.4.2
+radon==6.0.1
 # pip freeze > requirements.txt para librerias creadas en el entorno virtual
