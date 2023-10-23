@@ -37,7 +37,7 @@ def create_app():
     login_manager.init_app(app)
     cors.init_app(app, resources={r"/api/*": {"origins": "http://127.0.0.1:5000", "supports_credentials": True}})
 
-    login_manager.login_view = 'student.login'
+    login_manager.login_view = 'control.login'
     login_manager.login_message = "Please log in to access this page."
 
     # Importar y registrar las vistas (Blueprints) al final para evitar referencias circulares

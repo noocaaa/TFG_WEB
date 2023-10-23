@@ -57,9 +57,13 @@ def admin_dashboard():
         exercises_query = exercises_query.filter(Exercises.language == edit_filter_language)
     if edit_filter_name:
         exercises_query = exercises_query.filter(Exercises.name.contains(edit_filter_name))
-    
+
+    filtered_exercises = exercises_query.all()
+
     modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
+    # Aquí sobreescribes "exercises" con "filtered_exercises"
+    exercises = filtered_exercises
 
     edit_mode = request.args.get('editMode') == 'true'
 
@@ -82,10 +86,10 @@ def add_exercise():
     language = request.form['language']
     requirements = request.form['requirements']
     is_evaluation = 'evaluationExercise' in request.form  # Esto devolverá True si el checkbox está marcado, de lo contrario, False.
+    reference_solution = request.form['reference_solution']
 
     # Variables comunes para el renderizado
     modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
-
 
     # Comprobar si el ejercicio ya existe
     existing_exercise = Exercises.query.filter_by(name=title, module_id=module_id).first()
@@ -114,7 +118,8 @@ def add_exercise():
         module_id=module_id,
         test_verification=test_vf,
         language=language,
-        is_key_exercise=is_evaluation
+        is_key_exercise=is_evaluation,
+        reference_solution=reference_solution
     )
 
     # Dividir la cadena de requisitos en una lista y añadirlos a la tabla ExerciseRequirement
@@ -131,7 +136,6 @@ def add_exercise():
     db.session.commit()
     
     modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
-
 
     return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
 
@@ -344,6 +348,8 @@ def update_exercise():
                             db.session.add(exercise_requirement)
             elif key.startswith("language_"):
                 exercise.language = value
+            elif key.startswith("reference_solution_"):
+                exercise.reference_solution = value
 
     db.session.commit()
 

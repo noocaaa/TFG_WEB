@@ -184,6 +184,7 @@ class Exercises(db.Model):
     language = db.Column(db.Enum('LOGO', 'PYTHON', 'C++', 'JAVA', 'WEB'))
     requires_manual_review = db.Column(db.Boolean, default=False)
     is_key_exercise = db.Column(db.Boolean, default=False)
+    reference_solution = db.Column(db.Text)
 
     requirements = db.relationship(
         'Requirement',

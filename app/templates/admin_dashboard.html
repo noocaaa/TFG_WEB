@@ -182,6 +182,12 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="reference_solution">Código para la solución de referencia:</label>
+                                <textarea name="reference_solution" class="form-control" rows="3"></textarea>
+                                <small class="form-text text-muted">Ingrese la solución de referencia para este ejercicio.</small>
+                            </div>                            
+
+                            <div class="form-group">
                                 <label for="test_verification">Test de verificación (¡¡Formato JSON!!):</label>
                                 <textarea name="test_verification" class="form-control" rows="5" placeholder='{"InputProporcionado": "OutputEsperado", ...}' required></textarea>
                                 <small class="form-text text-muted">El JSON debe ser válido.</small>
@@ -479,6 +485,9 @@
                                     <label>Solución:</label>
                                     <input type="text" name="solution_{{ exercise.id }}" value="{{ exercise.solution }}">
                                     
+                                    <label>Solución de Referencia:</label>
+                                    <textarea name="reference_solution_{{ exercise.id }}">{{ exercise.reference_solution }}</textarea>                        
+
                                     <label>Verificación:</label>
                                     <input type="text" name="test_verification_{{ exercise.id }}" value="{{ exercise.test_verification }}">
                                     
