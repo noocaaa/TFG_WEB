@@ -108,7 +108,13 @@ def module_exercise(module_id):
     # If there's an exercise in progress, display it.
     if in_progress_exercise:
         exercise = get_exercise(in_progress_exercise.exercise_id)
-        return render_template('exercise.html', user=user, exercise=exercise, exercise_language=exercise.language)
+
+         # Añade un mensaje de alerta basado en los requisitos del ejercicio
+        requirements_str = ', '.join([req.name for req in exercise.requirements])
+        alert_message = f'¡Cuidado! Este ejercicio debe contener: {requirements_str} para poder ser valido.'
+        
+        return render_template('exercise.html', user=user, exercise=exercise, exercise_language=exercise.language, alert_message=alert_message)
+
 
     # Get the current module and next requirement
     _, next_req = get_current_module_and_next_requirement_for_user(current_user.id)
@@ -131,8 +137,12 @@ def module_exercise(module_id):
         if selected_exercise:
             assign_exercise_to_student(current_user.id, selected_exercise)
             exercise = get_exercise(selected_exercise.id)
+            
+            # Añade un mensaje de alerta basado en los requisitos del ejercicio
+            requirements_str = ', '.join([req.name for req in exercise.requirements])
+            alert_message = f'¡Cuidado! Este ejercicio debe contener: {requirements_str} para poder ser valido.'
 
-            return render_template('exercise.html', user=user, exercise=exercise, exercise_language=exercise.language)
+            return render_template('exercise.html', user=user, exercise=exercise, exercise_language=exercise.language, alert_message=alert_message)
 
     # Redirect to main if no action is taken.
     return redirect(url_for('student.principal'))
