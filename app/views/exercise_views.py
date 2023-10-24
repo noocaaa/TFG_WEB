@@ -2,13 +2,13 @@ from flask import Blueprint, redirect, url_for, flash, jsonify, request
 from flask_login import current_user, login_required
 
 from app import db
-from app.models import Exercises, StudentProgress, StudentActivity, Theory
+from app.models import Exercises, StudentProgress, StudentActivity, Theory, Requirement, UserRequirementsCompleted, ModuleRequirementOrder, ExtraExercises
 
 from sqlalchemy import func
 
 from datetime import datetime
 
-import os, subprocess, json, time, re, tempfile, ast
+import os, subprocess, json, time, re, tempfile, ast, random
 
 from radon.complexity import cc_visit
 
@@ -337,11 +337,232 @@ def update_score_user(user, score):
     user.score += score
     db.session.commit()
 
+class RequirementVisitor(ast.NodeVisitor):
+    def __init__(self):
+        self.requirements_found = {
+            'Intro': False, # Puede ser un requisito general, necesito más detalles
+            'Basic-Operators': False,
+            'Logical-Operators': False,
+            'If-Else': False,
+            'Switch': False, # Python no tiene Switch, quizás es para otro lenguaje
+            'While': False,
+            'For': False,
+            'Functions-Basics': False,
+            'Functions-Advanced': False, # Necesitaría una definición de "avanzado"
+            'Classes': False,
+            'Inheritance': False,
+            'Styles': False, # Esto parece ser específico para CSS/HTML
+            'Interactivity': False, # Esto parece ser específico para JS/DOM
+            'DOM-Basics': False, # Esto parece ser específico para JS/DOM
+            'DOM-Advanced': False, # Esto parece ser específico para JS/DOM
+            'Lists': False,
+            'Dictionaries': False
+        }
+
+    def visit_BinOp(self, node):
+        # Comprobar operadores básicos
+        if isinstance(node.op, (ast.Add, ast.Sub, ast.Mult, ast.Div)):
+            self.requirements_found['Basic-Operators'] = True
+        self.generic_visit(node)
+
+    def visit_BoolOp(self, node):
+        # Comprobar operadores lógicos
+        self.requirements_found['Logical-Operators'] = True
+        self.generic_visit(node)
+
+    def visit_If(self, node):
+        # Comprobar If-Else
+        self.requirements_found['If-Else'] = True
+        self.generic_visit(node)
+
+    def visit_While(self, node):
+        # Comprobar While
+        self.requirements_found['While'] = True
+        self.generic_visit(node)
+
+    def visit_For(self, node):
+        # Comprobar For
+        self.requirements_found['For'] = True
+        self.generic_visit(node)
+
+    def visit_FunctionDef(self, node):
+        # Comprobar definición básica de funciones
+        self.requirements_found['Functions-Basics'] = True
+        self.generic_visit(node)
+
+    def visit_ClassDef(self, node):
+        # Comprobar clases
+        self.requirements_found['Classes'] = True
+        # Comprobar herencia
+        if node.bases:
+            self.requirements_found['Inheritance'] = True
+        self.generic_visit(node)
+
+    def visit_List(self, node):
+        # Comprobar listas
+        self.requirements_found['Lists'] = True
+        self.generic_visit(node)
+
+    def visit_Dict(self, node):
+        # Comprobar diccionarios
+        self.requirements_found['Dictionaries'] = True
+        self.generic_visit(node)
+
+def check_requirements(code):
+    tree = ast.parse(code)
+    visitor = RequirementVisitor()
+    visitor.visit(tree)
+    return visitor.requirements_found
+
+
+# Obtener los ejercicios recientes completados por un estudiante para un requisito específico
+def get_recent_completed_exercises(student_id, recent_num, related_exercises_ids):
+    recent_exercises = (
+        StudentProgress.query
+        .filter(
+            StudentProgress.student_id == student_id,
+            StudentProgress.exercise_id.in_(related_exercises_ids),
+            StudentProgress.status.in_(['completed', 'failed'])
+        )
+        .order_by(StudentProgress.completion_date.desc())
+        .limit(recent_num)
+        .all()
+    )
+    
+    return recent_exercises
+
+# Determina el numero de ejercicios extras que añadir al estudiante
+def determine_number_of_extra_exercises(student_id, recent_num=4, max_extra_exercises=5, failure_rate_threshold=0.35):
+    # 1. Buscar el último requirement completado por el estudiante
+    last_completed_requirement = (
+        UserRequirementsCompleted.query
+        .filter_by(user_id=student_id)
+        .order_by(UserRequirementsCompleted.completion_date.desc())
+        .first()
+    )
+    
+    if not last_completed_requirement:
+        # Si el estudiante aún no ha completado ningún requisito, podemos seleccionar el primer requisito
+        # del primer módulo como el "requirement" actual.
+        next_requirement = (
+            ModuleRequirementOrder.query
+            .order_by(ModuleRequirementOrder.module_id, ModuleRequirementOrder.order_position)
+            .first()
+        )
+    else:
+        # Si el estudiante ha completado algún requisito, determina el siguiente
+        current_position = (
+            ModuleRequirementOrder.query
+            .filter_by(module_id=last_completed_requirement.module_id, requirement_id=last_completed_requirement.requirement_id)
+            .first()
+        )
+        
+        next_requirement = (
+            ModuleRequirementOrder.query
+            .filter_by(module_id=current_position.module_id)
+            .filter(ModuleRequirementOrder.order_position > current_position.order_position)
+            .order_by(ModuleRequirementOrder.order_position)
+            .first()
+        )
+    
+    # Si no hay un próximo requisito, terminar
+    if not next_requirement:
+        return 0
+    
+    requirement_obj = Requirement.query.get(next_requirement.requirement_id)
+
+    if not requirement_obj:
+        return 0
+
+    related_exercises_ids = [exercise.id for exercise in requirement_obj.exercises]
+    
+    recent_exercises = get_recent_completed_exercises(student_id, recent_num, related_exercises_ids)
+    
+    # Hasta que el estudiante no haya realizado el recent_num no se puede establecer si avanzar o añadir ejercicios
+    if len(recent_exercises) < recent_num:
+        return 0
+    
+    failed_exercises = sum(1 for exercise in recent_exercises if exercise.status == "failed")
+    failure_rate = failed_exercises / len(recent_exercises)
+
+    # Si la tasa de fallos es demasiado baja, no asignar ejercicios adicionales
+    if failure_rate < failure_rate_threshold:
+        return 0
+
+    all_times = [e.time_spent for e in recent_exercises]
+    min_time = min(all_times)
+    max_time = max(all_times)
+    
+    if min_time == max_time:
+        normalized_time_last_exercise = 1
+    else:
+        time_spent_last_exercise = recent_exercises[0].time_spent
+
+        if time_spent_last_exercise == 0:
+            time_spent_last_exercise = min_time
+        
+        normalized_time_last_exercise = (time_spent_last_exercise - min_time) / (max_time - min_time)
+    
+    weight_failure_rate = 0.7
+    weight_time = 0.3
+
+    normalized_time = abs(0.5 - normalized_time_last_exercise) * 2
+    
+    weighted_sum = (weight_failure_rate * failure_rate + weight_time * normalized_time)
+    
+    return max(0, round(weighted_sum * max_extra_exercises))
+
+
+def assign_extra_exercises(user_id):
+    # 1. Determinar cuántos ejercicios extra se necesitan
+    num_extra = determine_number_of_extra_exercises(user_id)
+
+    # 2. Identificar ejercicios disponibles como extras
+    all_exercises = db.session.query(Exercises).all()
+
+    # 2.1 Excluir ejercicios ya asignados como extras o intentados por el estudiante en la tabla de progreso regular
+    assigned_extra_exercise_ids = db.session.query(ExtraExercises.exercise_id)\
+                                            .filter(ExtraExercises.student_id == user_id)\
+                                            .all()
+
+    student_progress_records = db.session.query(StudentProgress)\
+                                         .filter(StudentProgress.student_id == user_id)\
+                                         .all()
+
+    attempted_exercise_ids = [record.exercise_id for record in student_progress_records] + [record[0] for record in assigned_extra_exercise_ids]
+    failed_exercise_ids = [record.exercise_id for record in student_progress_records if record.status == 'failed']
+
+    not_attempted_exercises = [exercise for exercise in all_exercises if exercise.id not in attempted_exercise_ids]
+    failed_exercises = [exercise for exercise in all_exercises if exercise.id in failed_exercise_ids]
+
+    # 3. Asignar ejercicios al estudiante
+    for i in range(num_extra):
+        if not_attempted_exercises:
+            extra_exercise = random.choice(not_attempted_exercises)
+            not_attempted_exercises.remove(extra_exercise)
+        elif failed_exercises:
+            extra_exercise = random.choice(failed_exercises)
+            failed_exercises.remove(extra_exercise)
+        else:
+            break  # No hay más ejercicios para asignar
+
+        # Crear el registro que conecta al estudiante con el ejercicio extra en la tabla ExtraExercises.
+        new_record = ExtraExercises(
+            student_id=user_id, 
+            exercise_id=extra_exercise.id, 
+            assigned_date=datetime.utcnow(), 
+            status='Assigned'
+        )
+        db.session.add(new_record)
+
+    db.session.commit()
+
+
 
 @exercise_blueprint.route('/correct_exercise', methods=['POST'])
 @login_required
 def correct_exercise():
-    
+
     if not current_user.is_authenticated:  
         return redirect(url_for('control.login'))
     
@@ -349,23 +570,53 @@ def correct_exercise():
     source_code, language, content_id, start_time, end_time, user_inputs = gather_data()
 
     exercise = Exercises.query.get(content_id)
-
+    
     time_spent = (end_time - start_time).seconds  
-
+    
     # Comprobamos que la solución es correcta
     status = compile_and_correct(content_id, source_code, language, user_inputs)
 
     if status == 'completed':
         style_feedback, complexity, loops_detected = all_checkings(source_code, language)
+        
+        student_score = calculate_score(style_feedback, complexity, loops_detected)
 
-        score = calculate_score(style_feedback, complexity, loops_detected)
-    
-        update_score_user(current_user, score)
+        requirements_status = check_requirements(source_code)
+        
+        met_requirements = sum(1 for _, is_met in requirements_status.items() if is_met)
+        
+        # Penalización por requisitos no cumplidos
+        for req, is_met in requirements_status.items():
+            if not is_met:
+                student_score -= 10
+
+        # Si no se cumple al menos el 60% de los requisitos, la solución es inválida.
+        if met_requirements < 0.6 * len(requirements_status):
+            student_score = 0
+            status = "failed"
+        
+        # Obtener la puntuación de la solución de referencia
+        if exercise.reference_solution:
+            ref_sf, ref_c, ref_l = all_checkings(exercise.reference_solution, language)
+            teacher_score = calculate_score(ref_sf, ref_c, ref_l)
+
+            # Ajustar la puntuación del estudiante basado en la comparación con la solución de referencia
+            fitness = max(0, 1 - abs(teacher_score - student_score) / 100.0)
+            student_score *= fitness
+        
+        # Asignar ejercicios adicionales si la puntuación del estudiante es baja
+        if student_score < 60:
+            assign_extra_exercises(current_user.id)
+
+        # Actualizar la puntuación del usuario
+        update_score_user(current_user, student_score)
+
+    assign_extra_exercises(current_user.id)
 
     #Almacenamos la información en la BBDD
     update_student_progress_and_activity(content_id, source_code, start_time, end_time, time_spent, status)
 
     #Comprobamos si el modulo se ha completado
     module_completed = check_module_completion(exercise)
-
+    
     return jsonify({"status": status, "module_completed": module_completed})

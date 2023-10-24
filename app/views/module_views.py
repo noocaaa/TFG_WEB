@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-from app.models import StudentProgress, Exercises, ExerciseRequirement, StudentActivity, TheoryRequirement, Theory, Requirement,  UserRequirementsCompleted, ModuleRequirementOrder
+from app.models import StudentProgress, Exercises, ExerciseRequirement, StudentActivity, TheoryRequirement,ExtraExercises, Theory, Requirement,  UserRequirementsCompleted, ModuleRequirementOrder
 
 from app import db
 
@@ -11,13 +11,12 @@ import random
 module_blueprint = Blueprint('module', __name__)
 
 # --- PARA MOSTRAR EL CAMINO DE FORMA ALEATORIA ---
-
 def get_current_module_and_next_requirement_for_user(user_id):
     # Primero, obtenemos el último requisito completado para este usuario.
     last_completed = db.session.query(UserRequirementsCompleted)\
-                               .filter_by(user_id=user_id)\
-                               .order_by(UserRequirementsCompleted.completion_date.desc())\
-                               .first()
+                            .filter_by(user_id=user_id)\
+                            .order_by(UserRequirementsCompleted.completion_date.desc(), UserRequirementsCompleted.id.desc())\
+                            .first()
 
     # Si el usuario no ha completado ningún requisito, retorna el primer módulo y su primer requisito.
     if not last_completed:
@@ -67,14 +66,34 @@ def get_current_module_and_next_requirement_for_user(user_id):
     return current_module_id, next_requirement
 
 
+
 def select_exercise_for_user(user_id, requirement_id):
-    # 2.2.1: Obtener la lista de ejercicios para el requisito actual
+    # Verificar si hay ejercicios extras disponibles para el usuario
+    extra_exercise_records = db.session.query(ExtraExercises)\
+                                .join(Exercises, Exercises.id == ExtraExercises.exercise_id)\
+                                .filter(ExtraExercises.student_id == user_id, ExtraExercises.status == 'Assigned')\
+                                .all()
+
+    if extra_exercise_records:
+        # Si hay ejercicios extras disponibles, seleccionamos uno al azar
+        selected_extra_exercise = random.choice(extra_exercise_records)
+        
+        # Marcar el ejercicio extra seleccionado como completado
+        selected_extra_exercise.status = 'Completed'
+        db.session.commit()
+        
+        return selected_extra_exercise.exercise
+
+    # Obtener la lista de ejercicios para el requisito actual
     available_exercises = db.session.query(Exercises)\
                                     .join(ExerciseRequirement, ExerciseRequirement.exercise_id == Exercises.id)\
                                     .filter(ExerciseRequirement.requirement_id == requirement_id)\
                                     .all()
 
-    # 2.2.2: Obtener todos los registros de progreso del estudiante para los ejercicios relacionados con el requirement_id
+    if available_exercises is None:
+        return None
+
+    # Obtener todos los registros de progreso del estudiante para los ejercicios relacionados con el requirement_id
     student_progress_records = db.session.query(StudentProgress.exercise_id, StudentProgress.status)\
                                         .join(Exercises, Exercises.id == StudentProgress.exercise_id)\
                                         .join(ExerciseRequirement, ExerciseRequirement.exercise_id == Exercises.id)\
@@ -92,8 +111,12 @@ def select_exercise_for_user(user_id, requirement_id):
 
     if not valid_exercises:
         failed_exercise = db.session.query(Exercises)\
-                                    .filter(Exercises.id.in_(failed_exercise_ids), Exercises.requirement_id == requirement_id)\
-                                    .all()
+            .join(ExerciseRequirement)\
+            .filter(
+                Exercises.id.in_(failed_exercise_ids), 
+                ExerciseRequirement.requirement_id == requirement_id
+            )\
+            .all()
         return random.choice(failed_exercise) if failed_exercise else None
 
     # 2.2.3: Identificar si hay algún ejercicio clave pendiente
@@ -259,19 +282,39 @@ def get_next_theory_for_user(student_id, requirement_id):
 
 # --- PARA LA CORRECION AUTOMATICA DEL EJERCICIO ---
 
-def all_exercises_completed_for_requirement(user_id, module_id):
-    # Obtener los ejercicios completados del estudiante para ese módulo en particular
-    completed_exercises = db.session.query(StudentProgress)\
-                                    .filter_by(student_id=user_id, status='Completed')\
-                                    .join(Exercises, StudentProgress.exercise_id == Exercises.id)\
-                                    .filter(Exercises.module_id == module_id)\
+def all_exercises_completed_for_requirement(user_id, requirement_id):
+    
+    # 1. Verificar key exercises completados
+    completed_key_exercises = db.session.query(StudentProgress)\
+                                        .join(Exercises, StudentProgress.exercise_id == Exercises.id)\
+                                        .join(ExerciseRequirement, Exercises.id == ExerciseRequirement.exercise_id)\
+                                        .filter(StudentProgress.student_id == user_id, StudentProgress.status == 'Completed')\
+                                        .filter(ExerciseRequirement.requirement_id == requirement_id, Exercises.is_key_exercise == True)\
+                                        .all()
+
+    total_key_exercises = db.session.query(Exercises)\
+                                    .join(ExerciseRequirement, Exercises.id == ExerciseRequirement.exercise_id)\
+                                    .filter(ExerciseRequirement.requirement_id == requirement_id, Exercises.is_key_exercise == True)\
                                     .all()
 
-    # Obtener todos los ejercicios asociados con el módulo
-    total_exercises = db.session.query(Exercises).filter_by(module_id=module_id).all()
+    if len(completed_key_exercises) != len(total_key_exercises):
+        return False  # No todos los key exercises han sido completados
+    
+    # 2. Verificar ejercicios extra asignados y completados
 
-    # Comparar la cantidad de ejercicios completados con el total
-    return len(completed_exercises) == len(total_exercises)
+    # Consultar todos los ejercicios extra asignados a ese estudiante para ese requirement
+    assigned_extra_exercises = db.session.query(ExtraExercises) \
+        .join(Exercises, ExtraExercises.exercise_id == Exercises.id) \
+        .join(ExerciseRequirement, Exercises.id == ExerciseRequirement.exercise_id) \
+        .filter(ExtraExercises.student_id == user_id, ExerciseRequirement.requirement_id == requirement_id) \
+        .all()
+
+    for assigned_exercise in assigned_extra_exercises:
+        # Verificar si el ejercicio ha sido completado
+        if assigned_exercise.status != 'Completed':
+            return False  # El ejercicio extra asignado no ha sido completado
+    
+    return True  # Todos los key exercises y ejercicios extra han sido completados
 
 
 
