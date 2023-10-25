@@ -20,6 +20,7 @@ El proyecto tuvo inicio a principios de julio, durando cinco meses hasta su fina
 
 \begin{sidewaysfigure}
     \centering
+    \scriptsize
     \begin{ganttchart}[
         hgrid,
         vgrid,
@@ -27,25 +28,49 @@ El proyecto tuvo inicio a principios de julio, durando cinco meses hasta su fina
         title label font=\tiny,
         title height=1,
         bar/.append style={fill=blue!30},
-        bar height=.5,
+        bar height=.4,
         y unit chart=0.6cm,
-        x unit=0.5cm,
+        x unit=0.13cm,
         time slot format=isodate
-    ]{2023-07-01}{2023-11-13}
+    ]{2023-07-01}{2023-11-15}
     
     \gantttitlecalendar{month=name} \\
     
     % Tareas
-    \ganttbar{Definición del tema}{2023-07-01}{2023-07-07} \\
-    \ganttbar{Revisión bibliográfica}{2023-07-08}{2023-07-21} \\
-    \ganttbar{Diseño del proyecto}{2023-07-22}{2023-08-04} \\
-    \ganttbar{Desarrollo inicial}{2023-08-05}{2023-08-25} \\
-    \ganttbar{Pruebas preliminares}{2023-08-26}{2023-09-08} \\
-    \ganttbar{Optimización}{2023-09-09}{2023-09-22} \\
-    \ganttbar{Desarrollo final}{2023-09-23}{2023-10-13} \\
-    \ganttbar{Pruebas finales}{2023-10-14}{2023-10-27} \\
-    \ganttbar{Redacción del informe}{2023-10-28}{2023-11-10} \\
-    \ganttbar{Revisión y correcciones}{2023-11-11}{2023-11-13} \\
+    \ganttgroup{Investigación}{2023-07-01}{2023-07-15} \\
+    \ganttbar{ITS}{2023-07-01}{2023-07-05} \\
+    \ganttbar{Pedagogía de la programación}{2023-07-03}{2023-07-08} \\
+    \ganttbar{Herramientas actuales}{2023-07-09}{2023-07-15} \\
+    
+    \ganttgroup{Definición}{2023-07-16}{2023-07-31} \\
+    \ganttbar{Definición y análisis del proyecto}{2023-07-16}{2023-07-18} \\
+    \ganttbar{Estructuración del contenido}{2023-07-25}{2023-07-31} \\
+    
+    \ganttbar{Definición y creación BBDDD}{2023-07-27}{2023-08-07} \\
+    
+    \ganttgroup{Desarrollo Frontend}{2023-08-08}{2023-08-24} \\
+    \ganttbar{Páginas del estudiante}{2023-08-08}{2023-08-12} \\
+    \ganttbar{Página del tutor}{2023-08-11}{2023-08-15} \\
+    \ganttbar{Página del administrador}{2023-08-16}{2023-08-19} \\
+    
+    \ganttgroup{Desarrollo Backend}{2023-08-25}{2023-09-15} \\
+    \ganttbar{Funciones}{2023-08-25}{2023-08-30} \\
+    \ganttbar{Editor de código}{2023-09-01}{2023-09-10} \\
+    \ganttbar{Batch de ejercicios}{2023-09-09}{2023-09-13} \\
+    \ganttbar{Pruebas}{2023-09-14}{2023-09-15} \\
+    
+    \ganttgroup{Módulo ITS}{2023-09-16}{2023-09-30} \\
+    \ganttbar{Definición estructura contenidos}{2023-09-16}{2023-09-20} \\
+    \ganttbar{Corrección automatizada}{2023-09-18}{2023-09-25} \\
+    \ganttbar{Valoración conocimientos}{2023-09-26}{2023-09-30} \\
+    
+    \ganttbar{Integración ITS-WEB}{2023-10-01}{2023-10-07} \\
+    \ganttbar{Pruebas y Evaluación}{2023-10-08}{2023-10-14} \\
+    \ganttbar{Mejoras prototipo}{2023-10-12}{2023-10-21} \\
+    
+    \ganttgroup{Documentación}{2023-10-22}{2023-11-15} \\
+    \ganttbar{Redacción documentación}{2023-10-22}{2023-10-28} \\
+    \ganttbar{Revisión y correcciones}{2023-10-29}{2023-11-15} \\
     
     \end{ganttchart}
     \caption{Diagrama de Gantt con la planificación del TFG}
