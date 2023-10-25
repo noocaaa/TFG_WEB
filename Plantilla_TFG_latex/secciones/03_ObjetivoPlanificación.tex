@@ -1,1 +1,55 @@
-\chapter{Diseño Y Planificación} \label{chap:objetivosPlanificación}
+\chapter{Planificación} \label{chap:planification}
+
+En el ámbito de cualquier proyecto, la planificación es un aspecto crucial para garantizar una correcta ejecución y un cumplimiento de objetivos. Es por ello que, en este capítulo, nos centraremos en cómo se ha organizado y estructurado el desarrollo de este proyecto con el fin de alcanzar el objetivo principal propuesto. Además, se incluirá un diagrama de Gantt con tal de obtener una visión más organizada del proyecto, y se detallará una estimación del tiempo que se ha dedicado a cada objetivo y tarea.
+
+\section{Fases}
+
+\subsection{Fase Inicial}
+
+\subsection{Fase de análisis}
+
+\subsection {Fase de desarrollo}
+
+\subsection{Fase de prueba y corrección}
+
+\subsection{Elaboración de la memoria}
+
+Durante las fases previas del proyecto, se llevó a cabo una recolección de datos e información pertinente. Al aproximarnos a las etapas finales del desarrollo, dicha información fue estructurada y articulada de manera coherente y sistemática, siendo la creación de la memoria.
+
+El proyecto tuvo inicio a principios de julio, durando cinco meses hasta su finalización. Es importante subrayar que el período previo a julio, aunque incluyó actividades de investigación y lectura, no es considerado crucial para la estructura del proyecto. Esto se debe a que, a pesar de haber realizado dichas tareas, no se le dedicó una cantidad de tiempo significante debido a otras responsabilidades. Por esta razón, se presenta el diagrama de Gantt que refleja el periodo de desarrollo del proyecto:
+
+\begin{sidewaysfigure}
+    \centering
+    \begin{ganttchart}[
+        hgrid,
+        vgrid,
+        title/.append style={fill=gray!30},
+        title label font=\tiny,
+        title height=1,
+        bar/.append style={fill=blue!30},
+        bar height=.5,
+        y unit chart=0.6cm,
+        x unit=0.5cm,
+        time slot format=isodate
+    ]{2023-07-01}{2023-11-13}
+    
+    \gantttitlecalendar{month=name} \\
+    
+    % Tareas
+    \ganttbar{Definición del tema}{2023-07-01}{2023-07-07} \\
+    \ganttbar{Revisión bibliográfica}{2023-07-08}{2023-07-21} \\
+    \ganttbar{Diseño del proyecto}{2023-07-22}{2023-08-04} \\
+    \ganttbar{Desarrollo inicial}{2023-08-05}{2023-08-25} \\
+    \ganttbar{Pruebas preliminares}{2023-08-26}{2023-09-08} \\
+    \ganttbar{Optimización}{2023-09-09}{2023-09-22} \\
+    \ganttbar{Desarrollo final}{2023-09-23}{2023-10-13} \\
+    \ganttbar{Pruebas finales}{2023-10-14}{2023-10-27} \\
+    \ganttbar{Redacción del informe}{2023-10-28}{2023-11-10} \\
+    \ganttbar{Revisión y correcciones}{2023-11-11}{2023-11-13} \\
+    
+    \end{ganttchart}
+    \caption{Diagrama de Gantt con la planificación del TFG}
+    \label{fig:gantt_diagram}
+\end{sidewaysfigure}
+
+\subsection{Presupuesto}
