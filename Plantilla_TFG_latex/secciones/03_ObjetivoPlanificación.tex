@@ -1,16 +1,56 @@
 \chapter{Planificación} \label{chap:planification}
 
-En el ámbito de cualquier proyecto, la planificación es un aspecto crucial para garantizar una correcta ejecución y un cumplimiento de objetivos. Es por ello que, en este capítulo, nos centraremos en cómo se ha organizado y estructurado el desarrollo de este proyecto con el fin de alcanzar el objetivo principal propuesto. Además, se incluirá un diagrama de Gantt con tal de obtener una visión más organizada del proyecto, y se detallará una estimación del tiempo que se ha dedicado a cada objetivo y tarea.
+En el ámbito de cualquier proyecto, la planificación es un aspecto crucial para garantizar una correcta ejecución y un cumplimiento de objetivos. Es por ello que, en este capítulo, nos centraremos en cómo se ha organizado y estructurado el desarrollo de este proyecto con el fin de alcanzar el objetivo principal propuesto. Además, presentaremos un diagrama de Gantt para proporcionar una visión clara y estructurada de las diferentes etapas y el tiempo asignado a cada una.
 
 \section{Fases}
 
 \subsection{Fase Inicial}
 
+En la fase inicial se establecieron las bases y objetivos del proyecto. Se reconoció la necesidad de una plataforma educativa digital que enseñe programación asimismo como sus buenas prácticas. Se llevaron a cabo reuniones preliminares para esbozar las características deseadas y el alcance del proyecto, teniendo siempre en mente la experiencia de usuario y la eficiencia en la corrección y retroalimentación por parte del usuario.
+
 \subsection{Fase de análisis}
+
+Durante esta etapa se realizó en una exploración profunda y meticulosa de las necesidades y los requirimientos clave para diseñar ua plataforma de aprendizaje eficaz. La prioridad fue establecer un ambiente donde los estudiantes no solo obtuvieran una corrección rápida, sino también una retroalimentación significativa que potenciara su aprendizaje. Además, se reconoció la importancia de ofrecer un enfoque adaptativo y personalizado que considerara la diversidad de ritmos y estilos de aprendizaje. Se investigaron tanto las demandas funcionales como las tecnológicas, y se llevó a cabo un análisis de la plataforma Codelearn S.L. con tal de garantizar que las decisiones tomadas fueran adecuadas y eficientes.
+
+Antes de adentrarnos en la construcción de la plataforma, fue esencial definir con precisión qué funcionalidades eran fundamentales. A través de reuniones, lecturas e investigación se definieron las siguientes características principales para el sistema:
+
+\begin{itemize}
+    \item Un sistema de corrección automatizada que evalúe tanto la solución como la calidad del código.
+    \item Un sistema de retroalimentación que ofrezca comentarios constructivos.
+    \item Un camino de ejercicios que se adapte dinámicamente al progreso y habilidades del estudiante.
+    \item Un esquema de progreso visual que motive y guíe a los estudiantes a través de su aprendizaje.
+    \item Una plataforma sencilla y visual, diseñada específicamente para niños, que les permita interactuar con el contenido de manera intuitiva.
+    \item Integración de un compilador en tiempo real, permitiendo a los estudiantes ejecutar y probar sus códigos directamente en la plataforma.
+    \item Un sistema de soporte y tutoría basado en un mecanismo de preguntas y respuestas: los estudiantes pueden enviar sus inquietudes o dudas específicas, y tutores expertos proporcionan respuestas claras y detalladas para guiarlos. 
+\end{itemize}
+
+Una vez establecidos los requisitos y objetivos del proyecto, la elección tecnológica se fundamentó en la experiencia previa buscando la eficiencia y comprensión. En el Frontend, se recurrió a HTML, CSS y JavaScript, estándares de la industria que ofrecen interfaces de usuario fluidas y dinámicas. Flask fue elegido para el Backend debido a su naturaleza intuitiva y su capacidad para adaptarse sin problemas con diversas librerías de Python. Finalmente, para la gestión de la base de datos, se optó por PostgreSQL, debido a su habilidad para manejar grandes volúmenes de datos, garantizando una estructura robusta y escalable para la plataforma educativa.
 
 \subsection {Fase de desarrollo}
 
+La fase de desarrollo se centró en implementar las características clave identificadas durante la fase anterior. Las principales características desarrolladas fueron:
+
+\begin{enumerate}
+    \item \textbf{Corrección automatizada de los ejercicios}: Con el fin de proporcionar una buena retroalimentación instantánea y detallada, se desarrolló un sistema de corrección automatizada que no solo verifica la solución del ejercicio, sino también la calidad y eficiencia del código escrito por el estudiante. Este sistema analiza aspectos clave como la limpieza del código, la utilización adecuada de estructuras de datos y la presencia de bucles repetitivos o redundantes. Esto garantiza que los estudiantes no solo resuelvan el problema, sino que también adopten buenas prácticas de codificación.
+
+    \item \textbf{Retroalimentación Personaliza}: No basta con ofrecer una corrección simple y binaria; es crucial que el estudiante entienda sus errores. Por ello, la plataforma proporciona comentarios detallados y sugerencias sobre cómo mejorar y optimizar el código. Esta inmediatez en la retroalimentación facilita el aprendizaje y la corrección de errores, fortaleciendo así la comprensión y aplicación de los conceptos.
+
+    \item \textbf{Caminos de Ejercicios Aleatorio}: Con el objetivo de proporcionar una experiencia de aprendizaje dinámica y adaptativa, se ha implementado un sistema que presenta un conjunto de ejercicios basados en requisitos específicos de forma aleatoria. De esta manera, cada vez que un estudiante enfrenta un requisito, se le desafía con un conjunto de ejercicios diferentes, asegurando una exposición diversa a los problemas. Además, si un estudiante no logra resolver un ejercicio, el sistema le proporciona automáticamente otro, permitiendo una adaptación constante al ritmo y habilidades del estudiante.
+    
+    \item \textbf{Esquema de progreso individualizado}: Para mantener la motivación, se diseñó un tablero de progreso que muestra dónde se sitúa el estudiante en su viaje educativo y qué le espera a continuación. Las recompensas e insignias se otorgan al alcanzar ciertos hitos, incentivando aún más el compromiso y el esfuerzo. 
+\end{enumerate}
+
+Cabe destacar que esta fase también implicó una serie de pruebas iterativas y correcciones, permitiendo ajustes y mejoras en tiempo real en función del feedback recibido y las observaciones realizadas.
+
 \subsection{Fase de prueba y corrección}
+
+Una vez finalizada la fase de desarrollo, se entró en una crucial etapa de pruebas y correcciones. Aunque las características se diseñaron con un entendimiento teórico sólido, es esencial verificar su eficacia en un entorno práctico.
+
+Para este propósito, se seleccionaron 2-3 estudiantes, para interactuar con la plataforma y sus funcionalidades. Durante esta etapa de prueba, se les solicitó que realizaran diversas tareas y que compartieran sus experiencias, dificultades y sugerencias.
+
+La retroalimentación obtenida de estos estudiantes fue clave. A partir de sus comentarios y observaciones, se llevaron a cabo varias modificaciones y ajustes en la plataforma. Estas correcciones no solo abordaron errores técnicos o problemas de usabilidad, sino que también ayudaron a refinar la experiencia de aprendizaje y a garantizar que la plataforma cumpliera con las expectativas y necesidades de los estudiantes.
+
+Este proceso iterativo de prueba y corrección aseguró que la plataforma estuviera bien equipada para ofrecer una experiencia educativa de calidad y responder adecuadamente a los desafíos que los estudiantes pudieran enfrentar.
 
 \subsection{Elaboración de la memoria}
 
@@ -18,63 +58,162 @@ Durante las fases previas del proyecto, se llevó a cabo una recolección de dat
 
 El proyecto tuvo inicio a principios de julio, durando cinco meses hasta su finalización. Es importante subrayar que el período previo a julio, aunque incluyó actividades de investigación y lectura, no es considerado crucial para la estructura del proyecto. Esto se debe a que, a pesar de haber realizado dichas tareas, no se le dedicó una cantidad de tiempo significante debido a otras responsabilidades. Por esta razón, se presenta el diagrama de Gantt que refleja el periodo de desarrollo del proyecto:
 
-\begin{sidewaysfigure}
+\begin{figure}[H]
     \centering
     \scriptsize
+    \resizebox{\textwidth}{!}{%
     \begin{ganttchart}[
         hgrid,
-        vgrid,
+        vgrid={*{6}{draw=none}, dotted},
         title/.append style={fill=gray!30},
         title label font=\tiny,
         title height=1,
         bar/.append style={fill=blue!30},
         bar height=.4,
-        y unit chart=0.6cm,
-        x unit=0.13cm,
-        time slot format=isodate
-    ]{2023-07-01}{2023-11-15}
+        y unit chart=0.5cm,
+        x unit=0.12cm,
+        time slot format=isodate,
+        milestone left shift =-1,
+        milestone right shift =2
+    ]{2023-07-01}{2023-11-14}
     
     \gantttitlecalendar{month=name} \\
     
     % Tareas
-    \ganttgroup{Investigación}{2023-07-01}{2023-07-15} \\
-    \ganttbar{ITS}{2023-07-01}{2023-07-05} \\
-    \ganttbar{Pedagogía de la programación}{2023-07-03}{2023-07-08} \\
-    \ganttbar{Herramientas actuales}{2023-07-09}{2023-07-15} \\
+    \ganttbar{Reuniones con el Tutor}{2023-07-31}{2023-07-31}
+    \ganttbar{}{2023-09-11}{2023-09-11}
+    \ganttbar{}{2023-09-18}{2023-09-18}
+    \ganttbar{}{2023-09-25}{2023-09-25} 
+    \ganttbar{}{2023-10-02}{2023-10-02}
+    \ganttbar{}{2023-10-09}{2023-10-09}
+    \ganttbar{}{2023-10-16}{2023-10-16}
+    \ganttbar{}{2023-10-23}{2023-10-23}
+    \ganttbar{}{2023-10-31}{2023-10-31}
+    \ganttbar{}{2023-11-06}{2023-11-06} \\
+    
+    \ganttgroup{Investigación}{2023-07-01}{2023-07-17} \\
+    \ganttbar{ITS}{2023-07-01}{2023-07-10} \\
+    \ganttbar{Pedagogía de la programación}{2023-07-11}{2023-07-15} \\
+    \ganttbar{Herramientas actuales}{2023-07-15}{2023-07-17} \\
     
     \ganttgroup{Definición}{2023-07-16}{2023-07-31} \\
-    \ganttbar{Definición y análisis del proyecto}{2023-07-16}{2023-07-18} \\
+    \ganttbar{Definición y análisis del proyecto}{2023-07-16}{2023-07-24} \\
     \ganttbar{Estructuración del contenido}{2023-07-25}{2023-07-31} \\
     
-    \ganttbar{Definición y creación BBDDD}{2023-07-27}{2023-08-07} \\
+    \ganttgroup{Definición y creación BBDD}{2023-08-01}{2023-08-10} \\
     
-    \ganttgroup{Desarrollo Frontend}{2023-08-08}{2023-08-24} \\
-    \ganttbar{Páginas del estudiante}{2023-08-08}{2023-08-12} \\
-    \ganttbar{Página del tutor}{2023-08-11}{2023-08-15} \\
-    \ganttbar{Página del administrador}{2023-08-16}{2023-08-19} \\
+    \ganttgroup{Desarrollo Frontend}{2023-08-10}{2023-08-24} \\
+    \ganttbar{Páginas del estudiante}{2023-08-10}{2023-08-15} \\
+    \ganttbar{Página del tutor}{2023-08-15}{2023-08-19} \\
+    \ganttbar{Página del administrador}{2023-08-19}{2023-08-24} \\
     
-    \ganttgroup{Desarrollo Backend}{2023-08-25}{2023-09-15} \\
-    \ganttbar{Funciones}{2023-08-25}{2023-08-30} \\
-    \ganttbar{Editor de código}{2023-09-01}{2023-09-10} \\
-    \ganttbar{Batch de ejercicios}{2023-09-09}{2023-09-13} \\
-    \ganttbar{Pruebas}{2023-09-14}{2023-09-15} \\
+    \ganttgroup{Desarrollo Backend}{2023-09-01}{2023-09-25} \\
+    \ganttbar{Funciones}{2023-09-01}{2023-09-08} \\
+    \ganttbar{Editor de código}{2023-09-08}{2023-09-16} \\
+    \ganttbar{Batch de ejercicios}{2023-09-17}{2023-09-21} \\
+    \ganttbar{Pruebas}{2023-09-22}{2023-09-25} \\
     
-    \ganttgroup{Módulo ITS}{2023-09-16}{2023-09-30} \\
-    \ganttbar{Definición estructura contenidos}{2023-09-16}{2023-09-20} \\
-    \ganttbar{Corrección automatizada}{2023-09-18}{2023-09-25} \\
-    \ganttbar{Valoración conocimientos}{2023-09-26}{2023-09-30} \\
+    \ganttgroup{Módulo ITS}{2023-09-25}{2023-10-10} \\
+    \ganttbar{Definición estructura contenidos}{2023-09-25}{2023-09-30} \\
+    \ganttbar{Corrección automatizada}{2023-10-01}{2023-10-06} \\
+    \ganttbar{Valoración conocimientos}{2023-10-07}{2023-10-10} \\
     
-    \ganttbar{Integración ITS-WEB}{2023-10-01}{2023-10-07} \\
-    \ganttbar{Pruebas y Evaluación}{2023-10-08}{2023-10-14} \\
-    \ganttbar{Mejoras prototipo}{2023-10-12}{2023-10-21} \\
+    \ganttgroup{Integración ITS-WEB}{2023-10-10}{2023-10-14} \\
+    \ganttgroup{Pruebas y Evaluación}{2023-10-14}{2023-10-16} \\
+    \ganttgroup{Mejoras prototipo}{2023-10-17}{2023-10-22} \\
     
-    \ganttgroup{Documentación}{2023-10-22}{2023-11-15} \\
-    \ganttbar{Redacción documentación}{2023-10-22}{2023-10-28} \\
-    \ganttbar{Revisión y correcciones}{2023-10-29}{2023-11-15} \\
+    \ganttgroup{Documentación}{2023-10-22}{2023-11-13} \\
+    \ganttbar{Redacción documentación}{2023-10-22}{2023-10-31} \\
+    \ganttbar{Revisión y correcciones}{2023-11-04}{2023-11-13}
     
     \end{ganttchart}
+    }
     \caption{Diagrama de Gantt con la planificación del TFG}
     \label{fig:gantt_diagram}
-\end{sidewaysfigure}
+\end{figure}
 
-\subsection{Presupuesto}
+\section{Presupuesto}
+
+En esta sección se presenta un análisis exhaustivo de los posibles gastos incurridos durante la ejecución del proyecto, considerando una variedad de elementos como materiales, licencias, horas de trabajo, entre otros.
+
+\subsection{Licencias}
+
+Determinar el coste asociado a las licencias de los recursos es esencial para abordar los costes un proyecto.
+
+Para este proyecto, se priorizó el uso de tecnologías de código abierto para minimizar los gastos. En la parte del Frontend, se aprovecharon los estándares abiertos HTML, CSS y JavaScript, lo que significó un coste nulo. En el Backend, se adoptó Flask, un micro-framework de Python de uso libre bajo la licencia BSD. Finalmente, para las necesidades de la base de datos, se seleccionó PostgreSQL, siendo una solución de código abierto operado bajo la licencia homónima. Respecto al control de versiones y la colaboración, se recurrió a Git, una herramienta de código abierto ideada por Linus Torvalds, y GitHub, una plataforma que, a pesar de ofrecer planes de pago, brinda opciones gratuitas para proyectos de código abierto. 
+
+En resumen, debido a estas decisiones tecnológicas, no se incurrió en ningún gasto en licencias, resultando en un coste total de software de 0€.
+
+\subsection{Recursos Materiales}
+
+Dentro de la inversión material, es indispensable considerar el equipo informático empleado en el proyecto, en este caso, un ordenador portátil. Comúnmente, estos dispositivos tienen una vida útil estimada que oscila entre los 2 y 4 años. 
+
+Si asumimos una vida útil intermedia de 3 años para el dispositivo, se estimará una depreciación anual del equipo. Por ello, considerando que el portátil tuvo un precio inicial de 950€, su depreciación anual será de 316,67€. 
+
+Finalmente, tenemos que tener en cuenta que el proyecto se ha desarrollado en una duración aproximada de 5 meses, por ello, el coste asociado al desgaste del portátil durante dicho período es de 132,78€.
+
+\subsection{Costes de Personal}
+
+Para el cálculo de costes de personal se ha tenido en cuenta un único empleado: un ingeniero informático. Tomando datos obtenidos de la Seguridad Social para el año 2023 \cite{seg-social}, el salario de dicho ingeniero oscila entre una base mínima de cotización de 1.759,50€ y una base máxima de 4.495,50€ mensuales.
+
+\begin{table}[H]
+    \centering
+    \small % Reduce el tamaño de fuente
+    \setlength{\tabcolsep}{1.8pt} % Reduce el espacio entre columnas
+    \begin{tabular}{@{}lrr@{}}
+        \toprule
+        \textbf{Concepto} & \textbf{Coste Mensual (€)} & \textbf{Coste 5 Meses (€)} \\
+        \midrule
+        Base Mínima de Cotización & 1.759,50 & 8.797,50 \\
+        Cotización Empresa (Base Mínima) & 415,44 & 2.077,20 \\
+        Cotización Trabajador (Base Mínima) & 82,70 & 413,50 \\
+        \textbf{Total (Base Mínima)} & \textbf{2.257,64} & \textbf{11.288,20} \\
+        \midrule
+        Base Máxima de Cotización & 4.495,50 & 22.477,50 \\
+        Cotización Empresa (Base Máxima) & 1.060,94 & 5.304,70 \\
+        Cotización Trabajador (Base Máxima) & 211,29 & 1.056,45 \\
+        \textbf{Total (Base Máxima)} & \textbf{5.767,73} & \textbf{28.838,65} \\
+        \bottomrule
+    \end{tabular}
+
+    \caption{Costes asociados al personal para un ingeniero informático.}
+    \label{tab:coste-personal}
+
+\end{table}
+
+A partir de la tabla, si realizamos un cálculo promedio entre la base mínima y máxima, se obtiene un salario promedio mensual de aproximadamente 3.127,50€. Puesto que el proyecto tiene una duración de 5 meses, se estima un coste total en salarios de 15.637,50€ para el desarrollo del proyecto.
+
+Adicionalmente, se debería considerar las cotizaciones correspondientes a la empresa y al trabajador sobre dicho salario, ascendiendo el coste total de personal para el proyecto a unos 17.900€ aproximadamente. 
+
+\subsection{Otros costes}
+
+Dentro de este apartado, se deben contemplar los gastos indirectos que resultan esenciales para la realización del proyecto. Algunos ejemplos serían el material de oficina, la conexión a Internet, la electricidad, los gastos de transporte, entre otros.
+
+Es una práctica común estimar estos costes indirectos como un porcentaje del gasto principal, en este caso, el coste de personal. Siguiendo esta norma, se ha determinado que estos gastos representan aproximadamente el 10\% del gasto total en personal:
+
+\[ 17.900€ \times 0,10 = 1.790€ \]
+
+Por lo tanto, se estima un coste adicional de 1.790€ para cubrir lo gastos indirectos asociados al proyecto.
+
+\subsection{Total}
+
+Para finalizar, se muestra una tabla que resume todos los costes obtenidos, haciendo una estimación mensual y total del proyecto. 
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lcc}
+        \hline
+        \textbf{Concepto} & \textbf{Coste Mensual (€)} & \textbf{Coste Total (5 Meses) (€)} \\
+        \hline
+        Licencias & 0,00 & 0,00 \\
+        Recursos Materiales (Portátil) & 26,56 & 132,78 \\
+        Personal (Salario promedio) & 3.127,50 & 15.637,50 \\
+        Cotizaciones (aprox.) & 452,50 & 2.262,50 \\
+        Otros costes & 358,00 & 1.790,00 \\
+        \hline
+        \textbf{Total} & \textbf{3964,06} & \textbf{19.822,78} \\
+        \hline
+    \end{tabular}
+    \caption{Total de costes del proyecto}
+    \label{tab:resumen-costes}
+\end{table}
