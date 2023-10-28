@@ -249,6 +249,7 @@ pdfproducer = {pdflatex}
 \usepackage[nottoc,notlof,notlot]{tocbibind}
 \usepackage{rotating}
 \usepackage{microtype}
+\usepackage[T1]{fontenc}
 
 \begin{document}
 
@@ -267,13 +268,12 @@ pdfproducer = {pdflatex}
     % Índice de imágenes y tablas
     \newpage
     \listoffigures
-
-    % Si hay suficientes se incluirá dicho índice
     \listoftables
     \newpage
 
     % RODGOM - INCLUYO ESTO PARA LA NUMERACIÓN CORRECTA
     \mainmatter
+    
     % Introducción y descripción del problema
     \input{secciones/01_Introduccion}
 
@@ -285,18 +285,18 @@ pdfproducer = {pdflatex}
 
     % Propuesta:
 
-    \input{secciones/04.1_requisitos}
+    \input{secciones/04_Requisitos}
 
-    \input{secciones/04_implementacion}
+    \input{secciones/05_Implementacion}
 
     % Experimentación
-    \input{secciones/05_analisis}
+    \input{secciones/06_Analisis}
 
     % Analisis de resultados
-    \input{secciones/06_resultados}
+    \input{secciones/07_Resultados}
 
      % Conclusiones
-    \input{secciones/07_conclusiones}
+    \input{secciones/08_Conclusiones}
 
     \newpage
     \appendix
