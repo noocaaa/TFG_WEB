@@ -4,48 +4,48 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {3.1}{\ignorespaces Costes asociados al personal para un ingeniero informático.}}{16}{table.3.1}%
-\contentsline {table}{\numberline {3.2}{\ignorespaces Total de costes del proyecto}}{17}{table.3.2}%
+\contentsline {table}{\numberline {3.1}{\ignorespaces Costes asociados al personal para un ingeniero informático.}}{15}{table.3.1}%
+\contentsline {table}{\numberline {3.2}{\ignorespaces Total de costes del proyecto}}{16}{table.3.2}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {4.1}{\ignorespaces Requisito funcional RF-01: Inicio de sesión.}}{20}{table.4.1}%
-\contentsline {table}{\numberline {4.2}{\ignorespaces Requisito funcional RF-02: Registro de usuario.}}{20}{table.4.2}%
-\contentsline {table}{\numberline {4.3}{\ignorespaces Requisito funcional RF-03: Perfil de usuario.}}{20}{table.4.3}%
-\contentsline {table}{\numberline {4.4}{\ignorespaces Requisito funcional RF-04: Selección de ejercicios por requisitos.}}{21}{table.4.4}%
-\contentsline {table}{\numberline {4.5}{\ignorespaces Requisito funcional RF-05: Corrección de ejercicios.}}{21}{table.4.5}%
-\contentsline {table}{\numberline {4.6}{\ignorespaces Requisito funcional RF-06: Compilador integrado.}}{21}{table.4.6}%
-\contentsline {table}{\numberline {4.7}{\ignorespaces Requisito funcional RF-07: Categorización de la teoría.}}{22}{table.4.7}%
-\contentsline {table}{\numberline {4.8}{\ignorespaces Requisito funcional RF-08: Repetición de ejercicios similares tras fallo.}}{22}{table.4.8}%
-\contentsline {table}{\numberline {4.9}{\ignorespaces Requisito funcional RF-09: Límite de tiempo para completar un ejercicio.}}{22}{table.4.9}%
-\contentsline {table}{\numberline {4.10}{\ignorespaces Requisito funcional RF-10: Resolución de dudas.}}{22}{table.4.10}%
-\contentsline {table}{\numberline {4.11}{\ignorespaces Requisito funcional RF-11: Consulta de los rankings.}}{23}{table.4.11}%
-\contentsline {table}{\numberline {4.12}{\ignorespaces Requisito funcional RF-12: Juegos en la web.}}{23}{table.4.12}%
-\contentsline {table}{\numberline {4.13}{\ignorespaces Requisito funcional RF-13: Consulta de los ejercicios corregidos.}}{23}{table.4.13}%
-\contentsline {table}{\numberline {4.14}{\ignorespaces Requisito funcional RF-14: Sistema de notificación.}}{23}{table.4.14}%
-\contentsline {table}{\numberline {4.15}{\ignorespaces Requisito funcional RF-15: Feedback sobre la solución.}}{24}{table.4.15}%
-\contentsline {table}{\numberline {4.16}{\ignorespaces Requisito funcional RF-16: Sistema de puntos.}}{24}{table.4.16}%
-\contentsline {table}{\numberline {4.17}{\ignorespaces Requisito funcional RF-17: Lista de usuarios.}}{24}{table.4.17}%
-\contentsline {table}{\numberline {4.18}{\ignorespaces Requisito funcional RF-18: Consulta de ejercicios realizados.}}{24}{table.4.18}%
-\contentsline {table}{\numberline {4.19}{\ignorespaces Requisito funcional RF-19: Panel de resolución de preguntas.}}{25}{table.4.19}%
-\contentsline {table}{\numberline {4.20}{\ignorespaces Requisito funcional RF-20: Lista de estudiantes inactivos.}}{25}{table.4.20}%
-\contentsline {table}{\numberline {4.21}{\ignorespaces Requisito funcional RF-21: Tiempo de resolución de ejercicios.}}{25}{table.4.21}%
-\contentsline {table}{\numberline {4.22}{\ignorespaces Requisito funcional RF-22: Corrección de ejercicios.}}{25}{table.4.22}%
-\contentsline {table}{\numberline {4.23}{\ignorespaces Requisito funcional RF-23: Usuarios con múltiples fallos.}}{26}{table.4.23}%
-\contentsline {table}{\numberline {4.24}{\ignorespaces Requisito funcional RF-24: Ejercicios realizados por día.}}{26}{table.4.24}%
-\contentsline {table}{\numberline {4.25}{\ignorespaces Requisito funcional RF-25: Usuarios con alta tasa de errores.}}{26}{table.4.25}%
-\contentsline {table}{\numberline {4.26}{\ignorespaces Requisito funcional RF-26: Alta de profesor por administrador.}}{26}{table.4.26}%
-\contentsline {table}{\numberline {4.27}{\ignorespaces Requisito funcional RF-27: Añadir elementos.}}{27}{table.4.27}%
-\contentsline {table}{\numberline {4.28}{\ignorespaces Requisito funcional RF-28: Consultar elementos.}}{27}{table.4.28}%
-\contentsline {table}{\numberline {4.29}{\ignorespaces Requisito funcional RF-29: Editar elementos.}}{27}{table.4.29}%
-\contentsline {table}{\numberline {4.30}{\ignorespaces Requisito funcional RF-30: Eliminar elementos.}}{27}{table.4.30}%
-\contentsline {table}{\numberline {4.31}{\ignorespaces Requisito funcional RF-31: Orden global.}}{28}{table.4.31}%
-\contentsline {table}{\numberline {4.32}{\ignorespaces Requisito no funcional RNF-01: Usabilidad.}}{28}{table.4.32}%
-\contentsline {table}{\numberline {4.33}{\ignorespaces Requisito no funcional RNF-02: Rendimiento.}}{28}{table.4.33}%
-\contentsline {table}{\numberline {4.34}{\ignorespaces Requisito no funcional RNF-03: Seguridad.}}{29}{table.4.34}%
-\contentsline {table}{\numberline {4.35}{\ignorespaces Requisito no funcional RNF-04: Compatibilidad.}}{29}{table.4.35}%
-\contentsline {table}{\numberline {4.36}{\ignorespaces Requisito no funcional RNF-05: Escalabilidad.}}{29}{table.4.36}%
-\contentsline {table}{\numberline {4.37}{\ignorespaces Requisito no funcional RNF-06: Disponibilidad.}}{29}{table.4.37}%
-\contentsline {table}{\numberline {4.38}{\ignorespaces Requisito no funcional RNF-07: Tiempo de Respuesta.}}{30}{table.4.38}%
-\contentsline {table}{\numberline {4.39}{\ignorespaces Requisito no funcional RNF-08: Mantenimiento.}}{30}{table.4.39}%
+\contentsline {table}{\numberline {4.1}{\ignorespaces Requisito funcional RF-01: Inicio de sesión.}}{18}{table.4.1}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Requisito funcional RF-02: Registro de usuario.}}{18}{table.4.2}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces Requisito funcional RF-03: Perfil de usuario.}}{18}{table.4.3}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces Requisito funcional RF-04: Selección de ejercicios por requisitos.}}{19}{table.4.4}%
+\contentsline {table}{\numberline {4.5}{\ignorespaces Requisito funcional RF-05: Corrección de ejercicios.}}{19}{table.4.5}%
+\contentsline {table}{\numberline {4.6}{\ignorespaces Requisito funcional RF-06: Compilador integrado.}}{19}{table.4.6}%
+\contentsline {table}{\numberline {4.7}{\ignorespaces Requisito funcional RF-07: Categorización de la teoría.}}{20}{table.4.7}%
+\contentsline {table}{\numberline {4.8}{\ignorespaces Requisito funcional RF-08: Repetición de ejercicios similares tras fallo.}}{20}{table.4.8}%
+\contentsline {table}{\numberline {4.9}{\ignorespaces Requisito funcional RF-09: Límite de tiempo para completar un ejercicio.}}{20}{table.4.9}%
+\contentsline {table}{\numberline {4.10}{\ignorespaces Requisito funcional RF-10: Resolución de dudas.}}{20}{table.4.10}%
+\contentsline {table}{\numberline {4.11}{\ignorespaces Requisito funcional RF-11: Consulta de los rankings.}}{21}{table.4.11}%
+\contentsline {table}{\numberline {4.12}{\ignorespaces Requisito funcional RF-12: Juegos en la web.}}{21}{table.4.12}%
+\contentsline {table}{\numberline {4.13}{\ignorespaces Requisito funcional RF-13: Consulta de los ejercicios corregidos.}}{21}{table.4.13}%
+\contentsline {table}{\numberline {4.14}{\ignorespaces Requisito funcional RF-14: Sistema de notificación.}}{21}{table.4.14}%
+\contentsline {table}{\numberline {4.15}{\ignorespaces Requisito funcional RF-15: Feedback sobre la solución.}}{22}{table.4.15}%
+\contentsline {table}{\numberline {4.16}{\ignorespaces Requisito funcional RF-16: Sistema de puntos.}}{22}{table.4.16}%
+\contentsline {table}{\numberline {4.17}{\ignorespaces Requisito funcional RF-17: Lista de usuarios.}}{22}{table.4.17}%
+\contentsline {table}{\numberline {4.18}{\ignorespaces Requisito funcional RF-18: Consulta de ejercicios realizados.}}{22}{table.4.18}%
+\contentsline {table}{\numberline {4.19}{\ignorespaces Requisito funcional RF-19: Panel de resolución de preguntas.}}{23}{table.4.19}%
+\contentsline {table}{\numberline {4.20}{\ignorespaces Requisito funcional RF-20: Lista de estudiantes inactivos.}}{23}{table.4.20}%
+\contentsline {table}{\numberline {4.21}{\ignorespaces Requisito funcional RF-21: Tiempo de resolución de ejercicios.}}{23}{table.4.21}%
+\contentsline {table}{\numberline {4.22}{\ignorespaces Requisito funcional RF-22: Corrección de ejercicios.}}{23}{table.4.22}%
+\contentsline {table}{\numberline {4.23}{\ignorespaces Requisito funcional RF-23: Usuarios con múltiples fallos.}}{24}{table.4.23}%
+\contentsline {table}{\numberline {4.24}{\ignorespaces Requisito funcional RF-24: Ejercicios realizados por día.}}{24}{table.4.24}%
+\contentsline {table}{\numberline {4.25}{\ignorespaces Requisito funcional RF-25: Usuarios con alta tasa de errores.}}{24}{table.4.25}%
+\contentsline {table}{\numberline {4.26}{\ignorespaces Requisito funcional RF-26: Alta de profesor por administrador.}}{24}{table.4.26}%
+\contentsline {table}{\numberline {4.27}{\ignorespaces Requisito funcional RF-27: Añadir elementos.}}{25}{table.4.27}%
+\contentsline {table}{\numberline {4.28}{\ignorespaces Requisito funcional RF-28: Consultar elementos.}}{25}{table.4.28}%
+\contentsline {table}{\numberline {4.29}{\ignorespaces Requisito funcional RF-29: Editar elementos.}}{25}{table.4.29}%
+\contentsline {table}{\numberline {4.30}{\ignorespaces Requisito funcional RF-30: Eliminar elementos.}}{25}{table.4.30}%
+\contentsline {table}{\numberline {4.31}{\ignorespaces Requisito funcional RF-31: Orden global.}}{26}{table.4.31}%
+\contentsline {table}{\numberline {4.32}{\ignorespaces Requisito no funcional RNF-01: Usabilidad.}}{26}{table.4.32}%
+\contentsline {table}{\numberline {4.33}{\ignorespaces Requisito no funcional RNF-02: Rendimiento.}}{26}{table.4.33}%
+\contentsline {table}{\numberline {4.34}{\ignorespaces Requisito no funcional RNF-03: Seguridad.}}{27}{table.4.34}%
+\contentsline {table}{\numberline {4.35}{\ignorespaces Requisito no funcional RNF-04: Compatibilidad.}}{27}{table.4.35}%
+\contentsline {table}{\numberline {4.36}{\ignorespaces Requisito no funcional RNF-05: Escalabilidad.}}{27}{table.4.36}%
+\contentsline {table}{\numberline {4.37}{\ignorespaces Requisito no funcional RNF-06: Disponibilidad.}}{27}{table.4.37}%
+\contentsline {table}{\numberline {4.38}{\ignorespaces Requisito no funcional RNF-07: Tiempo de Respuesta.}}{28}{table.4.38}%
+\contentsline {table}{\numberline {4.39}{\ignorespaces Requisito no funcional RNF-08: Mantenimiento.}}{28}{table.4.39}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

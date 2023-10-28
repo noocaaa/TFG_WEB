@@ -26,31 +26,31 @@
 \contentsline {subsection}{\numberline {3.1.2}Fase de análisis}{11}{subsection.3.1.2}%
 \contentsline {subsection}{\numberline {3.1.3}Fase de desarrollo}{12}{subsection.3.1.3}%
 \contentsline {subsection}{\numberline {3.1.4}Fase de prueba y corrección}{13}{subsection.3.1.4}%
-\contentsline {subsection}{\numberline {3.1.5}Elaboración de la memoria}{14}{subsection.3.1.5}%
-\contentsline {section}{\numberline {3.2}Presupuesto}{15}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Licencias}{15}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.1.5}Elaboración de la memoria}{13}{subsection.3.1.5}%
+\contentsline {section}{\numberline {3.2}Presupuesto}{14}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Licencias}{14}{subsection.3.2.1}%
 \contentsline {subsection}{\numberline {3.2.2}Recursos Materiales}{15}{subsection.3.2.2}%
 \contentsline {subsection}{\numberline {3.2.3}Costes de Personal}{15}{subsection.3.2.3}%
 \contentsline {subsection}{\numberline {3.2.4}Otros costes}{16}{subsection.3.2.4}%
 \contentsline {subsection}{\numberline {3.2.5}Total}{16}{subsection.3.2.5}%
-\contentsline {chapter}{\numberline {4}Requisitos}{19}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Requisitos Funcionales}{19}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Generales}{20}{subsection.4.1.1}%
-\contentsline {subsection}{\numberline {4.1.2}Sistema}{21}{subsection.4.1.2}%
-\contentsline {subsection}{\numberline {4.1.3}Estudiantes}{22}{subsection.4.1.3}%
-\contentsline {subsection}{\numberline {4.1.4}Profesores}{24}{subsection.4.1.4}%
-\contentsline {subsection}{\numberline {4.1.5}Administrador}{26}{subsection.4.1.5}%
-\contentsline {section}{\numberline {4.2}Requisitos No Funcionales}{28}{section.4.2}%
-\contentsline {chapter}{\numberline {5}Análisis}{31}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Análisis}{31}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Modelos de caso de uso}{31}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Arquitectura del sistema}{31}{section.5.3}%
-\contentsline {section}{\numberline {5.4}Modelos de comportamiento}{31}{section.5.4}%
-\contentsline {section}{\numberline {5.5}Modelado de Entidades y sus relaciones}{31}{section.5.5}%
-\contentsline {chapter}{\numberline {6}Diseño e Implementación}{33}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Pruebas y Resultados}{35}{chapter.7}%
-\contentsline {chapter}{\numberline {8}Conclusiones y Líneas de Trabajo Futuro}{37}{chapter.8}%
-\contentsline {chapter}{Anexos}{38}{chapter.8}%
-\contentsline {chapter}{Glosario}{38}{section*.9}%
-\contentsline {chapter}{Bibliograf\'{\i }a}{39}{appendix*.10}%
-\contentsline {chapter}{Bibliografía}{40}{appendix*.10}%
+\contentsline {chapter}{\numberline {4}Requisitos}{17}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Requisitos Funcionales}{17}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Generales}{18}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Sistema}{19}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}Estudiantes}{20}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}Profesores}{22}{subsection.4.1.4}%
+\contentsline {subsection}{\numberline {4.1.5}Administrador}{24}{subsection.4.1.5}%
+\contentsline {section}{\numberline {4.2}Requisitos No Funcionales}{26}{section.4.2}%
+\contentsline {chapter}{\numberline {5}Análisis}{29}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Análisis}{29}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Modelos de caso de uso}{29}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Arquitectura del sistema}{29}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Modelos de comportamiento}{29}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Modelado de Entidades y sus relaciones}{29}{section.5.5}%
+\contentsline {chapter}{\numberline {6}Diseño e Implementación}{31}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Pruebas y Resultados}{33}{chapter.7}%
+\contentsline {chapter}{\numberline {8}Conclusiones y Líneas de Trabajo Futuro}{35}{chapter.8}%
+\contentsline {chapter}{Anexos}{36}{chapter.8}%
+\contentsline {chapter}{Glosario}{36}{section*.9}%
+\contentsline {chapter}{Bibliograf\'{\i }a}{37}{appendix*.10}%
+\contentsline {chapter}{Bibliografía}{38}{appendix*.10}%

@@ -1,6 +1,6 @@
 \chapter{Planificación} \label{chap:planification}
 
-En el ámbito de cualquier proyecto, la planificación es un aspecto crucial para garantizar una correcta ejecución y un cumplimiento de objetivos. Es por ello que, en este capítulo, nos centraremos en cómo se ha organizado y estructurado el desarrollo de este proyecto con el fin de alcanzar el objetivo principal propuesto. Además, presentaremos un diagrama de Gantt para proporcionar una visión clara y estructurada de las diferentes etapas y el tiempo asignado a cada una.
+La planificación es un aspecto importante en cualquier proyecto. Nos permite asegurar una correcta ejecución y el logro de los objetivos establecidos. Por ello, en este capítulo, abordaremos la organización y estructuración del proyecto para con tal de cumplir el objetivo principal. Además, un diagrama de Gantt se incluirá, al final de la sección, para ofrecer una visión detallada del tiempo asignado a cada tarea.
 
 \section{Fases}
 
@@ -10,7 +10,7 @@ En la fase inicial se establecieron las bases y objetivos del proyecto. Se recon
 
 \subsection{Fase de análisis}
 
-Durante esta etapa se realizó en una exploración profunda y meticulosa de las necesidades y los requirimientos clave para diseñar ua plataforma de aprendizaje eficaz. La prioridad fue establecer un ambiente donde los estudiantes no solo obtuvieran una corrección rápida, sino también una retroalimentación significativa que potenciara su aprendizaje. Además, se reconoció la importancia de ofrecer un enfoque adaptativo y personalizado que considerara la diversidad de ritmos y estilos de aprendizaje. Se investigaron tanto las demandas funcionales como las tecnológicas, y se llevó a cabo un análisis de la plataforma Codelearn S.L. con tal de garantizar que las decisiones tomadas fueran adecuadas y eficientes.
+Durante esta etapa se realizó en una exploración profunda y meticulosa de las necesidades y los requerimientos clave para diseñar una plataforma de aprendizaje eficaz. Se buscó conseguir un entorno que proporcionará una buena retroalimentación. Se puso énfasis en un enfoque adaptativo y personalizado, teniendo en cuenta la diversidad de ritmos y estilos de aprendizaje. Sé investigaron tanto las demandas funcionales como las tecnológicas, y se llevó a cabo un análisis de la plataforma Codelearn S.L. con tal de garantizar que las decisiones tomadas fueran adecuadas y eficientes.
 
 Antes de adentrarnos en la construcción de la plataforma, fue esencial definir con precisión qué funcionalidades eran fundamentales. A través de reuniones, lecturas e investigación se definieron las siguientes características principales para el sistema:
 
@@ -20,37 +20,36 @@ Antes de adentrarnos en la construcción de la plataforma, fue esencial definir 
     \item Un camino de ejercicios que se adapte dinámicamente al progreso y habilidades del estudiante.
     \item Un esquema de progreso visual que motive y guíe a los estudiantes a través de su aprendizaje.
     \item Una plataforma sencilla y visual, diseñada específicamente para niños, que les permita interactuar con el contenido de manera intuitiva.
-    \item Integración de un compilador en tiempo real, permitiendo a los estudiantes ejecutar y probar sus códigos directamente en la plataforma.
-    \item Un sistema de soporte y tutoría basado en un mecanismo de preguntas y respuestas: los estudiantes pueden enviar sus inquietudes o dudas específicas, y tutores expertos proporcionan respuestas claras y detalladas para guiarlos. 
+    \item Un compilador en tiempo real que permite la ejecución y prueba de códigos en la plataforma.
+    \item Un sistema de soporte y tutoría basado en un mecanismo de preguntas y respuestas para asistir a los estudiantes con dudas específicas.
 \end{itemize}
 
-Una vez establecidos los requisitos y objetivos del proyecto, la elección tecnológica se fundamentó en la experiencia previa buscando la eficiencia y comprensión. En el Frontend, se recurrió a HTML, CSS y JavaScript, estándares de la industria que ofrecen interfaces de usuario fluidas y dinámicas. Flask fue elegido para el Backend debido a su naturaleza intuitiva y su capacidad para adaptarse sin problemas con diversas librerías de Python. Finalmente, para la gestión de la base de datos, se optó por PostgreSQL, debido a su habilidad para manejar grandes volúmenes de datos, garantizando una estructura robusta y escalable para la plataforma educativa.
+Con los requisitos y objetivos ya estuvieron claros, se pasó a la elección de tecnologías que se iban a usar. La decisión fue tomada en base la experiencia, ya que de esta manera se conseguía rápidamente la eficiencia. Para el Frontend, se usó HTML, CSS y JavaScript, gracias a que ofrecían unas interfaces de usuario fluidas y dinámicas. Se usó Flask para el Backend, ya que se adapta fácilmente con diversas librerías de Python. Asimismo, para la gestión de la base de datos, se usó por PostgreSQL, ya que garantizaba una estructura robusta y escalable.
 
 \subsection {Fase de desarrollo}
 
 La fase de desarrollo se centró en implementar las características clave identificadas durante la fase anterior. Las principales características desarrolladas fueron:
 
 \begin{enumerate}
-    \item \textbf{Corrección automatizada de los ejercicios}: Con el fin de proporcionar una buena retroalimentación instantánea y detallada, se desarrolló un sistema de corrección automatizada que no solo verifica la solución del ejercicio, sino también la calidad y eficiencia del código escrito por el estudiante. Este sistema analiza aspectos clave como la limpieza del código, la utilización adecuada de estructuras de datos y la presencia de bucles repetitivos o redundantes. Esto garantiza que los estudiantes no solo resuelvan el problema, sino que también adopten buenas prácticas de codificación.
+    \item \textbf{Corrección automatizada de los ejercicios}: Se desarrolló un sistema de corrección automatizada que no solo verifica la solución del ejercicio, sino también la calidad y eficiencia del código. Concretamente, analiza la limpieza del código, la utilización correcta de las estructuras de datos y si existen bucles repetitivos o redundantes. Garantizando que los estudiantes no solo resuelven el problema, sino que también adopten buenas prácticas de codificación.
 
-    \item \textbf{Retroalimentación Personaliza}: No basta con ofrecer una corrección simple y binaria; es crucial que el estudiante entienda sus errores. Por ello, la plataforma proporciona comentarios detallados y sugerencias sobre cómo mejorar y optimizar el código. Esta inmediatez en la retroalimentación facilita el aprendizaje y la corrección de errores, fortaleciendo así la comprensión y aplicación de los conceptos.
+    \item \textbf{Retroalimentación Personaliza}: Se debe ofrecer un buen \textit{feedback} para que los estudiantes entiendan sus errores. Por ello, se proporcionan comentarios detallados y las sugerencias necesarias. De esta manera, se fortalece la comprensión y se facilita el aprendizaje.
 
-    \item \textbf{Caminos de Ejercicios Aleatorio}: Con el objetivo de proporcionar una experiencia de aprendizaje dinámica y adaptativa, se ha implementado un sistema que presenta un conjunto de ejercicios basados en requisitos específicos de forma aleatoria. De esta manera, cada vez que un estudiante enfrenta un requisito, se le desafía con un conjunto de ejercicios diferentes, asegurando una exposición diversa a los problemas. Además, si un estudiante no logra resolver un ejercicio, el sistema le proporciona automáticamente otro, permitiendo una adaptación constante al ritmo y habilidades del estudiante.
+    \item \textbf{Caminos de Ejercicios Aleatorio}: Para poder proporcionar una buena experiencia de aprendizaje, el sistema tiene un conjunto de ejercicios basados en requisitos específicos de forma aleatoria. De esta manera, se consigue que cada vez que el estudiante se enfrenta un requisito, se le desafía con un conjunto de ejercicios diferentes, asegurando que los haga por comprensión y no por repetición. Es importante destacar, que si un estudiante no realiza correctamente un ejercicio, el sistema le proporcionará otro diferente.
     
-    \item \textbf{Esquema de progreso individualizado}: Para mantener la motivación, se diseñó un tablero de progreso que muestra dónde se sitúa el estudiante en su viaje educativo y qué le espera a continuación. Las recompensas e insignias se otorgan al alcanzar ciertos hitos, incentivando aún más el compromiso y el esfuerzo. 
+    \item \textbf{Esquema de progreso individualizado}: Se realizó un tablero que muestra dónde se sitúa el estudiante y qué le espera a continuación. De esta manera, se consigue una motivación e incentiva el esfuerzo.
 \end{enumerate}
 
 Cabe destacar que esta fase también implicó una serie de pruebas iterativas y correcciones, permitiendo ajustes y mejoras en tiempo real en función del feedback recibido y las observaciones realizadas.
 
 \subsection{Fase de prueba y corrección}
 
-Una vez finalizada la fase de desarrollo, se entró en una crucial etapa de pruebas y correcciones. Aunque las características se diseñaron con un entendimiento teórico sólido, es esencial verificar su eficacia en un entorno práctico.
+Tras finalizar la anterior fase, tocó centrarse en el testeo del prototipo y sus respectivos ajustes. A pesar de haber diseñado la página web en base la investigación teórica, se debía validar su usabilidad.
 
-Para este propósito, se seleccionaron 2-3 estudiantes, para interactuar con la plataforma y sus funcionalidades. Durante esta etapa de prueba, se les solicitó que realizaran diversas tareas y que compartieran sus experiencias, dificultades y sugerencias.
+Se eligió un grupo de 2-3 estudiantes, para que interactuaran con la plataforma. 
+Pidiéndoles que hicieran varias tareas y que compartieran sus impresiones, dificultades y recomendaciones.
 
-La retroalimentación obtenida de estos estudiantes fue clave. A partir de sus comentarios y observaciones, se llevaron a cabo varias modificaciones y ajustes en la plataforma. Estas correcciones no solo abordaron errores técnicos o problemas de usabilidad, sino que también ayudaron a refinar la experiencia de aprendizaje y a garantizar que la plataforma cumpliera con las expectativas y necesidades de los estudiantes.
-
-Este proceso iterativo de prueba y corrección aseguró que la plataforma estuviera bien equipada para ofrecer una experiencia educativa de calidad y responder adecuadamente a los desafíos que los estudiantes pudieran enfrentar.
+La retroalimentación de estos estudiantes fue clave. A partir de sus comentarios, se pudieron efectuar mejoras importantes en la plataforma. Se solucionaron fallos técnicos y cuestiones de usabilidad, además de optimizar la calidad de la experiencia educativa. Consiguiendo que la plataforma se adaptará a las necesidades y retos de los estudiantes, pudiendo asegurar una experiencia educativa de calidad.
 
 \subsection{Elaboración de la memoria}
 
@@ -135,15 +134,15 @@ El proyecto tuvo inicio a principios de julio, durando cinco meses hasta su fina
 
 \section{Presupuesto}
 
-En esta sección se presenta un análisis exhaustivo de los posibles gastos incurridos durante la ejecución del proyecto, considerando una variedad de elementos como materiales, licencias, horas de trabajo, entre otros.
+En esta parte del documento se realiza una descripción de los gastos ocasionados por el proyecto.
 
 \subsection{Licencias}
 
-Determinar el coste asociado a las licencias de los recursos es esencial para abordar los costes un proyecto.
+Con tal de realizar una buena evaluación del coste de un proyecto, se debe tener en cuenta todos aquellos gastos relacionados con licencias. En este caso, se optó por maximizar el uso de tecnologías \textit{OpenSource} para reducir costos.
 
-Para este proyecto, se priorizó el uso de tecnologías de código abierto para minimizar los gastos. En la parte del Frontend, se aprovecharon los estándares abiertos HTML, CSS y JavaScript, lo que significó un coste nulo. En el Backend, se adoptó Flask, un micro-framework de Python de uso libre bajo la licencia BSD. Finalmente, para las necesidades de la base de datos, se seleccionó PostgreSQL, siendo una solución de código abierto operado bajo la licencia homónima. Respecto al control de versiones y la colaboración, se recurrió a Git, una herramienta de código abierto ideada por Linus Torvalds, y GitHub, una plataforma que, a pesar de ofrecer planes de pago, brinda opciones gratuitas para proyectos de código abierto. 
+Para la interfaz de usuario, se usó HTML, CSS y JavaScript. En cuanto al Backend, se seleccionó Flask que también de costo cero. Además, se recurrió a PostgreSQL que no tiene ningún coste ni límite en cuanto a tamaño de la base de datos. Para el control de versiones, se usó Git y GitHub. Aunque GitHub ofrece planes de pago, dispone de opciones gratuitas. 
 
-En resumen, debido a estas decisiones tecnológicas, no se incurrió en ningún gasto en licencias, resultando en un coste total de software de 0€.
+Por lo tanto, el coste de licencias es cero. 
 
 \subsection{Recursos Materiales}
 
@@ -159,8 +158,8 @@ Para el cálculo de costes de personal se ha tenido en cuenta un único empleado
 
 \begin{table}[H]
     \centering
-    \small % Reduce el tamaño de fuente
-    \setlength{\tabcolsep}{1.8pt} % Reduce el espacio entre columnas
+    \small 
+    \setlength{\tabcolsep}{1.8pt}
     \begin{tabular}{@{}lrr@{}}
         \toprule
         \textbf{Concepto} & \textbf{Coste Mensual (€)} & \textbf{Coste 5 Meses (€)} \\
@@ -182,15 +181,15 @@ Para el cálculo de costes de personal se ha tenido en cuenta un único empleado
 
 \end{table}
 
-A partir de la tabla, si realizamos un cálculo promedio entre la base mínima y máxima, se obtiene un salario promedio mensual de aproximadamente 3.127,50€. Puesto que el proyecto tiene una duración de 5 meses, se estima un coste total en salarios de 15.637,50€ para el desarrollo del proyecto.
+Si calculamos el promedio salarial, se obtendría aproximadamente unos 3.127,50€. Como el proyecto tiene una duración de 5 meses, el coste total en salarios sería de 15.637,50€ para el desarrollo completo del proyecto.
 
-Adicionalmente, se debería considerar las cotizaciones correspondientes a la empresa y al trabajador sobre dicho salario, ascendiendo el coste total de personal para el proyecto a unos 17.900€ aproximadamente. 
+Adicionalmente, se debería considerar las cotizaciones correspondientes a la empresa y al trabajador, siendo el coste total para el proyecto de unos 17.900€ aproximadamente. 
 
 \subsection{Otros costes}
 
-Dentro de este apartado, se deben contemplar los gastos indirectos que resultan esenciales para la realización del proyecto. Algunos ejemplos serían el material de oficina, la conexión a Internet, la electricidad, los gastos de transporte, entre otros.
+Este apartado hace alusión a todos aquellos gastos indirectos importantes para la realización del proyecto. Como, por ejemplo, el material de oficina, la conexión a Internet, la electricidad, los gastos de transporte, entre otros.
 
-Es una práctica común estimar estos costes indirectos como un porcentaje del gasto principal, en este caso, el coste de personal. Siguiendo esta norma, se ha determinado que estos gastos representan aproximadamente el 10\% del gasto total en personal:
+Se suele estimar este tipo de costes indirectos como un porcentaje del gasto principal, en este caso, del coste de personal. Siguiendo esta norma, se ha determinado que estos gastos representan aproximadamente el 10\% del gasto total en personal:
 
 \[ 17.900€ \times 0,10 = 1.790€ \]
 
@@ -198,10 +197,10 @@ Por lo tanto, se estima un coste adicional de 1.790€ para cubrir lo gastos ind
 
 \subsection{Total}
 
-Para finalizar, se muestra una tabla que resume todos los costes obtenidos, haciendo una estimación mensual y total del proyecto. 
-
+Para finalizar, se muestra una tabla que resume todos los costes obtenidos, haciendo una estimación mensual y total del proyecto.
 \begin{table}[H]
     \centering
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{lcc}
         \hline
         \textbf{Concepto} & \textbf{Coste Mensual (€)} & \textbf{Coste Total (5 Meses) (€)} \\
@@ -215,6 +214,7 @@ Para finalizar, se muestra una tabla que resume todos los costes obtenidos, haci
         \textbf{Total} & \textbf{3964,06} & \textbf{19.822,78} \\
         \hline
     \end{tabular}
+    }
     \caption{Total de costes del proyecto}
     \label{tab:resumen-costes}
 \end{table}
