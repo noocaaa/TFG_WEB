@@ -1,0 +1,775 @@
+\chapter{Requisitos} \label{chap:requisitos}
+
+En este capítulo, se profundizará en el análisis de requisitos de la plataforma. Se tendrá en cuenta tanto los requisitos funcionales como los no funcionales, siendo este análisis de requisitos uno de los fundamentos para el desarrollo posterior de la plataforma.
+
+\section{Requisitos Funcionales}
+
+Con tal de garantizar la funcionalidad del programa y la realización de los objetivos establecidos, es esencial hacer una buena definición de los requisitos funcionales. Para facilitar su comprensión, presentaremos estos requisitos en tablas, siguiendo las convenciones de la ingeniería de requisitos y desarrollo de software. La organización de los contenidos es la siguiente:
+
+\begin{itemize}
+    \item \textbf{ID}: Identificador único para cada requisito. Esencial para una fácil referencia y seguimiento.
+    \item \textbf{Nombre}: Nombre del requisito.
+    \item \textbf{Descripción}: Explicación del propósito y alcance del requisito.
+    \item \textbf{Prioridad}: La importancia del requisito en relación con el sistema. Las categorías posibles son alta, media o baja. Siendo crucial abordar primero los requisitos de alta prioridad, mientras que los de baja prioridad se harán al final.
+    \item \textbf{Estado}: Refleja la situación actual del requisito, pudiendo estar \textit{en desarrollo}, \textit{completado}, \textit{en revisión} o \textit{rechazado}.
+\end{itemize}
+
+
+\subsection{Generales}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-01 \\
+        \hline
+        \textbf{Nombre} & Inicio de sesión \\
+        \hline
+        \textbf{Descripción} & Los usuarios registrados deben poder acceder a la plataforma introduciendo su nombre de usuario y contraseña. El sistema debe garantizar la confidencialidad y autenticidad de esta operación, asegurando que las contraseñas se gestionan y almacenan de manera segura. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-01: Inicio de sesión.}
+    \label{table:req-RF001}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-02 \\
+        \hline
+        \textbf{Nombre} & Registro de usuario \\
+        \hline
+        \textbf{Descripción} & Los nuevos usuarios deben poder registrarse en la plataforma proporcionando información relevante. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-02: Registro de usuario.}
+    \label{table:req-RF002}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-03 \\
+        \hline
+        \textbf{Nombre} & Perfil de usuario \\
+        \hline
+        \textbf{Descripción} & Cada usuario debe tener un perfil donde pueda visualizar su información personal, y donde poder cambiar ciertos datos.\\
+        \hline
+        \textbf{Prioridad} & Media \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-03: Perfil de usuario.}
+    \label{table:req-RF005}
+\end{table}
+    
+
+\subsection{Sistema}
+        
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-04 \\
+        \hline
+        \textbf{Nombre} & Selección de ejercicios por requisitos \\
+        \hline
+        \textbf{Descripción} & El sistema deberá presentar a los estudiantes ejercicios basados en el requisito que estén estudiando. Una vez completado un ejercicio, el siguiente deberá ser mostrado de forma aleatoria dentro del mismo requisito, hasta que se considere que el estudiante ha asimilado ese requisito. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline   
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-04: Selección de ejercicios por requisitos.}
+    \label{table:req-RF003}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-05 \\
+        \hline
+        \textbf{Nombre} & Corrección de ejercicios \\
+        \hline
+        \textbf{Descripción} & Al enviar una solución, el sistema no solo verificará si es correcta, sino que también evaluará la calidad del código en términos de optimización y buenas prácticas de programación. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-05: Corrección de ejercicios.}
+    \label{table:req-RF004}
+\end{table}
+        
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-06 \\
+        \hline
+        \textbf{Nombre} & Compilador integrado \\
+        \hline
+        \textbf{Descripción} & La plataforma deberá contener con un compilador integrado que permita a los estudiantes probar sus códigos en Java, HTML+CSS+JS, Python y C++. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-06: Compilador integrado.}
+    \label{table:req-RF007}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-07 \\
+        \hline
+        \textbf{Nombre} & Categorización de la teoría \\
+        \hline
+        \textbf{Descripción} & La teoría se clasificará en función del requisito, facilitando así su visualización dependiendo del punto en que se encuentre el estudiante. \\
+        \hline
+        \textbf{Prioridad} & Media \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-07: Categorización de la teoría.}
+    \label{table:req-RF008}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-08 \\
+        \hline
+        \textbf{Nombre} & Repetición de ejercicios similares tras fallo \\
+        \hline
+        \textbf{Descripción} & Si un estudiante falla un ejercicio, el sistema deberá presentar otro ejercicio con características similares para que el estudiante pueda intentarlo de nuevo. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-08: Repetición de ejercicios similares tras fallo.}
+    \label{table:req-RF00X}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-09 \\
+        \hline
+        \textbf{Nombre} & Límite de tiempo para completar un ejercicio \\
+        \hline
+        \textbf{Descripción} & Si el estudiante tarda más de un tiempo predefinido en completar un ejercicio, el sistema lo marcará como erróneo y presentará un nuevo ejercicio. \\
+        \hline
+        \textbf{Prioridad} & Media \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-09: Límite de tiempo para completar un ejercicio.}
+    \label{table:req-RF00Y}
+\end{table}
+
+\subsection{Estudiantes}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-10 \\
+        \hline
+        \textbf{Nombre} & Resolución de dudas \\
+        \hline
+        \textbf{Descripción} & Los estudiantes realizarán preguntas y adjuntar archivos para que el profesor les ayude. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-10: Resolución de dudas.}
+    \label{table:req-RF006}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-11 \\
+        \hline
+        \textbf{Nombre} & Consulta de los rankings \\
+        \hline
+        \textbf{Descripción} & Los estudiantes podrán consultar un ranking donde vean los \textit{top} 5 estudiantes diarios, semanales y mensuales. \\
+        \hline
+        \textbf{Prioridad} & Media \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-11: Consulta de los rankings.}
+    \label{table:req-RF00Z}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-12 \\
+        \hline
+        \textbf{Nombre} & Juegos en la web \\
+        \hline
+        \textbf{Descripción} & Por cada módulo que los estudiantes completen, se les desbloqueará un juego como recompensa. \\
+        \hline
+        \textbf{Prioridad} & Baja \\
+        \hline
+        \textbf{Estado} & Pendiente \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-12: Juegos en la web.}
+    \label{table:req-RF00A}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-13 \\
+        \hline
+        \textbf{Nombre} & Consulta de los ejercicios corregidos \\
+        \hline
+        \textbf{Descripción} & Los estudiantes podrán consultar los comentarios del profesor sobre los ejercicios que haya corregido. \\
+        \hline
+        \textbf{Prioridad} & Media \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-13: Consulta de los ejercicios corregidos.}
+    \label{table:req-RF00B}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-14 \\
+        \hline
+        \textbf{Nombre} & Sistema de notificación \\
+        \hline
+        \textbf{Descripción} & Se notificará al estudiante si su ejercicio es correcto o incorrecto cuando lo evalúe el profesor, junto con una retroalimentación del por qué es incorrecto. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-14: Sistema de notificación.}
+    \label{table:req-RF00C}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-15 \\
+        \hline
+        \textbf{Nombre} & Feedback sobre la solución \\
+        \hline
+        \textbf{Descripción} & Cuando un alumno envíe la solución, se le mostrará un feedback completo sobre ella. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-15: Feedback sobre la solución.}
+    \label{table:req-RF00D}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-16 \\
+        \hline
+        \textbf{Nombre} & Sistema de puntos \\
+        \hline
+        \textbf{Descripción} & Por cada ejercicio completado, el estudiante obtendrá una cantidad de puntos dependiendo de la calidad de su solución. \\
+        \hline
+        \textbf{Prioridad} & Baja \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-16: Sistema de puntos.}
+    \label{table:req-RF00E}
+\end{table}
+
+\subsection{Profesores}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-17 \\
+        \hline
+        \textbf{Nombre} & Lista de usuarios \\
+        \hline
+        \textbf{Descripción} & El profesor podrá ver una lista de todos los usuarios registrados en la plataforma. \\
+        \hline
+        \textbf{Prioridad} & Media \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-17: Lista de usuarios.}
+    \label{table:req-RF00F}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-18 \\
+        \hline
+        \textbf{Nombre} & Consulta de ejercicios realizados \\
+        \hline
+        \textbf{Descripción} & El profesor podrá consultar los ejercicios realizados por los estudiantes, junto con su estado, \\
+        \hline
+        \textbf{Prioridad} & Media \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-18: Consulta de ejercicios realizados.}
+    \label{table:req-RF00G}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-19 \\
+        \hline
+        \textbf{Nombre} & Panel de resolución de preguntas \\
+        \hline
+        \textbf{Descripción} & El profesor tendrá un panel donde podrá responder las preguntas realizadas por los estudiantes. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-19: Panel de resolución de preguntas.}
+    \label{table:req-RF00H}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-20 \\
+        \hline
+        \textbf{Nombre} & Lista de estudiantes inactivos \\
+        \hline
+        \textbf{Descripción} & El profesor podrá consultar en una lista los estudiantes que llevan más de una semana sin conectarse, incluyendo sus correos electrónicos para un posible seguimiento. \\
+        \hline
+        \textbf{Prioridad} & Media \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-20: Lista de estudiantes inactivos.}
+    \label{table:req-RF00I}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-21\\
+        \hline
+        \textbf{Nombre} & Tiempo de resolución de ejercicios \\
+        \hline
+        \textbf{Descripción} & Habrá una lista de estudiantes que tengan un tiempo de resolución de ejercicios demasiado bajo o alto, con tal de identificar posibles problemas o áreas de mejora. \\
+        \hline
+        \textbf{Prioridad} & Baja \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-21: Tiempo de resolución de ejercicios.}
+    \label{table:req-RF00J}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-22 \\
+        \hline
+        \textbf{Nombre} & Corrección de ejercicios \\
+        \hline
+        \textbf{Descripción} & El profesor tendrá la capacidad de corregir los ejercicios, relacionados con HTML, enviados por los estudiantes y ser capaz de proporcionar una retroalimentación. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-22: Corrección de ejercicios.}
+    \label{table:req-RF00K}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-23 \\
+        \hline
+        \textbf{Nombre} & Usuarios con múltiples fallos \\
+        \hline
+        \textbf{Descripción} & Se listarán los usuarios que han fallado más de dos veces un ejercicio específico con tal de poder identificar áreas problemáticas. \\
+        \hline
+        \textbf{Prioridad} & Baja \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-23: Usuarios con múltiples fallos.}
+    \label{table:req-RF00L}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-24 \\
+        \hline
+        \textbf{Nombre} & Ejercicios realizados por día \\
+        \hline
+        \textbf{Descripción} & Habrá un gráfico donde se podrá consultar el número de ejercicios realizados por día en la plataforma. Con tal de poder evaluar la actividad y el compromiso de los estudiantes. \\
+        \hline
+        \textbf{Prioridad} & Baja \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-24: Ejercicios realizados por día.}
+    \label{table:req-RF00N}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-25 \\
+        \hline
+        \textbf{Nombre} & Usuarios con alta tasa de errores \\
+        \hline
+        \textbf{Descripción} & Habrá una lista de usuarios con una alta tasa de errores en los ejercicios, con tal de poder ofrecer asistencia adicional. \\
+        \hline
+        \textbf{Prioridad} & Baja \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-25: Usuarios con alta tasa de errores.}
+    \label{table:req-RF00M}
+\end{table}
+
+\subsection{Administrador}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-26 \\
+        \hline
+        \textbf{Nombre} & Alta de profesor por administrador \\
+        \hline
+        \textbf{Descripción} & El administrador tendrá la capacidad de registrar a un profesor mediante el panel de administración. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-26: Alta de profesor por administrador.}
+    \label{table:req-RF0010}
+\end{table}
+        
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-27 \\
+        \hline
+        \textbf{Nombre} & Añadir elementos \\
+        \hline
+        \textbf{Descripción} & El administrador podrá añadir nuevos módulos, requisitos, profesores, teoría y ejercicios a la plataforma. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-27: Añadir elementos.}
+    \label{table:req-RF00O}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-28 \\
+        \hline
+        \textbf{Nombre} & Consultar elementos \\
+        \hline
+        \textbf{Descripción} & El administrador podrá consultar los detalles de los módulos, requisitos, profesores, teoría y ejercicios existentes en la plataforma. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-28: Consultar elementos.}
+    \label{table:req-RF00P}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-29 \\
+        \hline
+        \textbf{Nombre} & Editar elementos \\
+        \hline
+        \textbf{Descripción} & El administrador podrá editar los detalles de los módulos, profesores, teoría y ejercicios, excepto los requisitos que no son editables. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-29: Editar elementos.}
+    \label{table:req-RF00Q}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-30 \\
+        \hline
+        \textbf{Nombre} & Eliminar elementos \\
+        \hline
+        \textbf{Descripción} & El administrador podrá eliminar módulos, requisitos, profesores, teoría y ejercicios de la plataforma. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-30: Eliminar elementos.}
+    \label{table:req-RF00R}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RF-31 \\
+        \hline
+        \textbf{Nombre} & Orden global \\
+        \hline
+        \textbf{Descripción} & El administrador podrá crear y consultar un orden global que especifica el camino que debe seguir el estudiante en la plataforma, siendo una secuencia de módulos y requisitos. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito funcional RF-31: Orden global.}
+    \label{table:req-RF00S}
+\end{table}
+
+
+\section{Requisitos No Funcionales}
+
+Con tal de asegurar la calidad global del sistema, deberemos tener en cuenta los requisitos funcionales. Por ello, vamos a detallar estos requisitos de manera estructurada siguiendo el mismo formato que con los requisitos funcionales.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RNF-01 \\
+        \hline
+        \textbf{Nombre} & Usabilidad \\
+        \hline
+        \textbf{Descripción} & El sistema deberá ser intuitivo y fácil de usar para los diferentes tipos de usuarios. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito no funcional RNF-01: Usabilidad.}
+    \label{table:req-RNF31}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RNF-02 \\
+        \hline
+        \textbf{Nombre} & Rendimiento \\
+        \hline
+        \textbf{Descripción} & El sistema deberá ser capaz de manejar una cantidad promedio de usuarios. \\
+        \hline
+        \textbf{Prioridad} & Media \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito no funcional RNF-02: Rendimiento.}
+    \label{table:req-RNF32}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RNF-03 \\
+        \hline
+        \textbf{Nombre} & Seguridad \\
+        \hline
+        \textbf{Descripción} & Todos los datos sensibles, como contraseñas, deben estar encriptados. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito no funcional RNF-03: Seguridad.}
+    \label{table:req-RNF33}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RNF-04 \\
+        \hline
+        \textbf{Nombre} & Compatibilidad \\
+        \hline
+        \textbf{Descripción} & El sistema debe ser compatible con los navegadores web más comunes, incluidos Chrome, Firefox y Safari. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito no funcional RNF-04: Compatibilidad.}
+    \label{table:req-RNF35}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RNF-05 \\
+        \hline
+        \textbf{Nombre} & Escalabilidad \\
+        \hline
+        \textbf{Descripción} & El sistema deberá ser escalable para permitir la adición de más módulos, ejercicios y usuarios en el futuro. \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito no funcional RNF-05: Escalabilidad.}
+    \label{table:req-RNF36}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RNF-06 \\
+        \hline
+        \textbf{Nombre} & Disponibilidad \\
+        \hline
+        \textbf{Descripción} & La página web debe estar disponible el 99\% del tiempo, excluyendo el tiempo de mantenimiento programado. \\
+        \hline
+        \textbf{Prioridad} & Media \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito no funcional RNF-06: Disponibilidad.}
+    \label{table:req-RNF37}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RNF-07 \\
+        \hline
+        \textbf{Nombre} & Tiempo de Respuesta \\
+        \hline
+        \textbf{Descripción} & El tiempo de carga de las páginas no debe superar los 5 segundos. \\
+        \hline
+        \textbf{Prioridad} & Media \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito no funcional RNF-07: Tiempo de Respuesta.}
+    \label{table:req-RNF38}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RNF-08 \\
+        \hline
+        \textbf{Nombre} & Mantenimiento \\
+        \hline
+        \textbf{Descripción} & Se deberá tener una arquitectura bien estructurada que facilite poder añadir nuevas funcionalidades. Además, de poder corregir errores sin afectar al funcionamiento de todo el sistema  \\
+        \hline
+        \textbf{Prioridad} & Alta \\
+        \hline
+        \textbf{Estado} & Completado \\
+        \hline
+    \end{tabular}
+    \caption{Requisito no funcional RNF-08: Mantenimiento.}
+    \label{table:req-RNF39}
+\end{table}
