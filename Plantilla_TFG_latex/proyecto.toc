@@ -1,6 +1,4 @@
 \babel@toc {spanish}{}
-\contentsline {chapter}{}{\es@scroman {iii}}{chapter*.1}%
-\contentsline {chapter}{}{\es@scroman {v}}{chapter*.2}%
 \contentsline {chapter}{\numberline {1}Introducción}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Contexto Actual y Relevancia de la Programación}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Descripción del Problema}{1}{section.1.2}%
@@ -31,7 +29,7 @@
 \contentsline {subsection}{\numberline {3.2.1}Licencias}{14}{subsection.3.2.1}%
 \contentsline {subsection}{\numberline {3.2.2}Recursos Materiales}{15}{subsection.3.2.2}%
 \contentsline {subsection}{\numberline {3.2.3}Costes de Personal}{15}{subsection.3.2.3}%
-\contentsline {subsection}{\numberline {3.2.4}Otros costes}{16}{subsection.3.2.4}%
+\contentsline {subsection}{\numberline {3.2.4}Otros costes}{15}{subsection.3.2.4}%
 \contentsline {subsection}{\numberline {3.2.5}Total}{16}{subsection.3.2.5}%
 \contentsline {chapter}{\numberline {4}Requisitos}{17}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Requisitos Funcionales}{17}{section.4.1}%
