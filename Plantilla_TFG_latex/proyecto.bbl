@@ -6,6 +6,18 @@ Bernat~Foj Capell.
 \newblock \url{https://www.codelearn.es}, 2013.
 \newblock Accedido el: 24 de Octubre, 2023.
 
+\bibitem{intelligentturoingprogrammingeducation}
+Tyne Crow, Andrew Luxton-Reilly, and Burkhard Wünsche.
+\newblock Intelligent tutoring systems for programming education: a systematic
+  review.
+\newblock pages 53--62, 01 2018.
+
+\bibitem{dewarschonberg}
+Robert~B.K. Dewar and Edmond Schonberg.
+\newblock Computer science education: Where are the software engineers of
+  tomorrow?
+\newblock {\em Open Forum}, 2001.
+
 \bibitem{dragonbox}
 DragonBox.
 \newblock The dragonbox method.
@@ -17,6 +29,13 @@ Discovery Education.
 \newblock Dreambox learning.
 \newblock \url{http://www.dreambox.com/}, 2022.
 \newblock Accedido el: 24 de Octubre, 2023.
+
+\bibitem{interfacedesign}
+Douglas Frye and Elliot Soloway.
+\newblock Interface design: A neglected issue in educational software.
+\newblock In {\em Proceedings of the SIGCHI/GI Conference on Human Factors in
+  Computing Systems and Graphics Interface}, CHI '87, pages 93--97. Association
+  for Computing Machinery, 1986.
 
 \bibitem{civilizationedu}
 Inc. GlassLab~y Take-Two Interactive~Software.
@@ -56,6 +75,11 @@ Andrew Ng~Daphne Koller.
 \newblock \url{https://www.coursera.org/campus}, 2011.
 \newblock Accedido el: 25 de Octubre, 2023.
 
+\bibitem{large2005}
+J.~A. Large and Jamshid Beheshti.
+\newblock Interface design, web portals, and children.
+\newblock {\em Library Trends}, 54(2):318--342, 2005.
+
 \bibitem{fastforword}
 Carnegie Learning.
 \newblock Fast forword.
@@ -76,6 +100,17 @@ Medtronic.
 \newblock \url{https://www.touchsurgery.com/simulations}, 2019.
 \newblock Accedido el: 25 de Octubre, 2023.
 
+\bibitem{pears2007}
+Arnold Pears, Stephen Seidman, Lauri Malmi, Linda Mannila, Elizabeth Adams,
+  Jens Bennedsen, Marie Devlin, and James Paterson.
+\newblock A survey of literature on the teaching of introductory programming.
+\newblock {\em ACM SIGCSE Bulletin}, 39(4):204--223, 2007.
+
+\bibitem{document2010}
+Anthony Robins, Janet Rountree, and Nathan Rountree.
+\newblock Learning and teaching programming: A review and discussion.
+\newblock {\em Computer Science Education}, 13(2):137--172, 2003.
+
 \bibitem{seg-social}
 Seguridad Social.
 \newblock Cotización y recaudación de trabajadores para el 2021.
@@ -83,6 +118,12 @@ Seguridad Social.
   \url{https://www.seg-social.es/wps/portal/wss/internet/Trabajadores/CotizacionRecaudacionTrabajadores/36537},
   2023.
 \newblock Accedido el: 26 de Octubre, 2023.
+
+\bibitem{teachingcodingchildren}
+Ugur Tevfik~Kaplancali and Zafer Demirkol.
+\newblock Teaching coding to children: A methodological approach.
+\newblock {\em International Journal of Elementary Education}, 6(4):32--37,
+  2017.
 
 \bibitem{edx}
 MIT y~Harvard.
