@@ -3,46 +3,49 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: proyecto.aux
 The style file: plain.bst
 Database file #1: Bibliografia/referencias.bib
+Warning--entry type for "planttext" isn't style-file defined
+--line 202 of file Bibliografia/referencias.bib
+Warning--to sort, need author or key in planttext
 Warning--empty booktitle in intelligentturoingprogrammingeducation
-You've used 21 entries,
+You've used 22 entries,
             2118 wiz_defined-function locations,
-            620 strings with 7030 characters,
-and the built_in function-call counts, 5577 in all, are:
-= -- 565
-> -- 211
+            623 strings with 7079 characters,
+and the built_in function-call counts, 5738 in all, are:
+= -- 580
+> -- 212
 < -- 2
-+ -- 89
++ -- 90
 - -- 66
-* -- 287
-:= -- 925
-add.period$ -- 75
-call.type$ -- 21
-change.case$ -- 96
+* -- 293
+:= -- 942
+add.period$ -- 77
+call.type$ -- 22
+change.case$ -- 99
 chr.to.int$ -- 0
-cite$ -- 22
-duplicate$ -- 205
-empty$ -- 503
+cite$ -- 24
+duplicate$ -- 212
+empty$ -- 526
 format.name$ -- 66
-if$ -- 1206
+if$ -- 1246
 int.to.chr$ -- 0
-int.to.str$ -- 21
+int.to.str$ -- 22
 missing$ -- 7
-newline$ -- 119
+newline$ -- 123
 num.names$ -- 36
-pop$ -- 139
+pop$ -- 148
 preamble$ -- 1
-purify$ -- 78
+purify$ -- 80
 quote$ -- 0
-skip$ -- 153
+skip$ -- 160
 stack$ -- 0
-substring$ -- 248
-swap$ -- 36
+substring$ -- 253
+swap$ -- 37
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 81
-warning$ -- 1
+type$ -- 85
+warning$ -- 2
 while$ -- 49
-width$ -- 23
-write$ -- 244
-(There was 1 warning)
+width$ -- 24
+write$ -- 252
+(There were 3 warnings)

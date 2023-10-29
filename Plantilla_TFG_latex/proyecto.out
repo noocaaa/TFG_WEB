@@ -42,23 +42,26 @@
 \BOOKMARK [1][-]{section.5.1}{An\341lisis}{chapter.5}% 42
 \BOOKMARK [2][-]{subsection.5.1.1}{An\341lisis de Usuarios Objetivo}{section.5.1}% 43
 \BOOKMARK [2][-]{subsection.5.1.2}{An\341lisis de Requisitos Educativos}{section.5.1}% 44
-\BOOKMARK [1][-]{section.5.2}{Modelos de Caso de Uso}{chapter.5}% 45
-\BOOKMARK [2][-]{subsection.5.2.1}{Caso de Uso para Estudiantes}{section.5.2}% 46
-\BOOKMARK [2][-]{subsection.5.2.2}{Caso de Uso para Administradores}{section.5.2}% 47
-\BOOKMARK [1][-]{section.5.3}{Arquitectura del Sistema}{chapter.5}% 48
-\BOOKMARK [2][-]{subsection.5.3.1}{Arquitectura Frontend}{section.5.3}% 49
-\BOOKMARK [2][-]{subsection.5.3.2}{Arquitectura Backend}{section.5.3}% 50
-\BOOKMARK [1][-]{section.5.4}{Modelos de Comportamiento}{chapter.5}% 51
-\BOOKMARK [2][-]{subsection.5.4.1}{Diagramas de Flujo para la Selecci\363n y Evaluaci\363n de Ejercicios}{section.5.4}% 52
-\BOOKMARK [2][-]{subsection.5.4.2}{Diagramas para la L\363gica de Correcci\363n y Evaluaci\363n de Calidad de C\363digo}{section.5.4}% 53
-\BOOKMARK [1][-]{section.5.5}{Modelado de Entidades y sus Relaciones}{chapter.5}% 54
-\BOOKMARK [2][-]{subsection.5.5.1}{Entidades Principales}{section.5.5}% 55
-\BOOKMARK [2][-]{subsection.5.5.2}{Diagramas ER o de Clases}{section.5.5}% 56
-\BOOKMARK [1][-]{section.5.6}{M\351tricas de Evaluaci\363n}{chapter.5}% 57
-\BOOKMARK [0][-]{chapter.6}{Dise\361o e Implementaci\363n}{}% 58
-\BOOKMARK [0][-]{chapter.7}{Pruebas y Resultados}{}% 59
-\BOOKMARK [0][-]{chapter.8}{Conclusiones y L\355neas de Trabajo Futuro}{}% 60
-\BOOKMARK [0][-]{chapter.8}{Anexos}{}% 61
-\BOOKMARK [0][-]{section*.9}{Glosario}{}% 62
-\BOOKMARK [0][-]{appendix*.10}{Bibliograf\355a}{}% 63
-\BOOKMARK [0][-]{appendix*.10}{Bibliograf\355a}{}% 64
+\BOOKMARK [1][-]{section.5.2}{Modelos de Caso de Uso y Escenarios de Uso}{chapter.5}% 45
+\BOOKMARK [2][-]{subsection.5.2.1}{Actores del Sistema}{section.5.2}% 46
+\BOOKMARK [2][-]{subsection.5.2.2}{Restricciones y Reglas de Negocio}{section.5.2}% 47
+\BOOKMARK [2][-]{subsection.5.2.3}{Escenarios de Uso Detallados}{section.5.2}% 48
+\BOOKMARK [2][-]{subsection.5.2.4}{Seguridad y Acceso}{section.5.2}% 49
+\BOOKMARK [1][-]{section.5.3}{Arquitectura del Sistema}{chapter.5}% 50
+\BOOKMARK [2][-]{subsection.5.3.1}{Arquitectura Frontend}{section.5.3}% 51
+\BOOKMARK [2][-]{subsection.5.3.2}{Arquitectura Backend}{section.5.3}% 52
+\BOOKMARK [1][-]{section.5.4}{Modelos de Comportamiento}{chapter.5}% 53
+\BOOKMARK [2][-]{subsection.5.4.1}{Diagramas de Flujo para la Selecci\363n y Evaluaci\363n de Ejercicios}{section.5.4}% 54
+\BOOKMARK [2][-]{subsection.5.4.2}{Diagramas para la L\363gica de Correcci\363n y Evaluaci\363n de Calidad de C\363digo}{section.5.4}% 55
+\BOOKMARK [1][-]{section.5.5}{Modelado de Entidades y sus Relaciones}{chapter.5}% 56
+\BOOKMARK [2][-]{subsection.5.5.1}{Entidades Principales}{section.5.5}% 57
+\BOOKMARK [2][-]{subsection.5.5.2}{Diagramas ER o de Clases}{section.5.5}% 58
+\BOOKMARK [1][-]{section.5.6}{M\351tricas de Evaluaci\363n}{chapter.5}% 59
+\BOOKMARK [0][-]{chapter.6}{Dise\361o e Implementaci\363n}{}% 60
+\BOOKMARK [0][-]{chapter.7}{Pruebas y Resultados}{}% 61
+\BOOKMARK [0][-]{chapter.8}{Conclusiones y L\355neas de Trabajo Futuro}{}% 62
+\BOOKMARK [0][-]{chapter.8}{Anexos}{}% 63
+\BOOKMARK [0][-]{appendix.1.Alph1}{Uso de la Plataforma}{}% 64
+\BOOKMARK [0][-]{section*.19}{Glosario}{}% 65
+\BOOKMARK [0][-]{appendix*.20}{Bibliograf\355a}{}% 66
+\BOOKMARK [0][-]{appendix*.20}{Bibliograf\355a}{}% 67
