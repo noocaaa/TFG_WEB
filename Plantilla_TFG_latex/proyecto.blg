@@ -3,44 +3,46 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: proyecto.aux
 The style file: plain.bst
 Database file #1: Bibliografia/referencias.bib
-You've used 14 entries,
+Warning--empty booktitle in intelligentturoingprogrammingeducation
+You've used 21 entries,
             2118 wiz_defined-function locations,
-            568 strings with 5663 characters,
-and the built_in function-call counts, 2945 in all, are:
-= -- 302
-> -- 80
-< -- 0
-+ -- 37
-- -- 22
-* -- 92
-:= -- 496
-add.period$ -- 53
-call.type$ -- 14
-change.case$ -- 53
+            620 strings with 7030 characters,
+and the built_in function-call counts, 5577 in all, are:
+= -- 565
+> -- 211
+< -- 2
++ -- 89
+- -- 66
+* -- 287
+:= -- 925
+add.period$ -- 75
+call.type$ -- 21
+change.case$ -- 96
 chr.to.int$ -- 0
-cite$ -- 14
-duplicate$ -- 110
-empty$ -- 306
-format.name$ -- 22
-if$ -- 655
+cite$ -- 22
+duplicate$ -- 205
+empty$ -- 503
+format.name$ -- 66
+if$ -- 1206
 int.to.chr$ -- 0
-int.to.str$ -- 14
-missing$ -- 0
-newline$ -- 84
-num.names$ -- 22
-pop$ -- 100
+int.to.str$ -- 21
+missing$ -- 7
+newline$ -- 119
+num.names$ -- 36
+pop$ -- 139
 preamble$ -- 1
-purify$ -- 42
+purify$ -- 78
 quote$ -- 0
-skip$ -- 80
+skip$ -- 153
 stack$ -- 0
-substring$ -- 74
-swap$ -- 14
-text.length$ -- 0
+substring$ -- 248
+swap$ -- 36
+text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 53
-warning$ -- 0
-while$ -- 22
-width$ -- 16
-write$ -- 167
+type$ -- 81
+warning$ -- 1
+while$ -- 49
+width$ -- 23
+write$ -- 244
+(There was 1 warning)
