@@ -130,3 +130,14 @@ dmypy.json
 
 # Excluir carpeta donde se almacena el contenido proporcionado por el usuario
 asked_questions/
+
+#latex 
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
