@@ -47,16 +47,24 @@
 \BOOKMARK [2][-]{subsection.5.2.2}{Restricciones y Reglas de Negocio}{section.5.2}% 47
 \BOOKMARK [2][-]{subsection.5.2.3}{Escenarios de Uso Detallados}{section.5.2}% 48
 \BOOKMARK [2][-]{subsection.5.2.4}{Seguridad y Acceso}{section.5.2}% 49
-\BOOKMARK [1][-]{section.5.3}{Arquitectura del Sistema}{chapter.5}% 50
-\BOOKMARK [1][-]{section.5.4}{Modelos de Comportamiento}{chapter.5}% 51
-\BOOKMARK [2][-]{subsection.5.4.1}{Diagrama de Correcci\363n y Evaluaci\363n de calidad del c\363digo}{section.5.4}% 52
-\BOOKMARK [2][-]{subsection.5.4.2}{Diagrama para la Selecci\363n y Evaluaci\363n de ejercicios}{section.5.4}% 53
-\BOOKMARK [1][-]{section.5.5}{Modelado de Entidades y sus Relaciones}{chapter.5}% 54
-\BOOKMARK [0][-]{chapter.6}{Dise\361o e Implementaci\363n}{}% 55
-\BOOKMARK [0][-]{chapter.7}{Pruebas y Resultados}{}% 56
-\BOOKMARK [0][-]{chapter.8}{Conclusiones y L\355neas de Trabajo Futuro}{}% 57
-\BOOKMARK [0][-]{chapter.8}{Anexos}{}% 58
-\BOOKMARK [0][-]{appendix.1.Alph1}{Uso de la Plataforma}{}% 59
-\BOOKMARK [0][-]{section*.19}{Glosario}{}% 60
-\BOOKMARK [0][-]{appendix*.20}{Bibliograf\355a}{}% 61
-\BOOKMARK [0][-]{appendix*.20}{Bibliograf\355a}{}% 62
+\BOOKMARK [1][-]{section.5.3}{Modelado de Entidades y sus Relaciones}{chapter.5}% 50
+\BOOKMARK [0][-]{chapter.6}{Dise\361o e Implementaci\363n}{}% 51
+\BOOKMARK [1][-]{section.6.1}{Dise\361o Pedag\363gico}{chapter.6}% 52
+\BOOKMARK [1][-]{section.6.2}{Arquitectura del Sistema}{chapter.6}% 53
+\BOOKMARK [2][-]{subsection.6.2.1}{Diagramas de Arquitectura}{section.6.2}% 54
+\BOOKMARK [1][-]{section.6.3}{Dise\361o de Base de Datos}{chapter.6}% 55
+\BOOKMARK [1][-]{section.6.4}{Interfaces de Usuario}{chapter.6}% 56
+\BOOKMARK [2][-]{subsection.6.4.1}{Mockups o Capturas de Pantalla}{section.6.4}% 57
+\BOOKMARK [2][-]{subsection.6.4.2}{Interacci\363n Usuario-Sistema}{section.6.4}% 58
+\BOOKMARK [1][-]{section.6.5}{Implementaci\363n de Algoritmos}{chapter.6}% 59
+\BOOKMARK [2][-]{subsection.6.5.1}{Algoritmo para la correcci\363n y Evaluaci\363n de calidad del c\363digo}{section.6.5}% 60
+\BOOKMARK [2][-]{subsection.6.5.2}{Algoritmo para la selecci\363n y evaluaci\363n de ejercicios}{section.6.5}% 61
+\BOOKMARK [1][-]{section.6.6}{Tecnolog\355as y Herramientas}{chapter.6}% 62
+\BOOKMARK [1][-]{section.6.7}{Implementaci\363n de M\363dulos de Aprendizaje Adaptativo}{chapter.6}% 63
+\BOOKMARK [0][-]{chapter.7}{Pruebas y Resultados}{}% 64
+\BOOKMARK [0][-]{chapter.8}{Conclusiones y L\355neas de Trabajo Futuro}{}% 65
+\BOOKMARK [0][-]{chapter.8}{Anexos}{}% 66
+\BOOKMARK [0][-]{appendix.1.Alph1}{Uso de la Plataforma}{}% 67
+\BOOKMARK [0][-]{section*.19}{Glosario}{}% 68
+\BOOKMARK [0][-]{appendix*.20}{Bibliograf\355a}{}% 69
+\BOOKMARK [0][-]{appendix*.20}{Bibliograf\355a}{}% 70

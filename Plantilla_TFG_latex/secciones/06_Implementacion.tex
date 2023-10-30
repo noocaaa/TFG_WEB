@@ -1,0 +1,89 @@
+\chapter{Diseño e Implementación} \label{chap:analisisExperimentación}
+
+
+\section{Diseño Pedagógico}
+
+El diseño pedagógico se centra en el aprendizaje basado en problemas \cite{de2008aprendizaje}. Concretamente, se introduce la teoría relevante, que puede incluir explicaciones de texto, imágenes ilustrativas, y en ocasiones, material en formato de video. Una vez que el usuario ha absorbido el contenido teórico, se le presentan problemas prácticos relacionados para resolver.
+
+Existen dos categorías principales de ejercicios, cada una con un peso distinto en la estructura de aprendizaje:
+
+\begin {enumerate}
+\item Ejercicios estándar: Son problemas prácticos que refuerzan la comprensión del usuario sobre el tema.
+
+\item Ejercicios clave (\textit{key\_exercise}): Estos ejercicios desempeñan un papel crucial en la progresión del usuario. Son indicativos de si el usuario ha comprendido los requisitos fundamentales del tema en cuestión. Se deben completar estos ejercicios para avanzar al siguiente tema o módulo. Si el usuario no logra superar estos ejercicios en un primer intento, se le presentan ejercicios adicionales para reforzar su comprensión antes de volver a intentar los ejercicios clave.
+\end{enumerate}
+
+La plataforma corrige automáticamente para los módulos de C++, Java y Python, tal como se mencionó con anterioridad. Sin embargo, para el módulo de HTML+CSS+JS, se requiere una revisión manual por parte de un instructor. Esta revisión no solo califica el ejercicio, sino que también proporciona comentarios constructivos para guiar al usuario hacia la solución correcta.
+
+Además de la corrección, la plataforma evalúa la limpieza y estructura del código presentado, ya que es esencial para una buena educación. Por lo tanto, se proporciona una retroalimentación detallada al estudiante no solo sobre la corrección de su respuesta, sino también sobre cómo mejorar y optimizar su código.
+
+Finalmente, la plataforma tiene la capacidad de compilar ejercicios, permitiendo la verificación y corrección del código antes de su envío.
+
+\section{Arquitectura del Sistema}
+
+La interacción del usuario en el Frontend se lleva a cabo utilizando tecnologías estándar como HTML sin emplear \textit{frameworks} adicionales para su desarrollo. Además, la interfaz es \textit{Web Responsive}, lo que garantiza su adaptación a variados dispositivos. Desde el punto de vista de la seguridad, se han implementado medidas como la validación de entradas, previniendo así amenazas como los ataques XSS. Los datos de sesión se conservan en el cliente mediante cookies.
+
+Por otro lado, el Backend se ha desarrollado con Flask. Se encarga de administrar las API RESTful y de establecer una conexión ininterrumpida con la base de datos PostgreSQL. La biblioteca \textit{flask\_login} respalda las funcionalidades de autenticación y autorización, aportando una capa de seguridad adicional. La lógica de negocio del sistema reside principalmente en el Sistema de Tutoría Inteligente (ITS). Este subsistema es el encargado de la elección y evaluación de ejercicios, ofreciendo retroalimentación y monitoreando el avance del estudiante.
+
+En relación con la seguridad del Backend, se han establecido roles y restricciones de acceso coherentes con las reglas de negocio previamente determinadas. Aunque la arquitectura actual no posee herramientas concretas orientadas a la escalabilidad, está concebida para ser resistente y estable.
+
+Es esencial destacar que, la estructura general del sistema sigue el patrón Modelo-Vista-Controlador (MVC). La Vista reside en el Frontend, y el Controlador y Nodelo en el Backend \ref{fig:arqsistema}. Este patrón facilita la distinción entre la lógica de la interfaz de usuario y las operaciones, simplificando su mantenimiento.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{imagenes/ArquitecturaDeSistema.jpeg}
+    
+    \caption{Arquitectura de sistema}
+    \label{fig:arqsistema}
+\end{figure}
+
+\subsection{Diagramas de Arquitectura}
+Incluya cualquier diagrama relevante para explicar la arquitectura.
+
+\section{Diseño de Base de Datos}
+
+
+\newpage
+
+\begin{figure}[H]
+    \centering
+    \begin{sideways}
+        \includegraphics[width=1.8\textwidth]{imagenes/er.png}
+    \end{sideways}
+    \caption{Diagrama del modelo de datos}
+    \label{fig:modeladodedatos}
+\end{figure}
+
+\section{Interfaces de Usuario}
+\subsection{Mockups o Capturas de Pantalla}
+\subsection{Interacción Usuario-Sistema}
+Detalles de la interacción del usuario con el sistema.
+
+\section{Implementación de Algoritmos}
+\subsection{Algoritmo para la corrección y Evaluación de calidad del código}
+
+El verdadero reto comienza tras la entrega de un ejercicio por parte del estudiante. La lógica de corrección evalúa el código en términos de precisión y calidad. Si un código no alcanza un estándar mínimo, el sistema propone ejercicios adicionales, reforzando así las áreas de mejora del estudiante \ref{fig:correccion}. La justificación detrás de esta lógica se centra en la premisa de que la repetición y el refuerzo son esenciales para consolidar el aprendizaje. Además, al establecer estándares de calidad, se fomentan las buenas prácticas de programación desde las etapas iniciales de formación.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{imagenes/correcionejercicios.png}
+    \caption{Diagrama de flujo para la selección de ejercicios}
+    \label{fig:correccion}
+    \end{figure}
+
+\subsection{Algoritmo para la selección y evaluación de ejercicios}
+
+El sistema prioriza la progresión estructurada del estudiante. Al ingresar, la plataforma identifica ejercicios en curso o determina el próximo paso en función de los requisitos del módulo. Esta estructura garantiza que, antes de enfrentarse a cualquier tarea, los conceptos teóricos relevantes sean presentados al estudiante \ref{fig:seleccion}. Esta estrategia se fundamenta en la pedagogía moderna, que sugiere que la teoría y la práctica deben ir de la mano para un aprendizaje óptimo.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{imagenes/seleccionejercicios.png}
+\caption{Diagrama de flujo para la selección de ejercicios}
+\label{fig:seleccion}
+\end{figure}
+
+\section{Tecnologías y Herramientas}
+Enumere las tecnologías, lenguajes de programación, frameworks y bibliotecas utilizadas.
+
+\section{Implementación de Módulos de Aprendizaje Adaptativo}
+Describa cómo el sistema se adapta al progreso del estudiante.
