@@ -10,8 +10,27 @@
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {6.1}{\ignorespaces Arquitectura de sistema}}{38}{figure.6.1}%
 \contentsline {figure}{\numberline {6.2}{\ignorespaces Diagrama del modelo de datos}}{40}{figure.6.2}%
-\contentsline {figure}{\numberline {6.3}{\ignorespaces Diagrama de flujo para la selección de ejercicios}}{42}{figure.6.3}%
-\contentsline {figure}{\numberline {6.4}{\ignorespaces Diagrama de flujo para la selección de ejercicios}}{43}{figure.6.4}%
+\contentsline {figure}{\numberline {6.3}{\ignorespaces Inicio de Sesión para cualquier usuario.}}{41}{figure.6.3}%
+\contentsline {figure}{\numberline {6.4}{\ignorespaces Registro para cualquier usuario.}}{41}{figure.6.4}%
+\contentsline {figure}{\numberline {6.5}{\ignorespaces Página Principal de la interfaz del estudiante.}}{42}{figure.6.5}%
+\contentsline {figure}{\numberline {6.6}{\ignorespaces Apartado de Juegos de la interfaz del alumno.}}{42}{figure.6.6}%
+\contentsline {figure}{\numberline {6.7}{\ignorespaces Visualización de la teoría para el estudiante.}}{42}{figure.6.7}%
+\contentsline {figure}{\numberline {6.8}{\ignorespaces Apartado de contacto con el profesor.}}{43}{figure.6.8}%
+\contentsline {figure}{\numberline {6.9}{\ignorespaces Apartado de Ranking de la interfaz del usuario.}}{43}{figure.6.9}%
+\contentsline {figure}{\numberline {6.10}{\ignorespaces Visualización de los ejercicios para el usuario.}}{43}{figure.6.10}%
+\contentsline {figure}{\numberline {6.11}{\ignorespaces Apartado donde los estudiantes pueden revisar conceptos teóricos.}}{44}{figure.6.11}%
+\contentsline {figure}{\numberline {6.12}{\ignorespaces Apartado de configuración del estudiante.}}{44}{figure.6.12}%
+\contentsline {figure}{\numberline {6.13}{\ignorespaces Dashboard principal del profesor.}}{44}{figure.6.13}%
+\contentsline {figure}{\numberline {6.14}{\ignorespaces Pantalla de Estadísticas del profesor.}}{45}{figure.6.14}%
+\contentsline {figure}{\numberline {6.15}{\ignorespaces Pantalla con la lista de corrección de ejercicios.}}{45}{figure.6.15}%
+\contentsline {figure}{\numberline {6.16}{\ignorespaces Panel para facilitar la corrección los ejercicios para el profesor.}}{45}{figure.6.16}%
+\contentsline {figure}{\numberline {6.17}{\ignorespaces Apartado de Configuración del profesor.}}{46}{figure.6.17}%
+\contentsline {figure}{\numberline {6.18}{\ignorespaces Visión general del panel administrativo.}}{46}{figure.6.18}%
+\contentsline {figure}{\numberline {6.19}{\ignorespaces Diagrama de flujo para la selección de ejercicios}}{48}{figure.6.19}%
+\contentsline {figure}{\numberline {6.20}{\ignorespaces Diagrama de flujo para la selección de ejercicios}}{49}{figure.6.20}%
+\contentsline {figure}{\numberline {6.21}{\ignorespaces Diagrama de flujo que ilustra cómo se calcula la puntuación}}{50}{figure.6.21}%
+\contentsline {figure}{\numberline {6.22}{\ignorespaces Diagrama de flujo que ilustra cómo se calcula la puntuación}}{51}{figure.6.22}%
+\contentsline {figure}{\numberline {6.23}{\ignorespaces Diagrama de flujo que ilustra el cálculo del número extra de ejercicios}}{53}{figure.6.23}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
