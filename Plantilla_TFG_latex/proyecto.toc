@@ -58,16 +58,24 @@
 \contentsline {paragraph}{Autorización}{36}{section*.16}%
 \contentsline {paragraph}{Seguridad de Datos}{36}{section*.17}%
 \contentsline {paragraph}{Monitorización y Auditoría}{36}{section*.18}%
-\contentsline {section}{\numberline {5.3}Arquitectura del Sistema}{36}{section.5.3}%
-\contentsline {section}{\numberline {5.4}Modelos de Comportamiento}{37}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}Diagrama de Corrección y Evaluación de calidad del código}{37}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2}Diagrama para la Selección y Evaluación de ejercicios}{38}{subsection.5.4.2}%
-\contentsline {section}{\numberline {5.5}Modelado de Entidades y sus Relaciones}{39}{section.5.5}%
-\contentsline {chapter}{\numberline {6}Diseño e Implementación}{41}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Pruebas y Resultados}{43}{chapter.7}%
-\contentsline {chapter}{\numberline {8}Conclusiones y Líneas de Trabajo Futuro}{45}{chapter.8}%
-\contentsline {chapter}{Anexos}{46}{chapter.8}%
-\contentsline {chapter}{\numberline {A}Uso de la Plataforma}{47}{appendix.1.Alph1}%
-\contentsline {chapter}{Glosario}{48}{section*.19}%
-\contentsline {chapter}{Bibliograf\'{\i }a}{49}{appendix*.20}%
-\contentsline {chapter}{Bibliografía}{50}{appendix*.20}%
+\contentsline {section}{\numberline {5.3}Modelado de Entidades y sus Relaciones}{36}{section.5.3}%
+\contentsline {chapter}{\numberline {6}Diseño e Implementación}{37}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Diseño Pedagógico}{37}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Arquitectura del Sistema}{38}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Diagramas de Arquitectura}{39}{subsection.6.2.1}%
+\contentsline {section}{\numberline {6.3}Diseño de Base de Datos}{39}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Interfaces de Usuario}{41}{section.6.4}%
+\contentsline {subsection}{\numberline {6.4.1}Mockups o Capturas de Pantalla}{41}{subsection.6.4.1}%
+\contentsline {subsection}{\numberline {6.4.2}Interacción Usuario-Sistema}{41}{subsection.6.4.2}%
+\contentsline {section}{\numberline {6.5}Implementación de Algoritmos}{41}{section.6.5}%
+\contentsline {subsection}{\numberline {6.5.1}Algoritmo para la corrección y Evaluación de calidad del código}{41}{subsection.6.5.1}%
+\contentsline {subsection}{\numberline {6.5.2}Algoritmo para la selección y evaluación de ejercicios}{42}{subsection.6.5.2}%
+\contentsline {section}{\numberline {6.6}Tecnologías y Herramientas}{43}{section.6.6}%
+\contentsline {section}{\numberline {6.7}Implementación de Módulos de Aprendizaje Adaptativo}{43}{section.6.7}%
+\contentsline {chapter}{\numberline {7}Pruebas y Resultados}{45}{chapter.7}%
+\contentsline {chapter}{\numberline {8}Conclusiones y Líneas de Trabajo Futuro}{47}{chapter.8}%
+\contentsline {chapter}{Anexos}{48}{chapter.8}%
+\contentsline {chapter}{\numberline {A}Uso de la Plataforma}{49}{appendix.1.Alph1}%
+\contentsline {chapter}{Glosario}{50}{section*.19}%
+\contentsline {chapter}{Bibliograf\'{\i }a}{51}{appendix*.20}%
+\contentsline {chapter}{Bibliografía}{52}{appendix*.20}%

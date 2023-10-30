@@ -1,7 +1,8 @@
 \begin{thebibliography}{10}
 
 \bibitem{planttext}
-Plantulm, 2023.
+Plantulm.
+\newblock \url{https://plantuml.com/es/}, 2023.
 \newblock Accedido el: 29 de Octubre, 2023.
 
 \bibitem{codelearn}
@@ -15,6 +16,13 @@ Tyne Crow, Andrew Luxton-Reilly, and Burkhard Wünsche.
 \newblock Intelligent tutoring systems for programming education: a systematic
   review.
 \newblock pages 53--62, 01 2018.
+
+\bibitem{de2008aprendizaje}
+Servicio de~Innovaci{\'o}n~Educativa.
+\newblock Aprendizaje basado en problemas.
+\newblock {\em Gu{\'\i}as r{\'a}pidas sobre nuevas metodolog{\'\i}as,
+  Disponible en http://innovacioneducativa. upm.
+  es/guias/Aprendizaje\_basado\_en\_problemas. pdf}, 2008.
 
 \bibitem{dewarschonberg}
 Robert~B.K. Dewar and Edmond Schonberg.

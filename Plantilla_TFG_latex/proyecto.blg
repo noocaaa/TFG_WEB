@@ -7,45 +7,45 @@ Warning--entry type for "planttext" isn't style-file defined
 --line 202 of file Bibliografia/referencias.bib
 Warning--to sort, need author or key in planttext
 Warning--empty booktitle in intelligentturoingprogrammingeducation
-You've used 22 entries,
+You've used 23 entries,
             2118 wiz_defined-function locations,
-            623 strings with 7079 characters,
-and the built_in function-call counts, 5738 in all, are:
-= -- 580
-> -- 212
+            629 strings with 7348 characters,
+and the built_in function-call counts, 5953 in all, are:
+= -- 603
+> -- 219
 < -- 2
-+ -- 90
-- -- 66
-* -- 293
-:= -- 942
-add.period$ -- 77
-call.type$ -- 22
-change.case$ -- 99
++ -- 93
+- -- 68
+* -- 301
+:= -- 984
+add.period$ -- 81
+call.type$ -- 23
+change.case$ -- 103
 chr.to.int$ -- 0
-cite$ -- 24
-duplicate$ -- 212
-empty$ -- 526
-format.name$ -- 66
-if$ -- 1246
+cite$ -- 25
+duplicate$ -- 222
+empty$ -- 543
+format.name$ -- 68
+if$ -- 1290
 int.to.chr$ -- 0
-int.to.str$ -- 22
-missing$ -- 7
-newline$ -- 123
-num.names$ -- 36
-pop$ -- 148
+int.to.str$ -- 23
+missing$ -- 8
+newline$ -- 129
+num.names$ -- 38
+pop$ -- 151
 preamble$ -- 1
-purify$ -- 80
+purify$ -- 83
 quote$ -- 0
-skip$ -- 160
+skip$ -- 166
 stack$ -- 0
-substring$ -- 253
-swap$ -- 37
+substring$ -- 258
+swap$ -- 38
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 85
+type$ -- 89
 warning$ -- 2
-while$ -- 49
-width$ -- 24
-write$ -- 252
+while$ -- 51
+width$ -- 25
+write$ -- 264
 (There were 3 warnings)
