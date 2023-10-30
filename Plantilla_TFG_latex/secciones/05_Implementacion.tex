@@ -24,7 +24,7 @@ Es importante destacar que el sistema se ha diseñado para ser inclusivo, ofreci
 
 \section{Modelos de Caso de Uso y Escenarios de Uso}
 
-En esta sección se va a hablar de las interacciones usuario-sistema. En primer lugar, se abordará los modelos de caso de uso. Debido a que nos proporcionan una visión panorámica, resaltando las interacciones posibles y los actores implicados. Es decir, nos ayudará a definir lo que el sistema puede hacer y lo que se espera que haga. Además, también se va a especificar los diferentes escenarios de uso, ya que nos proporcionan una mejor comprensión de las interacciones específicas. Pudiendo observar las verdaderas dinámicas del sistema en acción.
+En esta sección se va a hablar de las interacciones usuario-sistema. En primer lugar, se abordará los modelos de caso de uso \ref{fig:caso_uso}. Debido a que nos proporcionan una visión panorámica, resaltando las interacciones posibles y los actores implicados. Es decir, nos ayudará a definir lo que el sistema puede hacer y lo que se espera que haga. Además, también se va a especificar los diferentes escenarios de uso, ya que nos proporcionan una mejor comprensión de las interacciones específicas. Pudiendo observar las verdaderas dinámicas del sistema en acción.
 
 Con esta combinación, se establecen las funcionalidades esperadas del sistema y cómo este responderá ante diferentes situaciones y acciones del usuario. Cabe destacar que los diagramas se han realizado mediante PlantULM \cite{planttext}. 
 
@@ -241,27 +241,64 @@ Finalmente, mantenemos un registro de todas las actividades significativas en la
 
 \section{Arquitectura del Sistema}
 
-\subsection{Arquitectura Frontend}
-% Contenido aquí
+La interacción del usuario en el Frontend se lleva a cabo utilizando tecnologías estándar como HTML sin emplear \textit{frameworks} adicionales para su desarrollo. Además, la interfaz es \textit{Web Responsive}, lo que garantiza su adaptación a variados dispositivos. Desde el punto de vista de la seguridad, se han implementado medidas como la validación de entradas, previniendo así amenazas como los ataques XSS. Los datos de sesión se conservan en el cliente mediante cookies.
 
-\subsection{Arquitectura Backend}
-% Contenido aquí
+Por otro lado, el Backend se ha desarrollado con Flask. Se encarga de administrar las API RESTful y de establecer una conexión ininterrumpida con la base de datos PostgreSQL. La biblioteca \textit{flask\_login} respalda las funcionalidades de autenticación y autorización, aportando una capa de seguridad adicional. La lógica de negocio del sistema reside principalmente en el Sistema de Tutoría Inteligente (ITS). Este subsistema es el encargado de la elección y evaluación de ejercicios, ofreciendo retroalimentación y monitoreando el avance del estudiante.
+
+En relación con la seguridad del Backend, se han establecido roles y restricciones de acceso coherentes con las reglas de negocio previamente determinadas. Aunque la arquitectura actual no posee herramientas concretas orientadas a la escalabilidad, está concebida para ser resistente y estable.
+
+Es esencial destacar que, la estructura general del sistema sigue el patrón Modelo-Vista-Controlador (MVC). La Vista reside en el Frontend, y el Controlador y Nodelo en el Backend \ref{fig:arqsistema}. Este patrón facilita la distinción entre la lógica de la interfaz de usuario y las operaciones, simplificando su mantenimiento.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{imagenes/ArquitecturaDeSistema.jpeg}
+    
+    \caption{Arquitectura de sistema}
+    \label{fig:arqsistema}
+\end{figure}
 
 \section{Modelos de Comportamiento}
 
-\subsection{Diagramas de Flujo para la Selección y Evaluación de Ejercicios}
-% Contenido aquí
+\subsection{Diagrama de Corrección y Evaluación de calidad del código}
 
-\subsection{Diagramas para la Lógica de Corrección y Evaluación de Calidad de Código}
-% Contenido aquí
+El verdadero reto comienza tras la entrega de un ejercicio por parte del estudiante. La lógica de corrección evalúa el código en términos de precisión y calidad. Si un código no alcanza un estándar mínimo, el sistema propone ejercicios adicionales, reforzando así las áreas de mejora del estudiante \ref{fig:correccion}. La justificación detrás de esta lógica se centra en la premisa de que la repetición y el refuerzo son esenciales para consolidar el aprendizaje. Además, al establecer estándares de calidad, se fomentan las buenas prácticas de programación desde las etapas iniciales de formación.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{imagenes/correcionejercicios.png}
+    
+    \caption{Diagrama de flujo para la corrección del código}
+    \label{fig:correccion}
+\end{figure}
+
+\subsection{Diagrama para la Selección y Evaluación de ejercicios}
+
+El sistema prioriza la progresión estructurada del estudiante. Al ingresar, la plataforma identifica ejercicios en curso o determina el próximo paso en función de los requisitos del módulo. Esta estructura garantiza que, antes de enfrentarse a cualquier tarea, los conceptos teóricos relevantes sean presentados al estudiante \ref{fig:seleccion}. Esta estrategia se fundamenta en la pedagogía moderna, que sugiere que la teoría y la práctica deben ir de la mano para un aprendizaje óptimo.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{imagenes/seleccionejercicios.png}
+\caption{Diagrama de flujo para la selección de ejercicios}
+\label{fig:seleccion}
+\end{figure}
+
 
 \section{Modelado de Entidades y sus Relaciones}
 
-\subsection{Entidades Principales}
-% Contenido aquí
+En este apartado se va a hablar sobre el modelado de datos, que es esencial para comprender la estructura y las relaciones entre las distintas entidades en una base de datos. Este proyecto gira alrededor de la gestión educativa. Aquí, usuarios como estudiantes y administradores interactúan con módulos, ejercicios, teorías y otros componentes. Las relaciones entre estas entidades garantizan una coherencia y eficiencia en el sistema. 
 
-\subsection{Diagramas ER o de Clases}
-% Contenido aquí
+El Diagrama Entidad-Relación (ER) \ref{fig:erdiagram} es la representación gráfica. Muestra entidades como tablas y sus interconexiones mediante líneas. Las cardinalidades en las relaciones aportan información sobre cómo interactúan estas entidades.
 
-\section{Métricas de Evaluación}
-% Contenido aquí
+Este diagrama desvela varias entidades clave: Users, Exercises, Theory y Modules. Las conexiones entre ellas reflejan la lógica de negocio y los requisitos del sistema. Por ejemplo, un usuario puede tener en progreso varios ejercicios. Sin embargo, cada progreso es único para un usuario. En paralelo, un módulo puede albergar múltiples ejercicios y teorías. Aun así, cada uno pertenece solo a un módulo.
+
+
+\newpage
+
+\begin{figure}[H]
+    \centering
+    \begin{sideways}
+        \includegraphics[width=1.8\textwidth]{imagenes/er.png}
+    \end{sideways}
+    \caption{Diagrama Entidad-Relación}
+    \label{fig:erdiagram}
+\end{figure}
