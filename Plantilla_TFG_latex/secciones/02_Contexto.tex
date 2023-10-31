@@ -1,38 +1,47 @@
 \chapter{Estado del Arte y Trabajos Relacionados} \label{chap:state_of_the_art}
 
-En este segundo capítulo tiene como objetivo presentar todo el conocimiento
-teórico adquirido en preparación para la implementación y adaptación de una
-ITS, así como el estado actual de esta tecnología.
-
-Este estudio está basado principalmente en las contribuciones presentadas en las conferencias de la \textit{International Conference on Intelligent Tutoring Systems} de los años 2016 \cite{ITS2016}, 2020 \cite{ITS2020} y 2021 \cite{ITS2021}. Estas ediciones han sido fuentes valiosas de información sobre las últimas tendencias, técnicas y avances en el campo de la tutoría inteligente. A lo largo de este capítulo, se explorará el papel de los Sistemas de Tutoría Inteligente en la educación moderna, las metodologías empleadas para adaptar el aprendizaje a las necesidades individuales de los estudiantes y las perspectivas actuales y futuras en la adaptación y personalización del aprendizaje en línea.
+Dentro de este capítulo se va a presentar todo el conocimiento teórico adquirido para la preparación de la implementación y adaptación del ITS. Concreatamente, el estudio se ha basado en las contribuciones presentadas en las conferencias de la \textit{International Conference on Intelligent Tutoring Systems} de los años 2016 \cite{ITS2016}, 2020 \cite{ITS2020} y 2021 \cite{ITS2021}. Estas ediciones han sido una fuente valiosa de información sobre las últimas tendencias, técnicas y avances en el campo de la tutoría inteligente. 
 
 \section{Definición de los ITS}
 
+Los Sistemas de Tutoría Inteligente (ITS, por sus siglas en inglés) son sistemas computacionales diseñados que proporcionan instrucciones o una retroalimentación inmediata y personalizada a los estudiantes con la mínima o nula intervención humana \cite{Woolf2009}. Estos utilizan técnicas de Inteligencia Artificial para modelar el conocimiento del dominio que se enseña y el proceso de aprendizaje del estudiante \cite{Aleven2016}. A través de estos modelos, los ITS adaptan la presentación del material educativo y los métodos de instrucción a las necesidades individuales de cada estudiante \cite{Nwana1990}.
+
+La principal meta de un ITS es imitar el efecto beneficioso que tiene un tutor humano en el aprendizaje \cite{VanLehn2011}. Para ello, los ITS abarcan diferentes componentes \ref{fig:arqITS} como el modelo del estudiante, el modelo del tutor, el modelo del dominio y el modelo de interfaz \cite{Koedinger1997}. Cada uno de estos modelos trabaja en conjunto para adaptar y personalizar el contenido y la retroalimentación, buscando optimizar el rendimiento académico y el compromiso del estudiante \cite{Durlach2008}.
+
+Una de las ventajas de los ITS es su habilidad para ofrecer una enseñanza adaptativa y escalable \cite{Murray2003}. En contextos educativos donde la enseñanza uno a uno no es práctica o factible, los ITS representan una solución viable para ofrecer instrucción personalizada a un gran número de estudiantes \cite{Graesser2009}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{imagenes/diseñoITS.png}
+    \caption{Arquitectura básica de un ITS \cite{Butz2006}}
+    \label{fig:arqITS}
+\end{figure}
+
 \section{Evolución de los ITS}
 
-La idea de ser capaces de utilizar la tecnología para personalizar y mejorar la experiencia de aprendizaje no es nueva. Sin embargo, con el crecimiento exponencial de las tecnologías de la información y la computación, esta idea ha ido experimentando transformaciones radicales, dando lugar a lo que se conoce hoy en día como Sistemas de Tutorización Inteligente. A continuación, se presenta una pequeña revisión de la evolución de los ITS, trazando su desarrollo desde sus inicios hasta su estado actual.
+La idea de ser capaces de utilizar la tecnología para personalizar y mejorar la experiencia de aprendizaje no es nueva. Sin embargo, con el crecimiento exponencial de la tecnología, la idea ha ido experimentando transformaciones radicales.
 
-Los ITS nacieron en la década de 1970, bajo la idea de que la tecnología podía ser utilizada para simular la tutoría humana. Estos primeros sistemas, limitados por la capacidad computacional de la época, se centraban en unos conocimientos muy específicos, como podían ser la geometría o el álgebra. Utilizaban una lógica básica y simple para ofrecer retroalimentación y una guía basada en las respuestas de los estudiantes. A pesar de su simplicidad, fueron representación de un gran paso hacia la individualización del aprendizaje.
+Los ITS nacieron en la década de 1970, con la idea de que la tecnología podía ser utilizada para simular la tutoría humana. Estos primeros sistemas, limitados por la capacidad computacional de entonces, se centraban en unos conocimientos muy específicos, como podían ser la geometría o el álgebra. Utilizaban una lógica básica y simple para ofrecer retroalimentación y una guía basada en las respuestas de los estudiantes. A pesar de su simplicidad, fueron representación de un gran paso hacia la individualización del aprendizaje.
 
-Con el progreso en la investigación de la Inteligencia Artificial (IA) en la década de 1980, los ITS comenzaron a incorporar técnicas más avanzadas. Estos sistemas no solo eran capaces de evaluar las respuestas de los estudiantes, sino también de comprender parcialmente el proceso de pensamiento detrás de esas respuestas. Así, el feedback proporcionado se volvía más personalizado y adaptativo, reflejando mejor las necesidades individuales de cada alumno.
+Con el progreso en la investigación de la Inteligencia Artificial (IA) en la década de 1980, se comenzó a incorporar técnicas más avanzadas. Estos sistemas no solo eran capaces de evaluar las respuestas de los estudiantes, sino también de comprender parcialmente el proceso de pensamiento detrás de esas respuestas. Así, el feedback proporcionado se volvía más personalizado y adaptativo, reflejando mejor las necesidades individuales de cada alumno.
 
-La siguiente década trajo consigo una mayor comprensión de la importancia de la interacción humano-computadora en los procesos educativos. Donde se desarrollaron las ITS con unas interfaces más intuitivas y amigables para el usuario. Estos sistemas comenzaron a ofrecer unos mejores entornos de aprendizaje, incorporando multimedia, simulaciones y otros recursos interactivos. La idea era crear un entorno donde el estudiante no solo recibiera retroalimentación, sino que también pudiera explorar y aprender de una manera más autónoma.
+La siguiente década trajo consigo una mayor comprensión de la importancia de la interacción humano-computadora en los procesos educativos. Donde se desarrollaron unas interfaces más intuitivas y amigables para el usuario. Estos sistemas comenzaron a ofrecer unos mejores entornos de aprendizaje, incorporando multimedia, simulaciones y otros recursos interactivos. Con la idea de crear un entorno donde el estudiante no solo recibiera retroalimentación, sino que también pudiera explorar y aprender de una manera más autónoma.
 
-En el siglo XXI, la proliferación de \textit{Big Data} y el avance en técnicas de aprendizaje profundo permitieron que los ITS alcanzaran un nuevo nivel de sofisticación. Con la capacidad de procesar grandes cantidades de datos, estos sistemas modernos pueden detectar patrones y tendencias en el comportamiento del estudiante que antes eran invisibles. Usando esta información para predecir las necesidades de aprendizaje futuras y adaptar el contenido en tiempo real, proporcionando una experiencia de aprendizaje aún más personalizada.
+El siglo XXI trajo la proliferación de \textit{Big Data} y el avance en técnicas de aprendizaje profundo. Esto permitió un nuevo nivel para los ITS. Con la capacidad de procesar grandes cantidades de datos, estos sistemas detectan patrones y tendencias dentro del comportamiento del estudiante que antes pasaban por desapercibidas. Usando toda esta información se predice las necesidades de aprendizaje futuras y se adapta el contenido en tiempo real, proporcionando una experiencia de aprendizaje aún más personalizada.
 
 El potencial de los ITS sigue siendo muy amplio. Con la constante evolución de la tecnología y una comprensión cada vez más profunda de la pedagogía, es probable que veamos sistemas aún más avanzados en el futuro cercano. Incluso, se espera que la integración de realidades virtual y aumentada, junto con avances en IA, genere ITS que ofrezcan experiencias de aprendizaje inmersivas y altamente adaptativas. 
 
 \section{Aplicaciones actuales de los ITS}
 
-La relevancia actual de los ITS se extiende a una variedad de dominios y, con la evolución tecnológica, su precisión y adaptabilidad han alcanzado niveles sin precedentes. Aprovechando técnicas de aprendizaje automático, estos sistemas pueden reconocer patrones en el comportamiento del usuario y adaptarse en función de ello. A su vez, mediante el análisis semántico, comprenden de manera profunda las respuestas de los estudiantes, garantizando una retroalimentación más precisa y relevante. Además, algunos ITS modernos están incorporando Realidad Virtual y Aumentada, ofreciendo entornos de aprendizaje inmersivos que permiten interacciones novedosas y atractivas con el contenido. A continuación, exploraremos algunas de las aplicaciones más prominentes de estos sistemas en el contexto contemporáneo.
+La relevancia actual de los ITS se extiende a una variedad de dominios. Aprovechando técnicas de aprendizaje automático, estos sistemas pueden reconocer patrones en el comportamiento del usuario y adaptarse en función a ello. A su vez, mediante el análisis semántico, comprenden de manera profunda las respuestas de los estudiantes, garantizando una retroalimentación más precisa y relevante. Además, algunos ITS modernos están incorporando Realidad Virtual y Aumentada, ofreciendo entornos de aprendizaje inmersivos que permiten interacciones novedosas y atractivas con el contenido. A continuación, exploraremos algunas de las aplicaciones más prominentes de estos sistemas en el contexto actual.
 
 \subsection{Educación K-12}
 
-Los ITS se han establecido como herramientas fundamentales para complementar el aprendizaje tradicional dentro del ámbito escolar, ya sea en la educación primaria o en la eduación secundaria. Sistemas como \textit{Dreambox} \cite{dreambox} para matemáticas o \textit{Fast Forword} \cite{fastforword} para la lectura, utilizan técnicas de tutorización inteligente para adaptar el contenido a las necesidades individuales de cada estudiante, permitiendo una educación más personalizada.
+Los ITS se han establecido como herramientas fundamentales para complementar el aprendizaje tradicional dentro del ámbito escolar, ya sea en la educación primaria o en la eduación secundaria. Sistemas como \textit{Dreambox} \cite{dreambox} para matemáticas o \textit{Fast Forword} \cite{fastforword} para la lectura, utilizan técnicas de tutorización inteligente que adaptan el contenido a las necesidades individuales de cada estudiante, permitiendo una educación más personalizada.
 
 \subsection{Educación Superior}
 
-Las universidades y colegios alrededor del mundo están empezando a integrar ITS en sus plataformas de aprendizaje en línea. Sobre todo, estas instituciones los han comenzado a usar para los cursos masivos en línea (MOOCs), donde el sistema se encarga de tutorizar a miles de estudiantes simultáneamente, sin una presencia física importante del profesor.
+Las universidades y colegios alrededor del mundo están empezando a integrar ITS en sus plataformas de aprendizaje en línea. Sobre todo, estas instituciones los han comenzado a usar dentro de sus cursos masivos en línea (MOOCs), donde el sistema se encarga de tutorizar a miles de estudiantes simultáneamente, sin una presencia física importante del profesor.
 
 Por ejemplo, el sistema \textit{edX} \cite{edx}, iniciado por Harvard y el MIT, ha integrado algoritmos de tutorización inteligente para ofrecer retroalimentación personalizada a los estudiantes en sus cursos MOOCs con más inscritos. Asimismo, la Universidad de Stanford, a través de la plataforma \textit{Coursera} \cite{coursera}, también ha experimentado con herramientas de tutorización para mejorar la retención y comprensión de los estudiantes adscritos. 
 
@@ -44,11 +53,11 @@ Grandes corporaciones como Google y Microsoft ya han comenzado a implementarlo e
 
 \subsection{Salud y Medicina}
 
-En el campo médico, también están desempeñando un papel crucial en la formación de futuros profesionales. Concretamente, \textit{Touch Surgery Simulator} \cite{touchsurgery} permite a los médicos practicar procedimientos quirúrgicos en un entorno virtual, sino que también proporciona retroalimentación detallada basada en el rendimiento y decisiones tomadas durante la simulación.
+En el campo médico, también están desempeñando un papel crucial en la formación de futuros profesionales. Concretamente, \textit{Touch Surgery Simulator} \cite{touchsurgery} permite a los médicos practicar procedimientos quirúrgicos en un entorno virtual, y proporciona una retroalimentación detallada basada en el rendimiento y decisiones tomadas durante la simulación.
 
 \subsection{Defensa y Aviación}
 
-Es importante destacar que la aviación y la defensa han estado al frente en la adopción de simuladores con capacidades de tutorización. Un gran ejemplo es el \textit{F-35 Lightning II Training System} \cite{f35training}. Este ayuda a capacitar los pilotos de combate, proporcionando escenarios adaptativos basados en las habilidades y el progreso del piloto.
+Es importante destacar que la aviación y la defensa han estado al frente en la adopción de simuladores con capacidades de tutorización. Un gran ejemplo es el \textit{F-35 Lightning II Training System} \cite{f35training} que ayuda a capacitar los pilotos de combate, proporcionando escenarios adaptativos basados en las habilidades y el progreso del piloto.
 
 \subsection{Juegos Educativos y Simuladores}
 
@@ -59,10 +68,93 @@ Los juegos educativos, como \textit {DragonBox} \cite{dragonbox} que enseña mat
 
 A pesar de las prometedoras capacidades y aplicaciones de los ITS en diversos contextos educativos y de formación, estos sistemas no están exentos de limitaciones y desafíos. 
 
-La interacción con estos sistemas no logra capturar la profundidad y empatía de un tutor humano, lo que puede generar desconexión o frustración por parte del estudiante. Estos sistemas, siendo fruto de una confluencia de disciplinas muy variadas, plantean retos en su diseño y actualización, especialmente cuando se busca mantener su relevancia en campos en constante evolución.
+La interacción con estos sistemas no logra capturar la profundidad y empatía de un tutor humano, lo que genera una desconexión o frustración por parte del estudiante. Estos sistemas, siendo fruto de una confluencia de disciplinas muy variadas, plantean retos en su diseño y actualización, especialmente cuando se busca mantener su relevancia en campos en constante evolución.
 
-La adaptabilidad de estos sistemas también se encuentra en una línea delicada. Por ser lo suficientemente generales para diversos contextos. Asimismo, como específicos para brindar una retroalimentación precisa. Siendo este equilibrio esencial para garantizar su eficacia. Cabe destacar, que con la recopilación constante de datos del usuario, se debe tener especial delicadeza en cuanto a la privacidad y seguridad. Es imperativo que estos sistemas ofrezcan unas garantías robustas con tal de proteger la información del alumno.
+La adaptabilidad de estos sistemas también se encuentra en una línea delicada, por ser lo suficientemente generales para diversos contextos, o demasiado específicos para brindar una retroalimentación precisa. Siendo la búsqueda de este equilibrio esencial para garantizar su eficacia. Cabe destacar, que con la recopilación constante de datos del usuario, se debe tener especial delicadeza en cuanto a la privacidad y seguridad. Siendo imperativo que ofrezcan unas garantías robustas con tal de proteger la información del alumno.
 
 Por otro lado, a pesar de su potencial democratizador en el acceso a la educación, los ITS corren el riesgo de convertirse en herramientas elitistas, accesibles solo para aquellos con los medios para obtenerlos. Por ello, es crucial que se trabaje en su accesibilidad y asequibilidad. Y si bien estos sistemas ofrecen métricas de rendimiento, medir su impacto real en el aprendizaje y en la transferencia práctica del conocimiento sigue siendo un gran reto.
 
 En resumen, se podría decir que los ITS se ven como una herramienta revolucionaria, pero es fundamental enfrentar y superar los desafíos mencionados para garantizar que su implementación sea efectiva y equitativa en todos los contextos educativos.
+
+\section{Papel del ITS en la educación moderna}
+
+Los ITS representan un cambio pragmático en el ámbito educativo. Utilizando algoritmos de inteligencia artificial, estos sistemas adaptan el contenido y el ritmo de aprendizaje de manera personalizada para cada estudiante \cite{Aleven2016}. La adaptabilidad es una de las características más destacadas de, permitiendo un ajuste en tiempo real del material educativo según el rendimiento y las necesidades del alumno \cite{Koedinger2013}.
+
+Esta capacidad para personalizar la instrucción ha demostrado ser eficaz para mejorar tanto el rendimiento académico como la retención del material. Además, los ITS recopilan datos detallados sobre el proceso de aprendizaje, lo que permite un análisis profundo para la identificación de áreas problemáticas y la facilitación de intervenciones educativas más eficaces \cite{VanLehn2011}.
+
+Aunque ofrecen grandes ventajas, también existen desafíos y limitaciones en su implementación. La efectividad de un ITS puede variar según el contexto y la materia, y su complejidad técnica puede ser una barrera para su adopción en entornos educativos más amplios \cite{Sottilare2017}.
+
+
+\subsection{Metodología para la adaptación del aprendizaje}
+
+La adaptabilidad del aprendizaje es esencial para maximizar el potencial de cada estudiante y garantizar que el material sea presentado de una manera tanto comprensible como desafiante. Una metodología eficaz para esta adaptabilidad debería incluir componentes como análisis de datos en tiempo real, una retroalimentación y personalización del contenido instantánea.
+
+La recolección y el análisis de datos en tiempo real permiten al sistema entender mejor las necesidades y los puntos débiles del estudiante \cite{Fancsali2019}. Esto a su vez facilita una retroalimentación más precisa y contextual, lo que mejora la eficacia del aprendizaje \cite{Heffernan2014}.
+
+Una característica importante es la adaptación de contenido, que puede variar desde la velocidad de la presentación del material hasta la complejidad de los ejercicios. Los ITS son particularmente eficaces en este aspecto, al permitir una adaptabilidad en tiempo real personalizada para cada estudiante \cite{Aleven2016}.
+
+En conjunto, la metodología debe ser iterativa y flexible, capaz de adaptarse tanto a las tendencias a largo plazo como a las necesidades inmediatas del estudiante, para poder proporcionar una experiencia de aprendizaje optimizada.
+
+
+\subsection{Futuras Direcciones} 
+
+A medida que la tecnología y la pedagogía avanzan, se abren nuevos horizontes para los ITS que prometen transformar aún más la experiencia educativa. En este apartado, se explorarán algunas de las direcciones futuras más prometedoras dentro del campo de la investigación y desarrollo de ITS.
+
+\subsubsection{Integración de Realidades Virtuales y Aumentadas}
+
+La incorporación de tecnologías de Realidad Virtual (RV) y Realidad Aumentada (RA) en los ITS tiene el potencial de crear entornos de aprendizaje inmersivos y altamente interactivos. Esto permitir´ia que los estudiantes se enganchen con el material de forma más profunda, facilitando tanto el aprendizaje conceptual como el práctico \cite{Radianti2020}.
+
+\subsubsection{Adaptabilidad Multidisciplinaria}
+
+Los ITS actuales suelen centrarse en dominios específicos, como las matemáticas o la programación. La adaptabilidad multidisciplinaria se presenta como un desafío futuro, donde los ITS serían capaces de guiar al estudiante a través de un currículo más amplio, ajustando dinámicamente los planes de estudio en función del progreso en múltiples materias \cite{Aleven2022}.
+
+\subsubsection{Emociones y Aprendizaje}
+
+Entender y adaptarse a las emociones del estudiante representa una dimensión adicional de personalización. Investigaciones futuras deberían enfocarse en cómo los ITS pueden detectar y responder a las emociones del estudiante para mejorar el compromiso y la retención \cite{DMello2013}.
+
+\subsubsection{Equidad en el Acceso}
+
+La equidad en el acceso a los ITS eficaces para estudiantes de todos los entornos socioeconómicos es una preocupación creciente. Los esfuerzos futuros podrían centrarse en hacer que estos sistemas sean más accesibles y asequibles, para evitar la creación de una brecha educativa \cite{Reich2019}.
+
+\subsubsection{Ética y Privacidad}
+
+Dada la recopilación de datos del estudiante, la ética y la privacidad son de suma importancia. Los ITS futuros deberán implementar garantías robustas de privacidad, cumpliendo con regulaciones globales con tal de asegurarse la confianza del usuario \cite{Zawacki-Richter2019}.
+
+\subsubsection{Interacción Humano-Agente}
+
+La eficacia de la interacción humano-agente se espera que sea un área de enfoque en los ITS futuros. La investigación podría orientarse hacia el desarrollo de agentes de IA que puedan simular con mayor eficacia la empatía y el apoyo que un educador humano podría proporcionar \cite{Heffernan2019}.
+
+\subsubsection{Validación y Efectividad}
+
+Medir la efectividad de los ITS en términos de resultados de aprendizaje y transferencia de habilidades es crítico. Estudios longitudinales que comparen la eficacia de los ITS con los métodos tradicionales de enseñanza podrían ofrecer insights valiosos \cite{Corbett2001}.
+
+En resumen, los ITS tienen un camino fascinante por delante. Sin embargo, es crucial que la comunidad académica y la industria trabajen en conjunto para superar los desafíos actuales, permitiendo que los ITS alcancen su potencial completo en la mejora y democratización de la educación.
+
+\section{Comparativa de las plataformas de programación}
+
+\begin{table}[h]
+    \centering
+
+    \begin{tabulary}{1.2\textwidth}{|L|L|L|L|L|L|L|}
+        \toprule
+        \textbf{Plataforma} & \textbf{Edad} & \textbf{Enfoque} & \textbf{Coste} & \textbf{ITS} & \textbf{Funcionamiento} & \textbf{Lenguajes} \\
+        \midrule
+        Codecademy & Adolescentes y adultos & Interactivo & De pago & Sí & Web & Python, Java \\
+        \midrule
+        Codewars & Adolescentes y adultos & Desafíos & Gratuito & No & Web & Python, Ruby \\
+        \midrule
+        edX & Adolescentes y adultos & Cursos universitarios & De pago y gratuito & Sí & Web & Python, Java \\
+        \midrule
+        Coursera & Adolescentes y adultos & Variedad de cursos & De pago y gratuito & Sí & Web y App & Python, C++ \\
+        \midrule
+        JetBrains Academy & Adolescentes y adultos & Proyectos prácticos & De pago & No & Web & Java, Kotlin \\
+        \midrule
+        Codelearn & Niños & Intro a programación y robótica & De pago & Sí & Web & Logo, Scratch, Python \\
+        \midrule
+        Code.org & Niños y adolescentes & Amplia gama de actividades & Gratuito & Sí & Web & Blockly, JavaScript \\
+        \bottomrule
+    \end{tabulary}
+    
+    \caption{Comparativa de plataformas actuales para la enseñanza de programación}
+    \label{tab:comparativa}
+\end{table}
