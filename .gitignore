@@ -141,3 +141,5 @@ asked_questions/
 *.out
 *.synctex.gz
 *.toc
+
+.vscode
