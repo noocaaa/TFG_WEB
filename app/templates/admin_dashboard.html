@@ -78,11 +78,7 @@
             <div class="col-md-3">
                 <!-- Sidebar for Module and Exercise Creation -->
                 <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action" id="moduleTab" onclick="showModuleForm(event)">Añadir Módulo</a>
-                    <a href="#" class="list-group-item list-group-item-action" id="exerciseTab" onclick="showExerciseForm(event)">Añadir Ejercicio</a>
-                    <a href="#" class="list-group-item list-group-item-action" id="theoryTab" onclick="showAddTheory(event)">Añadir Teoria</a>
-                    <a href="#" class="list-group-item list-group-item-action" id="addRequirementTab" onclick="showAddRequirement(event)">Añadir Requisitos</a>
-                    <a href="#" class="list-group-item list-group-item-action" id="teacherTab" onclick="showTeacherForm(event)">Añadir Profesor</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="addTab" onclick="showAdd(event)">Añadir Elemento</a>
                     
                     <a href="#" class="list-group-item list-group-item-action" id="listTab" onclick="showList(event)">Consultar Elementos</a>
 
@@ -104,8 +100,27 @@
                     {% endif %}
                 </div>   
 
+    <!-- ---- AÑADIR ---- -->
+
+                <!-- Menú desplegable para seleccionar una categoría que editar -->
+                <div class="card mb-4" id="addForm" style="display: none;">
+                    <div class="card-header">
+                        Añadir Elementos
+                    </div>
+                    <div class="card-body">
+                        <select class="form-control" id="categorySelect" onchange="showCategoryAdd(this.value)">
+                            <option value="">-- Selecciona una opción --</option>
+                            <option value="exercises">Ejercicios</option>
+                            <option value="requirements">Requisitos</option>
+                            <option value="theory">Teoría</option>
+                            <option value="teachers">Profesores</option>
+                            <option value="modules">Módulos</option>
+                        </select>
+                    </div>
+                </div>
+
                 <!-- Formulario para añadir módulo -->
-                <div class="card mb-4" id="moduleForm" style="display: none;">
+                <div class="card mb-4 category-add" id="formModules" style="display: none;">
                     <div class="card-header">
                         Crear Módulo
                     </div>
@@ -129,7 +144,7 @@
                 </div>
 
                 <!-- Formulario para añadir ejercicio -->
-                <div class="card mb-4" id="exerciseForm" style="display: none;">
+                <div class="card mb-4 category-add" id="formExercises" style="display: none;">
                     <div class="card-header">
                         Añadir ejercicio
                     </div>
@@ -201,7 +216,7 @@
                 </div>
 
                 <!-- Formulario para añadir profesor -->
-                <div class="card mb-4" id="teacherForm" style="display: none;">
+                <div class="card mb-4 category-add" id="formTeachers" style="display: none;">
                     <div class="card-header">
                         Añadir Profesor
                     </div>
@@ -257,45 +272,9 @@
                         </form>
                     </div>
                 </div>
-
-
-                <!-- Formulario unificado para eliminaciones -->
-                <div class="card mb-4" id="deleteForm"  style="display: none;">
-                    <div class="card-header">
-                        Eliminar Elemento
-                    </div>
-                    <div class="card-body">
-                        <form action="/admin/delete" method="post">
-                            <div class="form-group">
-                                <label for="element_type">Tipo de Elemento a Eliminar:</label>
-                                <select name="element_type" id="element_type" class="form-control" required onchange="toggleRequirementSelection()">
-                                    <option value="">Selecciona un elemento</option>
-                                    <option value="module">Módulo</option>
-                                    <option value="exercise">Ejercicio</option>
-                                    <option value="teacher">Profesor</option>
-                                    <option value="theory">Teoría</option>
-                                    <option value="requirement">Requisito</option>
-                                </select>
-                            </div>
-                            <div class="form-group" id="idInputContainer">
-                                <label for="element_id">ID del Elemento a Eliminar:</label>
-                                <input type="number" name="element_id" id="element_id" class="form-control" required>
-                            </div>
-                            <div class="form-group" id="requirementSelectContainer" style="display: none;">
-                                <label for="requirement_id">Selecciona el Requisito:</label>
-                                <select name="requirement_id" id="requirement_id" class="form-control">
-                                    {% for req in requirements %}
-                                        <option value="{{ req.id_requisito }}">{{ req.name }}</option>
-                                    {% endfor %}                                
-                                </select>
-                            </div>
-                            <input type="submit" value="Eliminar" class="btn btn-danger">
-                        </form>
-                    </div>
-                </div>
                                 
                 <!-- Formulario para añadir requisitos -->
-                <div id="addRequirementForm" class="card mb-4" style="display:none;">
+                <div id="formRequirements" class="card mb-4 category-add" style="display:none;">
                     <div class="card-header">
                         Añadir Requisito
                     </div>
@@ -311,7 +290,7 @@
                 </div>
 
                 <!-- Formulario para añadir teoría -->
-                <div class="card mb-4" id="theoryAddForm" style="display:none;">
+                <div class="card mb-4 category-add" id="formTheory" style="display:none;">
                     <div class="card-header">
                         Añadir Teoria
                     </div>
@@ -348,12 +327,49 @@
                     </div>
                 </div>
 
+    <!-- ---- ELIMINAR ---- -->
+
+                <!-- Formulario unificado para eliminaciones -->
+                <div class="card mb-4" id="deleteForm"  style="display: none;">
+                    <div class="card-header">
+                        Eliminar Elementos
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/delete" method="post">
+                            <div class="form-group">
+                                <label for="element_type">Tipo de Elemento a Eliminar:</label>
+                                <select name="element_type" id="element_type" class="form-control" required onchange="toggleRequirementSelection()">
+                                    <option value="">Selecciona un elemento</option>
+                                    <option value="module">Módulo</option>
+                                    <option value="exercise">Ejercicio</option>
+                                    <option value="teacher">Profesor</option>
+                                    <option value="theory">Teoría</option>
+                                    <option value="requirement">Requisito</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="idInputContainer">
+                                <label for="element_id">ID del Elemento a Eliminar:</label>
+                                <input type="number" name="element_id" id="element_id" class="form-control" required>
+                            </div>
+                            <div class="form-group" id="requirementSelectContainer" style="display: none;">
+                                <label for="requirement_id">Selecciona el Requisito:</label>
+                                <select name="requirement_id" id="requirement_id" class="form-control">
+                                    {% for req in requirements %}
+                                        <option value="{{ req.id_requisito }}">{{ req.name }}</option>
+                                    {% endfor %}                                
+                                </select>
+                            </div>
+                            <input type="submit" value="Eliminar" class="btn btn-danger">
+                        </form>
+                    </div>
+                </div>
+
     <!-- ---- EDITAR ---- -->
 
                 <!-- Menú desplegable para seleccionar una categoría que editar -->
                 <div class="card mb-4" id="editForm" style="display: none;">
                     <div class="card-header">
-                        Selecciona una categoría para editar
+                        Editar Elementos
                     </div>
                     <div class="card-body">
                         <select class="form-control" id="categorySelect" onchange="showCategoryEdit(this.value)">
@@ -533,7 +549,7 @@
                 <!-- Menú desplegable para seleccionar la categoría -->
                 <div class="card mb-4" id="listFrom" style="display: none;">
                     <div class="card-header">
-                        Selecciona una categoría
+                        Consultar Elementos
                     </div>
                     <div class="card-body">
                         <select class="form-control" id="categorySelect" onchange="showCategory(this.value)">
@@ -911,13 +927,12 @@
         }
 
         function hideAll() {
-            let elementsToHide = ['moduleForm', 'exerciseForm', 'cardExercises', 'cardModules',
-                'teacherForm', 'listFrom', 'cardRequirements', 'cardTeachers', 'cardTheory',
-                'theoryAddForm', 'editForm',
-                'globalOrderForm', 'addRequirementForm', 'deleteForm'];
+            let elementsToHide = ['cardExercises', 'cardModules', 'formRequirements', 'formTheory', 
+                'listFrom', 'cardRequirements', 'cardTeachers', 'cardTheory', 'formExercises', 'formModules',
+                'editForm', 'editExercises', 'editTeachers', 'editModules', 'editTheory', 'formTeachers',
+                'globalOrderForm', 'deleteForm', 'addForm'];
 
-            let tabsToRemoveActive = ['globalOrderTab', 'moduleTab', 'exerciseTab',  'teacherTab', 
-                'theoryTab', 'editTab', 'addRequirementTab', 'deleteFormTab', 'listTab'];
+            let tabsToRemoveActive = ['globalOrderTab', 'editTab', 'deleteFormTab', 'listTab', 'addTab'];
 
             elementsToHide.forEach(el => {
                 document.getElementById(el).style.display = 'none';
@@ -1059,6 +1074,18 @@
         }
 
 
+        function showAdd(event) {
+            event.preventDefault(); // Prevent default behaviour
+
+            hideAll();
+
+            document.getElementById('addForm').style.display = 'block';
+            document.getElementById('addTab').classList.add('active');
+
+            hideError();
+        }
+
+
         function showCategoryEdit(category) {
             // Ocultar todos los contenidos
             var contents = document.getElementsByClassName('category-edit');
@@ -1070,6 +1097,20 @@
             // Mostrar el contenido seleccionado
             if (category) {
                 document.getElementById('edit' + category.charAt(0).toUpperCase() + category.slice(1)).style.display = 'block';
+            }
+        } 
+
+        function showCategoryAdd(category) {
+            // Ocultar todos los contenidos
+            var contents = document.getElementsByClassName('category-add');
+            
+            for (var i = 0; i < contents.length; i++) {
+                contents[i].style.display = 'none';
+            }
+            
+            // Mostrar el contenido seleccionado
+            if (category) {
+                document.getElementById('form' + category.charAt(0).toUpperCase() + category.slice(1)).style.display = 'block';
             }
         } 
 
