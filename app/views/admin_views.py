@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for, request, jsonify
 from flask_login import current_user, login_required
 
 from app import db, bcrypt
@@ -513,6 +513,31 @@ def delete_element():
     modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
     return render_template('admin_dashboard.html',  modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, error=error_msg)
 
+# ---- CONSULTA ----
+
+@admin_blueprint.route('/filtrar_ejercicios', methods=['GET'])
+@login_required
+def filtrar_ejercicios():
+    # Obtén los parámetros del formulario
+    mod = request.args.get('language')
+    selected_requirement = request.args.get('requirement_id')
+
+    # Comienza con una consulta base de todos los ejercicios
+    exercises_query = Exercises.query
+
+    # Filtra por lenguaje si uno fue seleccionado
+    if mod:
+        exercises_query = exercises_query.filter(Exercises.module_id == mod)
+
+    # Filtra por requisito si uno fue seleccionado
+    if selected_requirement:
+        exercises_query = exercises_query.join(ExerciseRequirement).filter(ExerciseRequirement.requirement_id == selected_requirement)
+
+    # Obtén los resultados finales
+    exercises = exercises_query.all()
+
+    exercises_data = [{'id': ex.id, 'module_id': ex.module_id, 'name': ex.name, 'language': ex.language, 'requirements': [req.name for req in ex.requirements], 'is_key_exercise': ex.is_key_exercise} for ex in exercises]
+    return jsonify(exercises=exercises_data)
 
 # ---- GLOBAL ORDER ----
 
