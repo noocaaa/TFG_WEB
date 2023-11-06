@@ -84,17 +84,15 @@
                     <a href="#" class="list-group-item list-group-item-action" id="addRequirementTab" onclick="showAddRequirement(event)">Añadir Requisitos</a>
                     <a href="#" class="list-group-item list-group-item-action" id="teacherTab" onclick="showTeacherForm(event)">Añadir Profesor</a>
                     
-                    <a href="#" class="list-group-item list-group-item-action" id="listModule" onclick="showListModule(event)">Consultar Módulos</a>
-                    <a href="#" class="list-group-item list-group-item-action" id="listExercise" onclick="showListExercise(event)">Consultar Ejercicios</a>
-                    <a href="#" class="list-group-item list-group-item-action" id="listTheory" onclick="showListTheory(event)">Consultar Teoria</a>
-                    <a href="#" class="list-group-item list-group-item-action" id="requirementsTab" onclick="showListRequirements(event)">Consultar Requisitos</a>
-                    <a href="#" class="list-group-item list-group-item-action" id="listTeachers" onclick="showTeacherList(event)">Consultar Profesores</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="listTab" onclick="showList(event)">Consultar Elementos</a>
 
                     <a href="#" class="list-group-item list-group-item-action" id="editModulesTab" onclick="showEditModules(event)">Editar Modulos</a>
                     <a href="#" class="list-group-item list-group-item-action" id="editExercisesTab" onclick="showEditExercises(event)">Editar Ejercicios</a>
                     <a href="#" class="list-group-item list-group-item-action" id="editTheoryTab" onclick="showEditTheory(event)">Editar Teoria</a>
                     <a href="#" class="list-group-item list-group-item-action" id="editTeacherTab" onclick="showEditTeachers(event)">Editar Profesores</a>
+                    
                     <a href="#" class="list-group-item list-group-item-action" id="deleteFormTab" onclick="showDeleteForm(event)">Eliminar Elemento</a>
+                    
                     <a href="#" class="list-group-item list-group-item-action" id="globalOrderTab" onclick="showGlobalOrder(event)">Orden Global</a>
                 </div>
             </div>
@@ -299,108 +297,6 @@
                     </div>
                 </div>
                
-
-
-                <!-- Formulario lista profesores -->
-                <div id="teacherList" class="card mb-4"  style="display:none;">
-                    <div class="card-header">
-                        Lista de Profesores
-                    </div>                    
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nombre</th>
-                                    <th>Apellido</th>
-                                    <th>Email</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tbody>
-                                    {% for teacher in teachers %}
-                                        <tr>
-                                            <td>{{ teacher.id }}</td>
-                                            <td>{{ teacher.first_name }}</td>
-                                            <td>{{ teacher.last_name }}</td>
-                                            <td>{{ teacher.email }}</td>    
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                                
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Lista de módulos -->
-                <div class="card mb-4" id="cardModules" style="display: none;">
-                    <div class="card-header">
-                        Lista de módulos
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nombre</th>
-                                    <th>Descripción</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for module in modules %}
-                                <tr>
-                                    <td>{{ module.id }}</td>
-                                    <td>{{ module.name }}</td>
-                                    <td>{{ module.description }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-
-                <!-- Lista de ejercicios -->
-                <div class="card mb-4" id="cardExercises" style="display: none;">
-                    <div class="card-header">
-                        Lista de ejercicios
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>ID del Ejercicio</th>
-                                    <th>ID del Módulo</th>
-                                    <th>Nombre del Ejercicio</th>
-                                    <th>Lenguaje</th>
-                                    <th>Requisitos</th>
-                                    <th>¿Es un ejercicio clave?</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for exercise in exercises %}
-                                <tr>
-                                    <td>{{ exercise.id }}</td>
-                                    <td>{{ exercise.module_id }}</td>
-                                    <td>{{ exercise.name }}</td>
-                                    <td>{{ exercise.language }}</td>
-                                    <td>
-                                        {% set req_names = [] %}
-                                        {% for req in exercise.requirements %}
-                                            {% set _ = req_names.append(req.name) %}
-                                        {% endfor %}
-                                        {{ req_names|join(', ') }}
-                                    </td>
-                                    <td>{{ exercise.is_key_exercise }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-
                 <!-- Formularios edición--> 
                 <div id="editModules" class="card mb-4" style="display:none;">
                     <div class="card-header">
@@ -576,66 +472,6 @@
                     </div>
                 </div>
 
-                <div class="card mb-3" id="requirementsForm" style="display:none;">
-                    <div class="card-header">
-                        Consultar Requisitos
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nombre</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for req in requirements %}
-                                <tr>
-                                    <td>{{ req.id_requisito }}</td>
-                                    <td>{{ req.name }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Sección para consultar teorías -->
-                <div class="card mb-4" id="theoryListForm" style="display:none;">
-                    <div class="card-header">
-                        Consultar Teoria
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>ID del Módulo</th>
-                                    <th>Contenido</th>
-                                    <th>Requisitos</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for the in theory %}
-                                <tr>
-                                    <td>{{ the.id }}</td>
-                                    <td>{{ the.module_id }}</td>
-                                    <td>{{ the.content }}</td>
-                                    <td>
-                                        {% set req_names = [] %}
-                                        {% for req in the.requirements %}
-                                            {% set _ = req_names.append(req.name) %}
-                                        {% endfor %}
-                                        {{ req_names|join(', ') }}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-
                 <!-- Formularios edición Teoria--> 
                 <div id="editTheory" class="card mb-4" style="display:none;">
                     <div class="card-header">
@@ -675,9 +511,207 @@
                 </div>
 
 
+                <!-- Menú desplegable para seleccionar la categoría -->
+                <div class="card mb-4" id="listFrom" style="display: none;">
+                    <div class="card-header">
+                        Selecciona una categoría
+                    </div>
+                    <div class="card-body">
+                        <select class="form-control" id="categorySelect" onchange="showCategory(this.value)">
+                            <option value="">-- Selecciona una opción --</option>
+                            <option value="exercises">Ejercicios</option>
+                            <option value="requirements">Requisitos</option>
+                            <option value="theory">Teoría</option>
+                            <option value="teachers">Profesores</option>
+                            <option value="modules">Módulos</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Sección para consultar lista de los ejercicios -->
+                <div class="card mb-4 category-content" id="cardExercises" style="display: none;">
+                    <div class="card-header">
+                        Lista de ejercicios
+                    </div>
+                    <div class="card-body">
+                        <!-- Formulario de filtrado -->
+                        <form id="filterForm" method="post">
+                            <div class="form-group">
+                                <label for="languageFilter">Filtrar por lenguaje:</label>
+                                <select name="language" id="languageFilter" class="form-control">
+                                    {% for mod in modules %}
+                                        <option value="{{ mod.id }}">{{ mod.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="req_idd">Filtrar por requisito:</label>
+                                <select name="req_idd" id="req_idd" class="form-control" required>
+                                    {% for req in requirements %}
+                                        <option value="{{ req.id_requisito }}">{{ req.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <input type="submit" value="Actualizar Lista" class="btn btn-primary">
+                        </form>
+                    </div>
+
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID del Ejercicio</th>
+                                    <th>ID del Módulo</th>
+                                    <th>Nombre del Ejercicio</th>
+                                    <th>Lenguaje</th>
+                                    <th>Requisitos</th>
+                                    <th>¿Es un ejercicio clave?</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for exercise in exercises %}
+                                <tr>
+                                    <td>{{ exercise.id }}</td>
+                                    <td>{{ exercise.module_id }}</td>
+                                    <td>{{ exercise.name }}</td>
+                                    <td>{{ exercise.language }}</td>
+                                    <td>
+                                        {% set req_names = [] %}
+                                        {% for req in exercise.requirements %}
+                                            {% set _ = req_names.append(req.name) %}
+                                        {% endfor %}
+                                        {{ req_names|join(', ') }}
+                                    </td>
+                                    <td>{{ exercise.is_key_exercise }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Sección para consultar lista de requisitos -->
+                <div class="card mb-4 category-content" id="cardRequirements" style="display:none;">
+                    <div class="card-header">
+                        Consultar Requisitos
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for req in requirements %}
+                                <tr>
+                                    <td>{{ req.id_requisito }}</td>
+                                    <td>{{ req.name }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Sección para consultar lista de teorías -->
+                <div class="card mb-4 category-content" id="cardTheory" style="display:none;">
+                    <div class="card-header">
+                        Consultar Teoria
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>ID del Módulo</th>
+                                    <th>Contenido</th>
+                                    <th>Requisitos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for the in theory %}
+                                <tr>
+                                    <td>{{ the.id }}</td>
+                                    <td>{{ the.module_id }}</td>
+                                    <td>{{ the.content }}</td>
+                                    <td>
+                                        {% set req_names = [] %}
+                                        {% for req in the.requirements %}
+                                            {% set _ = req_names.append(req.name) %}
+                                        {% endfor %}
+                                        {{ req_names|join(', ') }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+                <!-- Formulario consultar lista de profesores -->
+                <div id="cardTeachers" class="card mb-4 category-content"  style="display:none;">
+                    <div class="card-header">
+                        Lista de Profesores
+                    </div>                    
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Apellido</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tbody>
+                                    {% for teacher in teachers %}
+                                        <tr>
+                                            <td>{{ teacher.id }}</td>
+                                            <td>{{ teacher.first_name }}</td>
+                                            <td>{{ teacher.last_name }}</td>
+                                            <td>{{ teacher.email }}</td>    
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Formulario consultar lista de módulos -->
+                <div class="card mb-4 category-content" id="cardModules" style="display: none;">
+                    <div class="card-header">
+                        Lista de módulos
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for module in modules %}
+                                <tr>
+                                    <td>{{ module.id }}</td>
+                                    <td>{{ module.name }}</td>
+                                    <td>{{ module.description }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>            
 
                 <!-- Formulario para Orden Global -->
-                <div class="card mb-4" id="globalOrderForm" style="display:none;">
+                <div class="card mb-4 " id="globalOrderForm" style="display:none;">
                     <!-- Tabla para mostrar los datos -->
                     <div class="card-header">
                         Lista del Path Educativo
@@ -756,6 +790,42 @@
 
     <!-- Scripts for Tabs -->
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Esta función manejará el envío del formulario
+            document.getElementById('filterForm').onsubmit = function(event) {
+                event.preventDefault(); // Previene el comportamiento por defecto del formulario (recargar la página)
+                const language = document.getElementById('languageFilter').value;
+                const requirement = document.getElementById('req_idd').value;
+
+                // Aquí se hace la petición fetch con los valores actuales del formulario
+                fetch(`/filtrar_ejercicios?language=${language}&requirement_id=${requirement}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Llamada a la función que actualiza la tabla con los datos recibidos
+                        updateTable(data.exercises);
+                    })
+                    .catch(error => console.error('Error:', error));
+            };
+        });
+
+        function updateTable(exercises) {
+            let rows = '';
+            exercises.forEach(ex => {
+                let requirements = ex.requirements.join(', ');
+                rows += `
+                    <tr>
+                        <td>${ex.id}</td>
+                        <td>${ex.module_id}</td>
+                        <td>${ex.name}</td>
+                        <td>${ex.language}</td>
+                        <td>${requirements}</td>
+                        <td>${ex.is_key_exercise}</td>
+                    </tr>
+                `;
+            });
+            document.querySelector('.table tbody').innerHTML = rows;
+        }
+
         function hideError() {
             var errorContainer = document.getElementById('errorContainer');
             if (errorContainer) {
@@ -764,15 +834,14 @@
         }
 
         function hideAll() {
-            let elementsToHide = ['moduleForm', 'exerciseForm', 'cardModules', 'cardExercises', 
-                'teacherForm', 'teacherList', 'editModules', 
-                'editExercises', 'editTeacher', 'theoryAddForm', 'theoryListForm', 'editTheory', 
-                'globalOrderForm', 'requirementsForm', 'addRequirementForm', 'deleteForm'];
+            let elementsToHide = ['moduleForm', 'exerciseForm', 'cardExercises', 'cardModules',
+                'teacherForm', 'editModules', 'listFrom', 'cardRequirements', 'cardTeachers', 'cardTheory',
+                'editExercises', 'editTeacher', 'theoryAddForm', 'editTheory', 
+                'globalOrderForm', 'addRequirementForm', 'deleteForm'];
 
-            let tabsToRemoveActive = ['globalOrderTab', 'moduleTab', 'exerciseTab', 'listModule', 
-                'listExercise', 'teacherTab', 'listTeachers', 
+            let tabsToRemoveActive = ['globalOrderTab', 'moduleTab', 'exerciseTab',  'teacherTab', 
                 'editModulesTab', 'editExercisesTab', 'editTeacherTab', 
-                'theoryTab', 'listTheory', 'editTheoryTab', 'requirementsTab', 'addRequirementTab', 'deleteFormTab'];
+                'theoryTab', 'editTheoryTab', 'addRequirementTab', 'deleteFormTab', 'listTab'];
 
             elementsToHide.forEach(el => {
                 document.getElementById(el).style.display = 'none';
@@ -820,28 +889,6 @@
             hideError();
         }
 
-        function showListModule() {
-            event.preventDefault(); // Prevent default behaviour
-
-            hideAll();
-
-            document.getElementById('cardModules').style.display = 'block';
-            document.getElementById('listModule').classList.add('active');
-
-            hideError();
-        }
-
-        function showListExercise() {
-            event.preventDefault(); // Prevent default behaviour
-
-            hideAll();
-
-            document.getElementById('cardExercises').style.display = 'block';
-            document.getElementById('listExercise').classList.add('active');
-  
-            hideError();
-        }
-
         function showTeacherForm(event) {
             event.preventDefault(); // Prevent default behaviour
 
@@ -852,19 +899,6 @@
 
             hideError();
         }
-
-
-        function showTeacherList(event) {
-            event.preventDefault(); // Prevent default behaviour
-
-            hideAll();
-
-            document.getElementById('teacherList').style.display = 'block';
-            document.getElementById('listTeachers').classList.add('active');
-
-            hideError();
-        }
-
 
         function showEditModules(event) {
             event.preventDefault(); // Prevent default behaviour
@@ -910,17 +944,6 @@
             hideError();
         }
 
-        function showListTheory(event) {
-            event.preventDefault(); // Prevent default behaviour
-
-            hideAll();
-
-            document.getElementById('theoryListForm').style.display = 'block';
-            document.getElementById('listTheory').classList.add('active');
-
-            hideError();
-        }
-
 
         function showEditTheory(event) {
             event.preventDefault(); // Prevent default behaviour
@@ -944,13 +967,13 @@
             hideError();
         }
 
-        function showListRequirements(event) {
+        function showList(event) {
             event.preventDefault(); // Prevent default behaviour
 
             hideAll();
 
-            document.getElementById('requirementsForm').style.display = 'block';
-            document.getElementById('requirementsTab').classList.add('active');
+            document.getElementById('listFrom').style.display = 'block';
+            document.getElementById('listTab').classList.add('active');
 
             hideError();
         }
@@ -978,8 +1001,21 @@
             hideError();
         }
 
+        function showCategory(category) {
+            // Ocultar todos los contenidos
+            var contents = document.getElementsByClassName('category-content');
+            
+            for (var i = 0; i < contents.length; i++) {
+                contents[i].style.display = 'none';
+            }
+            
+            // Mostrar el contenido seleccionado
+            if (category) {
+                document.getElementById('card' + category.charAt(0).toUpperCase() + category.slice(1)).style.display = 'block';
+            }
+        } 
 
-    </script>
+     </script>
 
     <!-- Enlace a Bootstrap JS y Popper.js (opcional) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
