@@ -620,6 +620,31 @@
                     <div class="card-header">
                         Consultar Teoria
                     </div>
+
+                    <!-- Formulario de filtrado -->
+                    <div class="card-body">
+                        <form id="filterTheoryForm" method="post">
+                            <div class="form-group">
+                                <label for="moduleFilter">Filtrar por ID del Módulo:</label>
+                                <select name="moduleFilter" id="moduleFilter" class="form-control">
+                                    <option value="">Todos</option>
+                                    {% for mod in modules %}
+                                        <option value="{{ mod.id }}">{{ mod.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="reqq_idd">Filtrar por requisito:</label>
+                                <select name="reqq_idd" id="reqq_idd" class="form-control" required>
+                                    {% for req in requirements %}
+                                        <option value="{{ req.id_requisito }}">{{ req.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <input type="submit" value="Actualizar Lista" class="btn btn-primary">
+                        </form>
+                    </div>
+
                     <div class="card-body">
                         <table class="table table-striped">
                             <thead>
@@ -790,6 +815,38 @@
 
     <!-- Scripts for Tabs -->
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('filterTheoryForm').onsubmit = function(event) {
+                event.preventDefault();
+                const module = document.getElementById('moduleFilter').value;
+                const requirement = document.getElementById('reqq_idd').value;
+
+                fetch(`/filtrar_teoria?module=${module}&requirement_id=${requirement}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        updateTheoryTable(data.theory);
+                    })
+                    .catch(error => console.error('Error:', error));
+            };
+        });
+
+        function updateTheoryTable(theory) {
+            let rows = '';
+            theory.forEach(th => {
+                let requirements = th.requirements.join(', ');
+                
+                rows += `
+                    <tr>
+                        <td>${th.id}</td>
+                        <td>${th.module_id}</td>
+                        <td>${th.content}</td>
+                        <td>${th.requirements}</td>
+                    </tr>
+                `;
+            });
+            document.querySelector('#cardTheory .table tbody').innerHTML = rows;
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             // Esta función manejará el envío del formulario
             document.getElementById('filterForm').onsubmit = function(event) {

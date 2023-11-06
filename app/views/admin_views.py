@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, jsonif
 from flask_login import current_user, login_required
 
 from app import db, bcrypt
-from app.models import Users, Exercises, Module, Theory, Requirement, ExerciseRequirement, ModuleRequirementOrder
+from app.models import Users, Exercises, Module, Theory, Requirement, ExerciseRequirement, ModuleRequirementOrder, TheoryRequirement
 
 from werkzeug.utils import secure_filename
 
@@ -538,6 +538,34 @@ def filtrar_ejercicios():
 
     exercises_data = [{'id': ex.id, 'module_id': ex.module_id, 'name': ex.name, 'language': ex.language, 'requirements': [req.name for req in ex.requirements], 'is_key_exercise': ex.is_key_exercise} for ex in exercises]
     return jsonify(exercises=exercises_data)
+
+@admin_blueprint.route('/filtrar_teoria', methods=['GET'])
+@login_required
+def filtrar_teoria():
+    # Obtén los parámetros del formulario
+    module_id = request.args.get('module')
+    selected_requirement = request.args.get('requirement_id')
+
+    # Comienza con una consulta base de todas las teorías
+    theory_query = Theory.query
+
+    # Filtra por módulo si uno fue seleccionado
+    if module_id:
+        theory_query = theory_query.filter(Theory.module_id == module_id)
+
+    if selected_requirement:
+        theory_query = theory_query.join(TheoryRequirement).filter(TheoryRequirement.id_requirement == selected_requirement)
+
+    # Obtén los resultados finales
+    theory = theory_query.all()
+
+    # Convertir a formato JSON
+    theory_data = [{'id': t.id, 'module_id': t.module_id, 'content': t.content, 'requirements': [req.name for req in t.requirements]} for t in theory]
+    
+    print(theory_data)
+
+    return jsonify(theory=theory_data)
+
 
 # ---- GLOBAL ORDER ----
 
