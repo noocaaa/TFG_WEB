@@ -122,8 +122,8 @@
         <div class="col-md-9 main-content">
             <h2 class="my-4">Lista de Progresos de Ejercicios</h2>
 
-            <!-- Filtro por student_id -->
-            <form action="{{ url_for('teacher.exercise_list') }}" method="POST">
+            <!-- Filtro por student_id y otros filtros -->
+            <form action="{{ url_for('teacher.exercise_list') }}" method="GET">
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" name="search" value="{{ search_term }}" placeholder="Buscar por ID de estudiante">
                     <div class="input-group-append">
@@ -136,20 +136,20 @@
                     <select class="form-control" name="status">
                         <option value="">Selecciona un estado</option>
                         <option value="completed">Completado</option>
-                        <option value="in-progress">En progreso</option>
-                        <option value="not-started">No iniciado</option>
-                        <!-- Puedes agregar más estados si los tienes -->
+                        <option value="failed">Fallado</option>
+                        <option value="pending">Pendiente</option>
+                        <option value="in progress">En progreso</option>
+                        <option value="under-review">En revisión</option>
                     </select>
                 </div>
 
                 <!-- Filtro por fecha -->
                 <div class="input-group mb-3">
-                    <input type="date" class="form-control" name="date" placeholder="Selecciona una fecha">
+                    <input type="date" class="form-control" name="start_date" value="{{ date }}" placeholder="Selecciona una fecha">
                 </div>
             </form>
 
-            
-            
+            <!-- Tabla de progresos -->
             <div class="content">
                 <table class="table table-bordered" id="exerciseTable">
                     <thead>
@@ -158,10 +158,10 @@
                             <th>ID de Estudiante</th>
                             <th>ID de Ejercicio</th>
                             <th>Estado</th>
-                            <th>Fecha de Completitud</th>
                             <th>Nota</th>
                             <th>Tiempo Usado</th>
                             <th>Fecha de Inicio</th>
+                            <th>Fecha de Finalización</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -171,10 +171,10 @@
                                 <td>{{ exercise.student_id }}</td>
                                 <td>{{ exercise.exercise_id }}</td>
                                 <td>{{ exercise.status }}</td>
-                                <td>{{ exercise.completion_date }}</td>
                                 <td>{{ exercise.grade }}</td>
                                 <td>{{ exercise.time_spent }}</td>
                                 <td>{{ exercise.start_date }}</td>
+                                <td>{{ exercise.completion_date }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -183,34 +183,31 @@
         
             <div class="pagination-wrapper">
                 <ul class="pagination">
+                    <!-- Paginación con los filtros mantenidos -->
                     {% if exercises.has_prev %}
                     <li class="page-item">
-                        <a class="page-link" href="{{ url_for('teacher.exercise_list', page=exercises.prev_num, search=search_term) }}">« Anterior</a>
+                        <a class="page-link" href="{{ url_for('teacher.exercise_list', page=exercises.prev_num, search=search_term, status=status, start_date=date) }}">« Anterior</a>
                     </li>
                     {% else %}
-                    <li class="page-item disabled">
-                        <a class="page-link">« Anterior</a>
-                    </li>
+                    <li class="page-item disabled"><a class="page-link">« Anterior</a></li>
                     {% endif %}
             
                     {% for page_num in exercises.iter_pages() %}
                     <li class="page-item {% if page_num == exercises.page %}active{% elif page_num is none %}disabled{% endif %}">
                         {% if page_num %}
-                        <a class="page-link" href="{{ url_for('teacher.exercise_list', page=page_num, search=search_term) }}">{{ page_num }}</a>
+                        <a class="page-link" href="{{ url_for('teacher.exercise_list', page=page_num, search=search_term, status=status, start_date=date) }}">{{ page_num }}</a>
                         {% else %}
                         <a class="page-link">...</a>
                         {% endif %}
                     </li>
                     {% endfor %}
-            
+
                     {% if exercises.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="{{ url_for('teacher.exercise_list', page=exercises.next_num, search=search_term) }}">Siguiente »</a>
+                        <a class="page-link" href="{{ url_for('teacher.exercise_list', page=exercises.next_num, search=search_term, status=status, start_date=date) }}">Siguiente »</a>
                     </li>
                     {% else %}
-                    <li class="page-item disabled">
-                        <a class="page-link">Siguiente »</a>
-                    </li>
+                    <li class="page-item disabled"><a class="page-link">Siguiente »</a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -219,36 +216,6 @@
     </div>
 </div>
 
-
-
-<!-- Scripts -->
-<script>
-    function toggleRow(userId) {
-        var row = document.getElementById('row-' + userId);
-        if (row.style.display === 'none') {
-            row.style.display = 'table-row';  // Cambiado de '' a 'table-row'
-        } else {
-            row.style.display = 'none';
-        }
-    }
-
-    function filterUsers() {
-        var input = document.getElementById("searchInput");
-        var filter = input.value.toUpperCase();
-        var table = document.getElementById("userTable");
-        var trs = table.getElementsByTagName("tr");
-        for (var i = 1; i < trs.length; i++) {
-            var tds = trs[i].getElementsByTagName("td");
-            var firstName = tds[1].textContent.toUpperCase();
-            var lastName = tds[2].textContent.toUpperCase();
-            if (firstName.indexOf(filter) > -1 || lastName.indexOf(filter) > -1) {
-                trs[i].style.display = "";
-            } else {
-                trs[i].style.display = "none";
-            }
-        }
-    }
-</script>
 
 <!-- Enlace a Bootstrap JS y Popper.js -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

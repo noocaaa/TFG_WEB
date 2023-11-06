@@ -212,9 +212,9 @@ def exercise_list():
     page = request.args.get('page', 1, type=int)
 
     # Término de búsqueda
-    search_term = request.form.get('search', '')
-    status = request.form.get('status')
-    date = request.form.get('start_date')
+    search_term = request.args.get('search', '')
+    status = request.args.get('status', '')
+    date = request.args.get('start_date', '')
 
     # Consulta base: todos los registros de ejercicio
     query = StudentProgress.query
@@ -231,7 +231,7 @@ def exercise_list():
     if date:
         # Convertimos la fecha de string a objeto date (si estás usando otra base de datos o ORM, es posible que no necesites este paso)
         date_obj = datetime.strptime(date, '%Y-%m-%d').date()
-        query = query.filter(StudentProgress.date == date_obj)
+        query = query.filter(func.date(StudentProgress.start_date) == date_obj)
 
     # Ordenar y paginar resultados (aquí lo ordenamos por id, pero puedes elegir otro campo si prefieres)
     exercises = query.order_by(StudentProgress.id).paginate(page=page, per_page=ITEMS_PER_PAGE, error_out=False)
