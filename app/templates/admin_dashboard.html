@@ -41,6 +41,7 @@
         input[type="text"], 
         input[type="date"], 
         input[type="email"], 
+
         textarea {
             width: 100%;
             padding: 10px;
@@ -93,20 +94,20 @@
                     <a href="#" class="list-group-item list-group-item-action" id="editExercisesTab" onclick="showEditExercises(event)">Editar Ejercicios</a>
                     <a href="#" class="list-group-item list-group-item-action" id="editTheoryTab" onclick="showEditTheory(event)">Editar Teoria</a>
                     <a href="#" class="list-group-item list-group-item-action" id="editTeacherTab" onclick="showEditTeachers(event)">Editar Profesores</a>
-
-                    <a href="#" class="list-group-item list-group-item-action" id="deleteModuleTab" onclick="showDeleteModuleForm(event)">Eliminar Módulo</a>
-                    <a href="#" class="list-group-item list-group-item-action" id="deleteExerciseTab" onclick="showDeleteExerciseForm(event)">Eliminar Ejercicio</a>
-                    <a href="#" class="list-group-item list-group-item-action" id="deleteTheoryTab" onclick="showDeleteTheory(event)">Eliminar Teoria</a>
-                    <a href="#" class="list-group-item list-group-item-action" id="deleteTeacherTab" onclick="showDeleteTeacherForm(event)">Eliminar Profesor</a>
-                    <a href="#" class="list-group-item list-group-item-action" id="deleteRequirementTab" onclick="showDeleteRequirementForm(event)">Eliminar Requisito</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="deleteFormTab" onclick="showDeleteForm(event)">Eliminar Elemento</a>
                     <a href="#" class="list-group-item list-group-item-action" id="globalOrderTab" onclick="showGlobalOrder(event)">Orden Global</a>
                 </div>
             </div>
 
             <div class="col-md-9">
-
                 <!-- Título -->
                 <h2 class="text-center mb-4">Panel Administrativo</h2>
+
+                <div class="container mt-3" id="errorContainer">
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endif %}
+                </div>   
 
                 <!-- Formulario para añadir módulo -->
                 <div class="card mb-4" id="moduleForm" style="display: none;">
@@ -204,6 +205,134 @@
 
                 </div>
 
+                <!-- Formulario para añadir profesor -->
+                <div class="card mb-4" id="teacherForm" style="display: none;">
+                    <div class="card-header">
+                        Añadir Profesor
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/add_teacher" method="post">
+                            <!-- Field for ID -->
+                            <div class="form-group">
+                                <label for="teacher_id">ID:</label>
+                                <input type="number" name="teacher_id" class="form-control" required>
+                            </div>
+
+                            <!-- Fields for First Name and Last Name -->
+                            <div class="form-group">
+                                <label for="first_name">Nombre:</label>
+                                <input type="text" name="first_name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name">Apellido:</label>
+                                <input type="text" name="last_name" class="form-control" required>
+                            </div>
+
+                            <!-- Fields for Birth Date, City, Gender -->
+                            <div class="form-group">
+                                <label for="birth_date">Fecha de Nacimiento:</label>
+                                <input type="date" name="birth_date" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">Ciudad:</label>
+                                <input type="text" name="city" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">Género:</label>
+                                <select name="gender" class="form-control" required>
+                                    <option value="male">Masculino</option>
+                                    <option value="female">Femenino</option>
+                                </select>
+                            </div>
+
+                            <!-- Fields for Email and Password -->
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" name="email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Contraseña:</label>
+                                <input type="password" name="password" class="form-control" required>
+                            </div>
+
+                            <!-- Hidden field for Type User -->
+                            <input type="hidden" name="type_user" value="X">
+
+                            <input type="submit" value="Añadir Profesor" class="btn btn-primary">
+                        </form>
+                    </div>
+                </div>
+
+
+                <!-- Formulario unificado para eliminaciones -->
+                <div class="card mb-4" id="deleteForm"  style="display: none;">
+                    <div class="card-header">
+                        Eliminar Elemento
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/delete" method="post">
+                            <div class="form-group">
+                                <label for="element_type">Tipo de Elemento a Eliminar:</label>
+                                <select name="element_type" id="element_type" class="form-control" required onchange="toggleRequirementSelection()">
+                                    <option value="">Selecciona un elemento</option>
+                                    <option value="module">Módulo</option>
+                                    <option value="exercise">Ejercicio</option>
+                                    <option value="teacher">Profesor</option>
+                                    <option value="theory">Teoría</option>
+                                    <option value="requirement">Requisito</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="idInputContainer">
+                                <label for="element_id">ID del Elemento a Eliminar:</label>
+                                <input type="number" name="element_id" id="element_id" class="form-control" required>
+                            </div>
+                            <div class="form-group" id="requirementSelectContainer" style="display: none;">
+                                <label for="requirement_id">Selecciona el Requisito:</label>
+                                <select name="requirement_id" id="requirement_id" class="form-control">
+                                    {% for req in requirements %}
+                                        <option value="{{ req.id_requisito }}">{{ req.name }}</option>
+                                    {% endfor %}                                
+                                </select>
+                            </div>
+                            <input type="submit" value="Eliminar" class="btn btn-danger">
+                        </form>
+                    </div>
+                </div>
+               
+
+
+                <!-- Formulario lista profesores -->
+                <div id="teacherList" class="card mb-4"  style="display:none;">
+                    <div class="card-header">
+                        Lista de Profesores
+                    </div>                    
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Apellido</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tbody>
+                                    {% for teacher in teachers %}
+                                        <tr>
+                                            <td>{{ teacher.id }}</td>
+                                            <td>{{ teacher.first_name }}</td>
+                                            <td>{{ teacher.last_name }}</td>
+                                            <td>{{ teacher.email }}</td>    
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <!-- Lista de módulos -->
                 <div class="card mb-4" id="cardModules" style="display: none;">
                     <div class="card-header">
@@ -270,151 +399,6 @@
                         </table>
                     </div>
                 </div>
-                
-
-                <div class="container mt-3" id="errorContainer">
-                    {% if error %}
-                        <div class="alert alert-danger">{{ error }}</div>
-                    {% endif %}
-                </div>   
-                
-                <!-- Formulario para eliminar módulo -->
-                <div class="card mb-4" id="deleteModuleForm" style="display: none;">
-                    <div class="card-header">
-                        Eliminar Módulo
-                    </div>
-                    <div class="card-body">
-                        <form action="/admin/delete_module" method="post">
-                            <div class="form-group">
-                                <label for="module_id">ID del Módulo a Eliminar:</label>
-                                <input type="number" name="module_id" class="form-control" required>
-                            </div>
-                            <input type="submit" value="Eliminar Módulo" class="btn btn-danger">
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Formulario para eliminar ejercicio -->
-                <div class="card mb-4" id="deleteExerciseForm" style="display: none;">
-                    <div class="card-header">
-                        Eliminar Ejercicio
-                    </div>
-                    <div class="card-body">
-                        <form action="/admin/delete_exercise" method="post">
-                            <div class="form-group">
-                                <label for="exercise_id">ID del Ejercicio a Eliminar:</label>
-                                <input type="number" name="exercise_id" class="form-control" required>
-                            </div>
-                            <input type="submit" value="Eliminar Ejercicio" class="btn btn-danger">
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Formulario para añadir profesor -->
-                <div class="card mb-4" id="teacherForm" style="display: none;">
-                    <div class="card-header">
-                        Añadir Profesor
-                    </div>
-                    <div class="card-body">
-                        <form action="/admin/add_teacher" method="post">
-                            <!-- Field for ID -->
-                            <div class="form-group">
-                                <label for="teacher_id">ID:</label>
-                                <input type="number" name="teacher_id" class="form-control" required>
-                            </div>
-
-                            <!-- Fields for First Name and Last Name -->
-                            <div class="form-group">
-                                <label for="first_name">Nombre:</label>
-                                <input type="text" name="first_name" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="last_name">Apellido:</label>
-                                <input type="text" name="last_name" class="form-control" required>
-                            </div>
-
-                            <!-- Fields for Birth Date, City, Gender -->
-                            <div class="form-group">
-                                <label for="birth_date">Fecha de Nacimiento:</label>
-                                <input type="date" name="birth_date" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="city">Ciudad:</label>
-                                <input type="text" name="city" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="gender">Género:</label>
-                                <select name="gender" class="form-control" required>
-                                    <option value="male">Masculino</option>
-                                    <option value="female">Femenino</option>
-                                </select>
-                            </div>
-
-                            <!-- Fields for Email and Password -->
-                            <div class="form-group">
-                                <label for="email">Email:</label>
-                                <input type="email" name="email" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="password">Contraseña:</label>
-                                <input type="password" name="password" class="form-control" required>
-                            </div>
-
-                            <!-- Hidden field for Type User -->
-                            <input type="hidden" name="type_user" value="X">
-
-                            <input type="submit" value="Añadir Profesor" class="btn btn-primary">
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Formulario lista profesores -->
-                <div id="teacherList" class="card mb-4"  style="display:none;">
-                    <div class="card-header">
-                        Lista de Profesores
-                    </div>                    
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nombre</th>
-                                    <th>Apellido</th>
-                                    <th>Email</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tbody>
-                                    {% for teacher in teachers %}
-                                        <tr>
-                                            <td>{{ teacher.id }}</td>
-                                            <td>{{ teacher.first_name }}</td>
-                                            <td>{{ teacher.last_name }}</td>
-                                            <td>{{ teacher.email }}</td>    
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                                
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Formulario eliminación profesores -->
-                <div id="deleteTeacherForm" class="card mb-4"  style="display:none;">
-                    <div class="card-header">
-                        Eliminar Profesor
-                    </div>                     
-                    <div class="card-body">
-                        <form action="/admin/delete_teacher" method="post">
-                            <div class="form-group">
-                                <label for="teacherID">ID del Profesor a Eliminar:</label>
-                                <input type="number" class="form-control" name="teacher_id" id="teacherID" required>
-                            </div>
-                            <input type="submit" value="Eliminar Profesor" class="btn btn-danger">
-                        </form>
-                    </div>
-                </div>                
                 
 
                 <!-- Formularios edición--> 
@@ -651,21 +635,6 @@
                     </div>
                 </div>
 
-                <!-- Formulario para eliminar teoria -->
-                <div class="card mb-4" id="deleteTheoryForm" style="display: none;">
-                    <div class="card-header">
-                        Eliminar Teoria
-                    </div>
-                    <div class="card-body">
-                        <form action="/admin/delete_theory" method="post">
-                            <div class="form-group">
-                                <label for="exercise_id">ID de la Teoria  a Eliminar:</label>
-                                <input type="number" name="exercise_id" class="form-control" required>
-                            </div>
-                            <input type="submit" value="Eliminar Teoria" class="btn btn-danger">
-                        </form>
-                    </div>
-                </div>
 
                 <!-- Formularios edición Teoria--> 
                 <div id="editTheory" class="card mb-4" style="display:none;">
@@ -705,25 +674,6 @@
                     </div>
                 </div>
 
-                <!-- Formulario para eliminar requisitos -->
-                <div id="deleteRequirementForm" class="card mb-4" style="display:none;">
-                    <div class="card-header">
-                        Eliminar Requisito
-                    </div>
-                    <div class="card-body">
-                        <form action="/admin/delete_requirement" method="post">
-                            <div class="form-group">
-                                <label for="requirement_id">Selecciona el Requisito:</label>
-                                <select name="requirement_id" class="form-control" required>
-                                    {% for req in requirements %}
-                                        <option value="{{ req.id_requisito }}">{{ req.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-danger">Eliminar</button>
-                        </form>
-                    </div>
-                </div>
 
 
                 <!-- Formulario para Orden Global -->
@@ -732,6 +682,49 @@
                     <div class="card-header">
                         Lista del Path Educativo
                     </div>
+
+                    <div class="card-body">
+                        <form action="/admin/update_global_order" method="post">
+                            <div class="form-group">
+                                <label for="module_id">ID del Módulo:</label>
+                                <select name="module_id" class="form-control" required>
+                                    <!-- Suponiendo que tienes una lista de módulos disponibles -->
+                                    {% for module in modules %}
+                                    <option value="{{ module.id }}">{{ module.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="requirement_id">ID del Requisito:</label>
+                                <select name="requirement_id" id="requirement_id" class="form-control" required>
+                                    <!-- Suponiendo que tienes una lista de requisitos disponibles -->
+                                    {% for req in requirements %}
+                                        <option value="{{ req.id_requisito }}">{{ req.name }}</option>
+                                    {% endfor %}
+                                </select>                           
+                            </div>
+                            <div class="form-group">
+                                <label for="order_position">Posición:</label>
+                                <input type="number" name="order_position" class="form-control" required>
+                            </div>
+                            <input type="submit" value="Actualizar Orden" class="btn btn-primary">
+                        </form>
+
+                        <!-- Agregar espacio visual entre formularios -->
+                        <hr>
+
+                        <!-- Formulario para eliminar un registro en una posición específica -->
+                        <form action="/admin/delete_from_position" method="post">
+                            <div class="form-group">
+                                <label for="position_to_delete">Posición a eliminar:</label>
+                                <input type="number" name="position_to_delete" class="form-control" required>
+                            </div>
+
+                            <!-- Botón para eliminar -->
+                            <input type="submit" value="Eliminar Posición" class="btn btn-danger">
+                        </form>
+                    </div>
+
                     <div class="card-body">
                         <table class="table table-bordered">
                             <thead>
@@ -754,7 +747,6 @@
                             </tbody>
                         </table>
                     </div>
-
                 </div>
 
 
@@ -772,15 +764,15 @@
         }
 
         function hideAll() {
-            let elementsToHide = ['moduleForm', 'exerciseForm', 'cardModules', 'cardExercises', 'deleteModuleForm',
-                'deleteExerciseForm', 'teacherForm', 'teacherList', 'deleteTeacherForm', 'editModules', 
+            let elementsToHide = ['moduleForm', 'exerciseForm', 'cardModules', 'cardExercises', 
+                'teacherForm', 'teacherList', 'editModules', 
                 'editExercises', 'editTeacher', 'theoryAddForm', 'theoryListForm', 'editTheory', 
-                'deleteTheoryForm', 'globalOrderForm', 'requirementsForm', 'addRequirementForm', 'deleteRequirementForm'];
+                'globalOrderForm', 'requirementsForm', 'addRequirementForm', 'deleteForm'];
 
             let tabsToRemoveActive = ['globalOrderTab', 'moduleTab', 'exerciseTab', 'listModule', 
-                'listExercise', 'deleteModuleTab', 'deleteExerciseTab', 'teacherTab', 'listTeachers', 
-                'deleteTeacherTab', 'editModulesTab', 'editExercisesTab', 'editTeacherTab', 
-                'theoryTab', 'listTheory', 'editTheoryTab', 'deleteTheoryTab', 'requirementsTab', 'addRequirementTab', 'deleteRequirementTab'];
+                'listExercise', 'teacherTab', 'listTeachers', 
+                'editModulesTab', 'editExercisesTab', 'editTeacherTab', 
+                'theoryTab', 'listTheory', 'editTheoryTab', 'requirementsTab', 'addRequirementTab', 'deleteFormTab'];
 
             elementsToHide.forEach(el => {
                 document.getElementById(el).style.display = 'none';
@@ -791,6 +783,20 @@
             });
         }
 
+        function toggleRequirementSelection() {
+            var selection = document.getElementById('element_type').value;
+            var idInputContainer = document.getElementById('idInputContainer');
+            var requirementSelectContainer = document.getElementById('requirementSelectContainer');
+            
+            // Muestra el campo de selección solo si se elige 'requirement'
+            if (selection === 'requirement') {
+                idInputContainer.style.display = 'none';
+                requirementSelectContainer.style.display = 'block';
+            } else {
+                idInputContainer.style.display = 'block';
+                requirementSelectContainer.style.display = 'none';
+            }
+        }
 
         function showModuleForm() {
             event.preventDefault(); // Prevent default behaviour
@@ -836,28 +842,6 @@
             hideError();
         }
 
-        function showDeleteModuleForm(event) {
-            event.preventDefault(); // Prevent default behaviour
-
-            hideAll();
-
-            document.getElementById('deleteModuleForm').style.display = 'block';
-            document.getElementById('deleteModuleTab').classList.add('active');
-
-            hideError();
-        }
-
-        function showDeleteExerciseForm(event) {
-            event.preventDefault(); // Prevent default behaviour
-
-            hideAll();
-
-            document.getElementById('deleteExerciseForm').style.display = 'block';
-            document.getElementById('deleteExerciseTab').classList.add('active');
-    
-            hideError();
-        }
-
         function showTeacherForm(event) {
             event.preventDefault(); // Prevent default behaviour
 
@@ -881,17 +865,6 @@
             hideError();
         }
 
-
-        function showDeleteTeacherForm(event) {
-            event.preventDefault(); // Prevent default behaviour
-
-            hideAll();
-
-            document.getElementById('deleteTeacherForm').style.display = 'block';
-            document.getElementById('deleteTeacherTab').classList.add('active');
-
-            hideError();
-        }
 
         function showEditModules(event) {
             event.preventDefault(); // Prevent default behaviour
@@ -960,20 +933,6 @@
             hideError();
         }
 
-
-        function showDeleteTheory(event) {
-            event.preventDefault(); // Prevent default behaviour
-
-            hideAll();
-
-            document.getElementById('deleteTheoryForm').style.display = 'block';
-            document.getElementById('deleteTheoryTab').classList.add('active');
-
-
-            hideError();
-        }
-
-
         function showGlobalOrder(event) {
             event.preventDefault(); // Prevent default behaviour
 
@@ -1008,14 +967,13 @@
             hideError();
         }
 
-
-        function showDeleteRequirementForm(event) {
+        function showDeleteForm(event) {
             event.preventDefault(); // Prevent default behaviour
 
             hideAll();
 
-            document.getElementById('deleteRequirementForm').style.display = 'block';
-            document.getElementById('deleteRequirementTab').classList.add('active');
+            document.getElementById('deleteForm').style.display = 'block';
+            document.getElementById('deleteFormTab').classList.add('active');
 
             hideError();
         }

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import current_user, login_required
 
 from app import db, bcrypt
@@ -221,7 +221,6 @@ def add_teacher():
 
     modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
-    flash('Profesor añadido con éxito', 'success')
     return  render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
 
 
@@ -280,6 +279,35 @@ def add_theory():
 
     return render_template('admin_dashboard.html', modules=modules, modules_requirements = modulesRequirement, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
 
+
+@admin_blueprint.route('/admin/add_requirement', methods=['POST'])
+@login_required
+def add_requirement():
+    # Recopilar datos desde el formulario
+    requirement_name = request.form.get('requirement_name')
+
+    # Intentar obtener la teoría usando el ID
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
+
+    # Validar datos
+    if not requirement_name:
+        error_msg = 'El nombre del requisito es obligatorio.'
+        return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, theory=theory, requirements=requirements, error=error_msg)
+
+    # Verificar si el requisito ya existe
+    existing_requirement = Requirement.query.filter_by(name=requirement_name).first()
+    if existing_requirement:
+        error_msg = 'El requisito ya existe.'
+        return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, theory=theory, requirements=requirements, error=error_msg)
+
+    # Crear y guardar el nuevo requisito en la base de datos
+    new_requirement = Requirement(name=requirement_name)
+    db.session.add(new_requirement)
+    db.session.commit()
+
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
+
+    return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
 
 
 # ---------- UPDATE ----------
@@ -422,173 +450,168 @@ def update_theory(theory_id):
 
 # ------------------- DELETE -------------------
 
-
-
-@admin_blueprint.route('/admin/delete_module', methods=['POST'])
+@admin_blueprint.route('/admin/delete', methods=['POST'])
 @login_required
-def delete_module():
-    # Comprobar si el usuario está loggeado
-    if not current_user.is_authenticated:  
+def delete_element():
+    # Comprobar si el usuario está loggeado y es administrador
+    if not current_user.is_authenticated or current_user.type_user != 'T':
         return redirect(url_for('control.login'))
     
-    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
+    element_type = request.form.get('element_type')
+    element_id = request.form.get('element_id')
+    requirement_id = request.form.get('requirement_id') if element_type == 'requirement' else None
 
-    module_id = request.form.get('module_id')
-    if module_id:
-        # Obtiene el módulo por ID
-        module_to_delete = Module.query.get(module_id)
-        
-        # Si el módulo existe, lo elimina
+    if element_type == 'module':
+        # Lógica para eliminar módulo
+        module_to_delete = Module.query.get(element_id)
         if module_to_delete:
             db.session.delete(module_to_delete)
             db.session.commit()
         else:
-            error_msg = 'Módulo no encontrado'
-            return  render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, requirements=requirements, exercises=exercises, teachers=teachers, theory=theory, error=error_msg)
-
-    else:
-        error_msg = 'Error al eliminar el módulo'
-        return  render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, requirements=requirements, exercises=exercises, teachers=teachers, theory=theory, error=error_msg)
-
-    return  render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, requirements=requirements, teachers=teachers, theory=theory)
-
-
-@admin_blueprint.route('/admin/delete_exercise', methods=['POST'])
-@login_required
-def delete_exercise():
-    # Comprobar si el usuario está loggeado
-    if not current_user.is_authenticated:  
-        return redirect(url_for('control.login'))
+            error_msg = 'Módulo no encontrado.'
     
-    exercise_id = request.form.get('exercise_id')
-
-    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
-
-    if exercise_id:
-        # Obtiene el ejercicio por ID
-        exercise_to_delete = Exercises.query.get(exercise_id)
-        
-        # Si el ejercicio existe, lo elimina
+    elif element_type == 'exercise':
+        # Lógica para eliminar ejercicio
+        exercise_to_delete = Exercises.query.get(element_id)
         if exercise_to_delete:
             db.session.delete(exercise_to_delete)
             db.session.commit()
         else:
-            error_msg = 'Ejercicio no encontrado'
-            return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, error=error_msg)
-    else:
-        error_msg = 'Error al eliminar el ejercicio'
-        return  render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory,  error=error_msg)
-
-    exercises = Exercises.query.all()
-
-    return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
-
-
-@admin_blueprint.route('/admin/delete_teacher', methods=['POST'])
-@login_required
-def delete_teacher():
-    # Comprobar si el usuario está loggeado
-    if not current_user.is_authenticated:  
-        return redirect(url_for('control.login'))
-
-    # Comprobar si el usuario es un administrador
-    if current_user.type_user != 'T': 
-        flash('No tienes permisos para realizar esta acción.', 'error')
-        return redirect(url_for('student.principal'))
-
-    teacher_id = request.form.get('teacher_id')
-    teacher = Users.query.get(teacher_id)
-
-    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
-
-    if not teacher:
-        error_msg = 'Profesor no encontrado'
-        return  render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, error=error_msg)
-
-    db.session.delete(teacher)
-    db.session.commit()
-
-    teachers = Users.query.filter_by(type_user="X").all()
-
-    return  render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
-
-
-@admin_blueprint.route('/admin/delete_theory', methods=['POST'])
-@login_required
-def delete_theory():
-    theory_id = request.form.get('exercise_id')  # Obtener el ID de la teoría desde el formulario
-
-    # Intentar obtener la teoría usando el ID
-    theory = Theory.query.get(theory_id)
-
-    modules, exercises, teachers, all_theory, requirements, modulesRequirement = obtener_datos()
-
-    if not theory:
-        error_msg = 'Teoría no encontrada.'
-
-        return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=all_theory, error=error_msg)
-
-    # Eliminar la teoría y guardar los cambios en la base de datos
-    db.session.delete(theory)
-    db.session.commit()
-
-    # Recargar la página con las teorías actualizadas
-    all_theory = Theory.query.all()
-
-    return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=all_theory)
-
-@admin_blueprint.route('/admin/add_requirement', methods=['POST'])
-@login_required
-def add_requirement():
-    # Recopilar datos desde el formulario
-    requirement_name = request.form.get('requirement_name')
-
-    # Intentar obtener la teoría usando el ID
-    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
-
-    # Validar datos
-    if not requirement_name:
-        flash('El nombre del requisito es obligatorio.', 'error')
-        return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, theory=theory, requirements=requirements)
-
-    # Verificar si el requisito ya existe
-    existing_requirement = Requirement.query.filter_by(name=requirement_name).first()
-    if existing_requirement:
-        flash('El requisito ya existe.', 'error')
-        return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, theory=theory, requirements=requirements)
-
-    # Crear y guardar el nuevo requisito en la base de datos
-    new_requirement = Requirement(name=requirement_name)
-    db.session.add(new_requirement)
-    db.session.commit()
-
-    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
-
-    flash('Requisito añadido exitosamente.', 'success')
-    return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
-
-
-@admin_blueprint.route('/admin/delete_requirement', methods=['POST'])
-@login_required
-def delete_requirement():
-    # Recopilar ID del requisito desde el formulario
-    requirement_id = request.form.get('requirement_id')
-
-    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
-
-    # Buscar el requisito en la base de datos
-    requirement_to_delete = Requirement.query.get(requirement_id)
+            error_msg = 'Ejercicio no encontrado.'
     
-    if not requirement_to_delete:
-        flash('Requisito no encontrado.', 'error')
-        return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
+    elif element_type == 'teacher':
+        # Lógica para eliminar profesor
+        teacher_to_delete = Users.query.get(element_id)
+        if teacher_to_delete:
+            db.session.delete(teacher_to_delete)
+            db.session.commit()
+        else:
+            error_msg = 'Profesor no encontrado.'
+    
+    elif element_type == 'theory':
+        # Lógica para eliminar teoría
+        theory_to_delete = Theory.query.get(element_id)
+        if theory_to_delete:
+            db.session.delete(theory_to_delete)
+            db.session.commit()
+        else:
+            error_msg = 'Teoría no encontrada.'
+    
+    elif element_type == 'requirement' and requirement_id:
+        # Lógica para eliminar requisito
+        requirement_to_delete = Requirement.query.get(requirement_id)
+        if requirement_to_delete:
+            db.session.delete(requirement_to_delete)
+            db.session.commit()
+        else:
+            error_msg ='Requisito no encontrado.'
+    
+    else:
+        error_msg = 'Tipo de elemento no válido o ID faltante.'
 
-    # Eliminar el requisito de la base de datos
-    db.session.delete(requirement_to_delete)
+    # Recargar los datos después de la eliminación para la plantilla
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
+    return render_template('admin_dashboard.html',  modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, error=error_msg)
+
+
+# ---- GLOBAL ORDER ----
+
+@admin_blueprint.route('/admin/update_global_order', methods=['POST'])
+@login_required
+def update_global_order():
+    # Obtener el módulo y el requisito junto con la nueva posición desde el formulario
+    module_id = int(request.form.get('module_id'))
+    requirement_id = request.form['requirement_id']
+    new_order_position = int(request.form.get('order_position'))
+
+    # Verifica si ya existe un registro para el módulo y requisito dados
+    existing_order = ModuleRequirementOrder.query.filter_by(
+        module_id=module_id, 
+        requirement_id=requirement_id
+    ).first()
+
+    # Si existe, actualiza su posición
+    if existing_order:
+        existing_order.order_position = new_order_position
+    else:
+        # Si no existe, crea uno nuevo
+        new_order = ModuleRequirementOrder(
+            module_id=module_id,
+            requirement_id=requirement_id,
+            order_position=new_order_position
+        )
+        db.session.add(new_order)
+
+        # Encuentra el registro que queremos mover
+        existing_order = ModuleRequirementOrder.query.filter_by(
+            module_id=module_id, 
+            requirement_id=requirement_id
+        ).first()
+
+        # Encuentra los registros cuyo orden debe incrementarse
+        # Es decir, los que están en la posición de la nueva posición en adelante
+        orders_to_update = ModuleRequirementOrder.query.filter(
+            ModuleRequirementOrder.order_position >= new_order_position
+        ).filter(
+            ModuleRequirementOrder.id != existing_order.id  # Excluye el registro que estamos moviendo
+        ).all()
+
+        # Incrementa su posición para hacer espacio para el nuevo
+        for order in orders_to_update:
+            order.order_position += 1
+
+        # Si el registro existe, actualiza su posición al nuevo valor
+        if existing_order:
+            existing_order.order_position = new_order_position
+        else:
+            # Si no existe, crea uno nuevo
+            new_order = ModuleRequirementOrder(
+                module_id=module_id,
+                requirement_id=requirement_id,
+                order_position=new_order_position
+            )
+            db.session.add(new_order)
+
+    # Guarda los cambios en la base de datos
     db.session.commit()
 
+    # Obtener datos actualizados para renderizar en el template
     modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
 
-    flash('Requisito eliminado exitosamente.', 'success')
-    return render_template('admin_dashboard.html', modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
+    # Renderiza el template con los datos actualizados
+    return render_template('admin_dashboard.html',  modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory)
+
+
+@admin_blueprint.route('/admin/delete_from_position', methods=['POST'])
+@login_required
+def delete_from_position():
+    # Asumimos que recibimos la posición a eliminar desde el formulario
+    position_to_delete = request.form.get('position_to_delete', type=int)
+
+    # Obtener el registro a eliminar
+    record_to_delete = ModuleRequirementOrder.query.filter_by(order_position=position_to_delete).first()
+
+    if record_to_delete:
+        # Eliminar el registro
+        db.session.delete(record_to_delete)
+        db.session.commit()
+
+        # Seleccionar todos los registros con una posición mayor a la eliminada
+        subsequent_records = ModuleRequirementOrder.query.filter(
+            ModuleRequirementOrder.order_position > position_to_delete
+        ).order_by(ModuleRequirementOrder.order_position.asc()).all()
+
+        # Decrementar la posición de esos registros en 1
+        for record in subsequent_records:
+            record.order_position -= 1
+            db.session.commit()  # Puedes hacer esto después del bucle si prefieres hacer un solo commit
+    else:
+        error_msg = 'No se encontró el registro en la posición indicada.'
+    
+    # Obtener datos actualizados para renderizar en el template
+    modules, exercises, teachers, theory, requirements, modulesRequirement = obtener_datos()
+
+    # Renderiza el template con los datos actualizados
+    return render_template('admin_dashboard.html',  modules_requirements = modulesRequirement, modules=modules, exercises=exercises, teachers=teachers, requirements=requirements, theory=theory, error=error_msg)
+
 
