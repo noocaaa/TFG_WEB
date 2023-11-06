@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}
+Juegos
+{% endblock %}
+
+{% block head_extra %}
+<style>
+    iframe {
+        padding: 0;
+        margin: auto; /* Centrar el iframe horizontalmente */
+        box-sizing: border-box;
+        display: block; /* Asegurar que el iframe se comporta como un bloque para aceptar márgenes automáticos */
+        border: none; /* Opcional: elimina el borde del iframe */
+    }
+
+    .show-result {
+        flex: 1;
+        padding: 20px;
+        border: 1px solid #72B4A4;
+        border-radius: 15px;
+        margin: 10px;
+        background-color: #FFF;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 10px;
+        margin-right: 30px;
+        margin-left: 0px;
+        text-align: center;
+    }
+
+    .show-result2 {
+        display: flex;
+        justify-content: center; /* Centra los hijos horizontalmente */
+        align-items: center; /* Centra los hijos verticalmente */
+        flex-direction: column; /* Organiza los hijos en una columna */
+        padding: 20px;
+        border: 1px solid #72B4A4;
+        border-radius: 15px;
+        margin: 10px; /* Centrar el div .show-result horizontalmente */
+        background-color: #FFF;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 10px;
+        margin-right: 30px;
+        margin-left: 0px;
+        overflow: hidden; /* Evitar cualquier desbordamiento */
+        height: 700px; /* Altura suficiente para contener el iframe y el título */
+        margin-bottom: 20px;
+    }
+
+    h2 {
+        margin-bottom: 20px; /* Espacio debajo del título */
+    }
+
+    body, html {
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .show-result2 iframe {
+        transform: rotate(0deg); /* Rota el iframe 90 grados */
+        /* Ajustes adicionales para manejar el cambio de dimensiones después de la rotación */
+        height: 800px; /* Ajusta al tamaño de visualización deseado */
+        width: 600px;  /* Ajusta al tamaño de visualización deseado */
+    }
+
+    .game-container {
+        display: flex;        
+        flex-wrap: wrap;
+        justify-content: space-around; /* Esto separará igualmente los elementos */
+        align-items: flex-start; /* Esto asegurará que los elementos se alineen en la parte superior */
+        padding: 0;
+        margin: 0;
+    }
+
+    .game-link {
+        flex: 0 0 calc(45% - 10px); /* Ocupa el 50% del ancho del contenedor menos el margen */
+        margin: 5px; /* Da un poco de espacio alrededor de los enlaces */
+        text-decoration: none; /* Opcional: elimina el subrayado de los enlaces */
+    }
+
+    .opt {
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        border: 1px solid #72B4A4;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        padding-top: calc(50% - 20px); /* Esto creará la altura del elemento basada en el ancho */
+        box-sizing: border-box; /* Para incluir el padding y el borde en el ancho y altura total */
+    }
+
+    .game-title {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.75);
+        color: white;
+        padding: 10px 0; /* Ajuste este valor según necesite */
+    }
+
+    .opt img {
+        max-width: 100%;
+        max-height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+
+
+</style>
+{% endblock %}
+
+{% block main_content %}
+<!-- Contenido Principal -->
+<main>
+    <div class="show-result">
+        <h2>JUEGOS</h2>
+    </div>
+        <div class="game-container">
+            <a href="{{ url_for('general.minesweeper') }}" class="game-link">
+                <div class="opt" style="background-image: url('../static/img/minesweeper.png');">
+                    <div class="game-title"> Buscaminas </div>
+                </div>
+            </a>
+            <a href="{{ url_for('general.chess') }}" class="game-link">
+                <div class="opt" style="background-image: url('../static/img/chess.png');">
+                    <div class="game-title"> Ajedrez </div>
+                </div>
+            </a>
+            <a href="{{ url_for('general.g_2048') }}" class="game-link">
+                <div class="opt" style="background-image: url('../static/img/2048.jpeg');" >
+                    <div class="game-title"> 2048 </div>
+                </div>
+            </a>
+            <a href="{{ url_for('general.hextris') }}" class="game-link">
+                <div class="opt" style="background-image: url('../static/img/hextris.png');">
+                    <div class="game-title"> Hextris </div>
+                </div>
+            </a>
+        </div>
+</main>    
+{% endblock %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+
+
