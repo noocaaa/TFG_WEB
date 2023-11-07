@@ -5,6 +5,7 @@ Juegos
 {% endblock %}
 
 {% block head_extra %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <style>
     iframe {
         padding: 0;
@@ -110,9 +111,6 @@ Juegos
         top: 0;
         left: 0;
     }
-
-
-
 </style>
 {% endblock %}
 
@@ -122,33 +120,150 @@ Juegos
     <div class="show-result">
         <h2>JUEGOS</h2>
     </div>
-        <div class="game-container">
-            <a href="{{ url_for('general.minesweeper') }}" class="game-link">
-                <div class="opt" style="background-image: url('../static/img/minesweeper.png');">
-                    <div class="game-title"> Buscaminas </div>
-                </div>
-            </a>
-            <a href="{{ url_for('general.chess') }}" class="game-link">
-                <div class="opt" style="background-image: url('../static/img/chess.png');">
-                    <div class="game-title"> Ajedrez </div>
-                </div>
-            </a>
-            <a href="{{ url_for('general.g_2048') }}" class="game-link">
-                <div class="opt" style="background-image: url('../static/img/2048.jpeg');" >
-                    <div class="game-title"> 2048 </div>
-                </div>
-            </a>
-            <a href="{{ url_for('general.hextris') }}" class="game-link">
-                <div class="opt" style="background-image: url('../static/img/hextris.png');">
-                    <div class="game-title"> Hextris </div>
-                </div>
-            </a>
+    <div class="game-container" data-requirements-completed="{{ requirements_completed|tojson }}">
+        <a href="{{ url_for('game.minesweeper') }}" class="game-link">
+            <div class="opt" style="background-image: url('../static/img/minesweeper.png');">
+                <div class="game-title"> Buscaminas </div>
+            </div>
+        </a>
+        <a href="{{ url_for('game.chess') }}" class="game-link">
+            <div class="opt" style="background-image: url('../static/img/chess.png');">
+                <div class="game-title"> Ajedrez </div>
+            </div>
+        </a>
+        <a href="{{ url_for('game.g_2048') }}" class="game-link">
+            <div class="opt" style="background-image: url('../static/img/2048.jpeg');" >
+                <div class="game-title"> 2048 </div>
+            </div>
+        </a>
+        <a href="{{ url_for('game.hextris') }}" class="game-link">
+            <div class="opt" style="background-image: url('../static/img/hextris.png');">
+                <div class="game-title"> Hextris </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Modal para Requisitos No Completados -->
+    <div class="modal fade" id="requirementsModal" tabindex="-1" aria-labelledby="requirementsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="requirementsModalLabel">Requisitos No Completados</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            Para acceder a este juego necesitas completar todos los requisitos del módulo correspondiente.
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
         </div>
+        </div>
+    </div>
+
+    <!-- Modal para Confirmar Pago -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="paymentModalLabel">Confirmar Pago</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            Este juego cuesta X créditos. ¿Estás dispuesto a seguir?
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            <button type="button" class="btn btn-primary" id="confirmPayment">Sí</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Modal para Confirmar Pago -->
+    <div class="modal fade" id="moneyModal" tabindex="-1" aria-labelledby="moneyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="paymentModalLabel">¡Haz más ejercicios!</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            No suficiente dinero.
+            </div>
+        </div>
+        </div>
+    </div>
+
 </main>    
 {% endblock %}
 
 {% block scripts %}
+<!-- Primero, incluye jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Después, incluye Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        var gamePrice = {{ game_price|tojson }};
+        var studentScore = {{ student_score|tojson }};
+        var requirementsCompleted = $('.game-container').data('requirements-completed');
+        var showPaymentModal = {{ show_payment_modal|tojson }};
+        var showNotMoneyModal = {{ show_not_money_modal|tojson }};
+
+        if (!requirementsCompleted) {
+            $('#requirementsModal').modal('show');
+        }
+
+        if (showPaymentModal) {
+            $('#paymentModal').modal('show');
+            $('#paymentModal .modal-body').text('Este juego cuesta ' + gamePrice + ' puntos. Tienes ' + studentScore + ' créditos. ¿Estás dispuesto a seguir?');
+        }
+
+        if (showNotMoneyModal) {
+            $('#moneyModal').modal('show');
+            $('#moneyModal .modal-body').text('Este juego cuesta ' + gamePrice + ' puntos. Tienes ' + studentScore + ' puntos.');
+        }
+
+        $("#confirmPayment").on("click", function() {
+            if (studentScore >= gamePrice) {
+                $.ajax({
+                    url: '/procesar_pago', // La URL de tu endpoint en Flask
+                    type: 'POST',
+                    data: JSON.stringify({ game_price: gamePrice, student_score: studentScore }),
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.payment_successful) {
+                            // Redirigir al juego si el pago fue exitoso
+                            window.location.href = response.redirect_url;
+                        } else {
+                            // Manejar el caso donde no se pudo procesar el pago
+                            alert("No se pudo procesar el pago. Por favor, inténtalo de nuevo.");
+                        }
+                    },
+                    error: function(error) {
+                        // Manejar errores de la solicitud AJAX
+                        alert("Error al procesar la solicitud. Por favor, inténtalo de nuevo.");
+                    }
+                });
+            } else {
+                alert("No tienes suficientes créditos para realizar esta transacción.");
+            }
+        });
+
+    });
+</script>
+
+
 {% endblock %}
 
 

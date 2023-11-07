@@ -30,6 +30,7 @@ class Users(db.Model, UserMixin):
         db.session.commit()
 
     extra_exercises = db.relationship('ExtraExercises', back_populates='student')
+    payments = db.relationship('Payment', back_populates='user', lazy=True)
 
 class StudentProgress(db.Model):
     __tablename__ = 'student_progress'
@@ -228,3 +229,31 @@ class UserRequirementsCompleted(db.Model):
     user = db.relationship('Users', backref=db.backref('completed_requirements', lazy=True))
     requirement = db.relationship('Requirement', backref=db.backref('completed_users', lazy=True))
     module = db.relationship('Module', backref=db.backref('completed_users', lazy=True))
+
+class Game(db.Model):
+    __tablename__ = 'games'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    price = db.Column(db.Numeric(10, 2), nullable=False)  # Precio para acceder al juego
+
+    # Relación uno a muchos con la tabla payments (un juego puede tener muchos pagos)
+    payments = db.relationship('Payment', backref='game', lazy=True)
+
+    def __repr__(self):
+        return f'<Game {self.name}>'
+
+class Payment(db.Model):
+    __tablename__ = 'payments'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    game_id = db.Column(db.Integer, db.ForeignKey('games.id'), nullable=False)  # Referencia a la tabla games
+    amount = db.Column(db.Numeric(10, 2), nullable=False)  # La cantidad pagada
+    payment_date = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Relación con el usuario (muchos pagos pueden pertenecer a un usuario)
+    user = db.relationship('Users', back_populates='payments')
+
+    def __repr__(self):
+        return f'<Payment {self.id} User {self.user_id} Game {self.game_id}>'
