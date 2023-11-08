@@ -13,7 +13,7 @@ El objetivo de ITS-KidsCode es [Descripción del objetivo principal del proyecto
 
 ## 🛠️ Instalación
 ```bash
-git clone [url-del-repositorio]
-cd [nombre-del-proyecto]
+git clone https://github.com/noocaaa/TFG_WEB.git
+cd TFG_WEB-master
 pip install -r requirements.txt
 
