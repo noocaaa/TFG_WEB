@@ -8,9 +8,11 @@ from sqlalchemy import func
 
 from datetime import datetime
 
-import os, subprocess, json, time, re, tempfile, ast, random
+import os, subprocess, json, time, re, tempfile, ast, random, lizard, threading
 
 from radon.complexity import cc_visit
+
+import pylint.epylint as lint
 
 exercise_blueprint = Blueprint('exercise', __name__)
 
@@ -260,10 +262,9 @@ def check_module_completion(exercise):
             return False
     return True
 
+# ---- ESTILO DEL CÓDIGO ----
 
 def evaluate_code_style(source_code):
-    import pylint.epylint as lint
-
     # Crear un archivo temporal
     with tempfile.NamedTemporaryFile(suffix=".py", delete=False) as temp:
         temp_name = temp.name
@@ -277,34 +278,200 @@ def evaluate_code_style(source_code):
 
     return feedback
 
+def evaluate_code_style_JAVA(source_code):
+    with tempfile.NamedTemporaryFile(suffix=".java", delete=False) as temp:
+        temp_name = temp.name
+        temp.write(source_code.encode())
+        temp.flush()
+
+    try:
+        result = subprocess.run(
+            ["checkstyle", "-c", "./app/static/google_checks.xml", temp_name],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        feedback = result.stdout
+        error_output = result.stderr
+        exit_code = result.returncode
+    except subprocess.CalledProcessError as e:
+        feedback = e.output
+    finally:
+        os.remove(temp_name)
+
+    return feedback, error_output, exit_code
+
+
+def evaluate_code_style_CPP(source_code):
+    # Crear un archivo temporal con la extensión adecuada para C++
+    with tempfile.NamedTemporaryFile(suffix=".cpp", delete=False) as temp:
+        temp_name = temp.name
+        temp.write(source_code.encode())
+        temp.flush()  # Asegúrate de que se escribe todo el contenido al archivo
+
+    try:
+        # Ejecutar cpplint en el archivo temporal, ignorando los errores de copyright
+        result = subprocess.run(["cpplint", "--filter=-legal/copyright", temp_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        feedback = result.stdout.decode() + result.stderr.decode()
+    finally:
+        # Borrar el archivo temporal
+        os.remove(temp_name)
+
+    return feedback
+
+def count_tmp_lines(feedback):
+    # Dividir el feedback por líneas
+    lines = feedback.split('\n')
+    # Contar las líneas de errores que contienen '/tmp' y excluir líneas que empiecen con "Done processing"
+    count = sum('/tmp' in line and not line.startswith('Done processing') for line in lines)
+    return count
+
+# ---- COMPLEJIDAD CICLOMATICA ----
 
 def calculate_cyclomatic_complexity(source_code):
     blocks = cc_visit(source_code)
     total_complexity = sum(block.complexity for block in blocks)
     return total_complexity
 
-class LoopDetector(ast.NodeVisitor):
-    def __init__(self):
-        self.has_loops = False
+def calculate_cyclomatic_complexity_JAVA(source_code):
+    # Analiza el código fuente con Lizard
+    analysis_result = lizard.analyze_file.analyze_source_code('temp.java', source_code)
+    # Suma la complejidad ciclomática de todas las funciones
+    total_complexity = sum(func.cyclomatic_complexity for func in analysis_result.function_list)
+    return total_complexity
 
-    def visit_For(self, node):
-        self.has_loops = True
+def calculate_cyclomatic_complexity_CPP(source_code):
+    # Analiza el código fuente con Lizard
+    analysis_result = lizard.analyze_file.analyze_source_code('temp.cpp', source_code)
+    # Suma la complejidad ciclomática de todas las funciones
+    total_complexity = sum(func.cyclomatic_complexity for func in analysis_result.function_list)
+    return total_complexity
 
-    def visit_While(self, node):
-        self.has_loops = True
+# ---- BUCLES INFINITOS ----
 
-def has_loops(source_code):
-    tree = ast.parse(source_code)
-    detector = LoopDetector()
-    detector.visit(tree)
-    return detector.has_loops
+def run_program_CPP(source_code, timeout_seconds = 3):
+    with tempfile.NamedTemporaryFile(suffix='.cpp', mode='w+', delete=False) as src_file:
+        src_file.write(source_code)
+        src_file.flush()  # Asegurarse de que se escribe en el disco
+        executable_name = src_file.name + '.out'
+
+    # Compilar el código fuente
+    compile_process = subprocess.run(['g++', src_file.name, '-o', executable_name],
+                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    
+    # Verificar si hay errores de compilación
+    if compile_process.returncode != 0:
+        print("Error en la compilación:")
+        print(compile_process.stderr.decode())
+        return False
+
+    try:
+        # Ejecutar el programa compilado
+        process = subprocess.Popen([executable_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        # Iniciar un temporizador y esperar que termine el proceso
+        process_thread = threading.Thread(target=process.communicate)
+        process_thread.start()
+        process_thread.join(timeout_seconds)
+        if process_thread.is_alive():
+            # Terminar el proceso si sigue activo (bucle infinito potencial)
+            process.terminate()
+            process_thread.join()
+            print(f"El proceso ha sido terminado después de {timeout_seconds} segundos, posible bucle infinito.")
+            return True
+        else:
+            print("El proceso ha terminado correctamente.")
+            return False
+    finally:
+        # Eliminar los archivos temporales
+        subprocess.run(['rm', src_file.name])
+        subprocess.run(['rm', executable_name])
+
+def run_program(source_code, timeout_seconds = 3):
+    # Añadir la declaración de codificación utf-8 si tu código fuente contiene caracteres no ASCII
+    
+    with tempfile.NamedTemporaryFile(suffix='.py', mode='w+', delete=False) as src_file:
+        src_file.write(source_code)
+        src_file.flush()
+        src_file_name = src_file.name
+
+    # Definir una variable para almacenar el resultado del hilo
+    thread_result = {"timeout": False}
+
+    def target():
+        try:
+            subprocess.run(['python3', src_file_name], timeout=timeout_seconds)
+        except subprocess.TimeoutExpired:
+            thread_result["timeout"] = True
+            print(f"El proceso ha sido terminado después de {timeout_seconds} segundos, posible bucle infinito.")
+
+    thread = threading.Thread(target=target)
+    thread.start()
+    thread.join(timeout_seconds)
+
+    # Limpiar
+    subprocess.run(['rm', src_file_name])
+
+    if thread.is_alive():
+        # Si el hilo está vivo después del tiempo límite, se asume que hay un bucle infinito.
+        thread.join()
+        return True
+    elif thread_result["timeout"]:
+        # Si el hilo no está vivo pero se ha alcanzado el tiempo límite, también es un bucle infinito.
+        return True
+    else:
+        # Si el hilo ha terminado antes del tiempo límite, no hay bucle infinito.
+        return False
+
+def run_program_JAVA(source_code, timeout_seconds = 3, class_name = 'Main'):
+    # Creamos un directorio temporal para almacenar el archivo .java y el .class
+    with tempfile.TemporaryDirectory() as temp_dir:
+        src_file_path = os.path.join(temp_dir, f"{class_name}.java")
+        with open(src_file_path, 'w') as src_file:
+            src_file.write(source_code)
+
+        # Compilar el código fuente
+        compile_process = subprocess.run(['javac', src_file_path],
+                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                        cwd=temp_dir)
+
+        # Verificar si hay errores de compilación
+        if compile_process.returncode != 0:
+            print("Error en la compilación:")
+            print(compile_process.stderr.decode())
+            return False
+
+        try:
+            # Ejecutar el programa compilado
+            cmd = ['java', '-cp', temp_dir, class_name]
+            process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+            # Iniciar un temporizador y esperar que termine el proceso
+            process_thread = threading.Thread(target=process.communicate)
+            process_thread.start()
+            process_thread.join(timeout_seconds)
+            if process_thread.is_alive():
+                # Terminar el proceso si sigue activo (bucle infinito potencial)
+                process.terminate()
+                process_thread.join()
+                print(f"El proceso ha sido terminado después de {timeout_seconds} segundos, posible bucle infinito.")
+                return True
+            else:
+                print("El proceso ha terminado correctamente.")
+                return False
+        finally:
+            # Los archivos temporales se eliminarán automáticamente al salir del bloque with
+            pass
+
+
+# --- PUNTUACION --- 
 
 def calculate_score(style_feedback, complexity, loops_detected):
     # Puntuación inicial
     score = 100
     
     # Deducción por problemas de estilo (por cada problema detectado, se restan 10 puntos)
-    style_issues = style_feedback.count("\n")
+    style_issues = count_tmp_lines(style_feedback)
     score -= 5 * style_issues
     
     # Deducción por complejidad ciclomática
@@ -319,7 +486,9 @@ def calculate_score(style_feedback, complexity, loops_detected):
     return max(0, score)
 
 def all_checkings(source_code, language):
+    
     if language == 'PYTHON':
+
         # Evaluamos el estilo del código
         style_feedback = evaluate_code_style(source_code)
 
@@ -327,9 +496,29 @@ def all_checkings(source_code, language):
         complexity = calculate_cyclomatic_complexity(source_code)
 
         # Detectamos bucles en el código
-        loops_detected = has_loops(source_code)
+        loops_detected = run_program(source_code)
 
-        return style_feedback, complexity, loops_detected
+    elif language == 'JAVA':
+
+        style_feedback = evaluate_code_style_JAVA(source_code)
+
+        # Calculamos la complejidad ciclomática
+        complexity = calculate_cyclomatic_complexity_JAVA(source_code)
+
+        # Detectamos bucles en el código
+        loops_detected = run_program_JAVA(source_code)
+
+    elif language == 'CPP':
+
+        style_feedback = evaluate_code_style_CPP(source_code)
+
+        # Calculamos la complejidad ciclomática
+        complexity = calculate_cyclomatic_complexity_CPP(source_code)
+
+        # Detectamos bucles en el código
+        loops_detected = run_program_CPP(source_code)
+
+    return style_feedback, complexity, loops_detected
 
 def update_score_user(user, score):
     if user.score is None:
@@ -340,21 +529,21 @@ def update_score_user(user, score):
 class RequirementVisitor(ast.NodeVisitor):
     def __init__(self):
         self.requirements_found = {
-            'Intro': False, # Puede ser un requisito general, necesito más detalles
+            'Intro': False, 
             'Basic-Operators': False,
             'Logical-Operators': False,
             'If-Else': False,
-            'Switch': False, # Python no tiene Switch, quizás es para otro lenguaje
+            'Switch': False, 
             'While': False,
             'For': False,
             'Functions-Basics': False,
-            'Functions-Advanced': False, # Necesitaría una definición de "avanzado"
+            'Functions-Advanced': False, 
             'Classes': False,
             'Inheritance': False,
-            'Styles': False, # Esto parece ser específico para CSS/HTML
-            'Interactivity': False, # Esto parece ser específico para JS/DOM
-            'DOM-Basics': False, # Esto parece ser específico para JS/DOM
-            'DOM-Advanced': False, # Esto parece ser específico para JS/DOM
+            'Styles': False,
+            'Interactivity': False,
+            'DOM-Basics': False,
+            'DOM-Advanced': False,
             'Lists': False,
             'Dictionaries': False
         }

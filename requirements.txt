@@ -11,7 +11,11 @@ pyflakes==3.1.0
 pylint==2.5.3
 astroid==2.4.2
 radon==6.0.1
-
+checkstyle==8.29
+cpplint==1.6.1
+lizard==1.17.10
+cppcheck==1.90
+clang==10.0.0-4
 ## Dependencias del Sistema
 # - **TeX Live**:
 #   - Versión: TeX Live 2019/Debian (pdfTeX 3.14159265-2.6-1.40.20)
