@@ -16,6 +16,9 @@ cpplint==1.6.1
 lizard==1.17.10
 cppcheck==1.90
 clang==10.0.0-4
+llvm==10.0-50
+libclang-dev==10.0-50
+javalang=0.13.0
 ## Dependencias del Sistema
 # - **TeX Live**:
 #   - Versión: TeX Live 2019/Debian (pdfTeX 3.14159265-2.6-1.40.20)
