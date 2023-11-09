@@ -5,14 +5,16 @@ from app import db
 from app.models import Exercises, StudentProgress, StudentActivity, Theory, Requirement, UserRequirementsCompleted, ModuleRequirementOrder, ExtraExercises
 
 from sqlalchemy import func
-
 from datetime import datetime
 
-import os, subprocess, json, time, re, tempfile, ast, random, lizard, threading
-
 from radon.complexity import cc_visit
+from javalang.tree import *
 
 import pylint.epylint as lint
+import os, subprocess, json, time, re, tempfile, ast, random, lizard, threading, javalang, clang.cindex
+
+libclang_path = "/usr/lib/llvm-10/lib"
+os.environ['LIBCLANG_LIBRARY_PATH'] = libclang_path
 
 exercise_blueprint = Blueprint('exercise', __name__)
 
@@ -526,6 +528,8 @@ def update_score_user(user, score):
     user.score += score
     db.session.commit()
 
+# ---- COMPROBACIÓN DE REQUISITOS ----
+
 class RequirementVisitor(ast.NodeVisitor):
     def __init__(self):
         self.requirements_found = {
@@ -597,12 +601,114 @@ class RequirementVisitor(ast.NodeVisitor):
         self.requirements_found['Dictionaries'] = True
         self.generic_visit(node)
 
-def check_requirements(code):
-    tree = ast.parse(code)
-    visitor = RequirementVisitor()
-    visitor.visit(tree)
-    return visitor.requirements_found
 
+class RequirementVisitor_JAVA:
+
+    def __init__(self):
+        self.requirements_found = {
+            'Intro': False,
+            'Basic-Operators': False,
+            'Logical-Operators': False,
+            'If-Else': False,
+            'Switch': False,
+            'While': False,
+            'For': False,
+            'Methods-Basics': False,
+            'Methods-Advanced': False,
+            'Classes': False,
+            'Inheritance': False,
+            'Arrays': False
+        }
+
+    def visit(self, node):
+        if isinstance(node, BinaryOperation):
+            self.requirements_found['Basic-Operators'] = True
+        elif isinstance(node, IfStatement) or isinstance(node, TernaryExpression):
+            self.requirements_found['If-Else'] = True
+        elif isinstance(node, WhileStatement):
+            self.requirements_found['While'] = True
+        elif isinstance(node, ForStatement):
+            self.requirements_found['For'] = True
+        elif isinstance(node, MethodDeclaration):
+            self.requirements_found['Methods-Basics'] = True
+            if node.parameters or node.throws or node.type_parameters:
+                self.requirements_found['Methods-Advanced'] = True
+        elif isinstance(node, ClassDeclaration):
+            self.requirements_found['Classes'] = True
+            if node.extends or node.implements:
+                self.requirements_found['Inheritance'] = True
+        elif isinstance(node, ArrayInitializer):
+            self.requirements_found['Arrays'] = True
+
+        # Recursivamente visita los hijos del nodo actual si los tiene
+        if hasattr(node, 'children'):
+            for child in node.children:
+                if isinstance(child, (list, set)):
+                    for item in child:
+                        if isinstance(item, javalang.ast.Node):
+                            self.visit(item)
+                elif isinstance(child, javalang.ast.Node):
+                    self.visit(child)
+
+
+class RequirementVisitor_CPP:
+    def __init__(self):
+        self.requirements_found = {
+            'Basic-Operators': False,
+            'Logical-Operators': False,
+            'If-Else': False,
+            'Switch': False,
+            'While': False,
+            'For': False,
+            'Functions-Basics': False,
+            'Functions-Advanced': False,
+            'Classes': False,
+            'Inheritance': False,
+            'Templates': False,
+        }
+
+    def visit(self, node):
+        # Esta función necesita ser llamada recursivamente para cada hijo del nodo.
+        if node.kind == clang.cindex.CursorKind.BINARY_OPERATOR:
+            self.requirements_found['Basic-Operators'] = True
+        elif node.kind == clang.cindex.CursorKind.IF_STMT:
+            self.requirements_found['If-Else'] = True
+        elif node.kind == clang.cindex.CursorKind.WHILE_STMT:
+            self.requirements_found['While'] = True
+        elif node.kind == clang.cindex.CursorKind.FOR_STMT:
+            self.requirements_found['For'] = True
+        elif node.kind in [clang.cindex.CursorKind.FUNCTION_DECL, clang.cindex.CursorKind.CXX_METHOD]:
+            self.requirements_found['Functions-Basics'] = True
+        elif node.kind == clang.cindex.CursorKind.CLASS_DECL:
+            self.requirements_found['Classes'] = True
+        elif node.kind == clang.cindex.CursorKind.CLASS_TEMPLATE:
+            self.requirements_found['Templates'] = True
+
+        for child in node.get_children():
+            self.visit(child)
+
+
+def check_requirements(code, language):
+    if language == "PYTHON":
+        tree = ast.parse(code)
+        visitor = RequirementVisitor()
+        visitor.visit(tree)
+        return visitor.requirements_found
+    elif language == "JAVA":
+        tree = javalang.parse.parse(code)
+        visitor = RequirementVisitor_JAVA()
+        for path, node in tree:
+            visitor.visit(node)
+        return visitor.requirements_found
+    elif language == "CPP":
+        index = clang.cindex.Index.create()
+        tu = index.parse('tmp.cpp', args=['-std=c++11'],  # Asegúrate de que el estándar de C++ sea el correcto
+                        unsaved_files=[('tmp.cpp', code)], options=0)
+        visitor = RequirementVisitor_CPP()
+        visitor.visit(tu.cursor)
+        return visitor.requirements_found
+
+# ---- EJERCICIOS ----
 
 # Obtener los ejercicios recientes completados por un estudiante para un requisito específico
 def get_recent_completed_exercises(student_id, recent_num, related_exercises_ids):
