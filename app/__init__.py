@@ -35,7 +35,7 @@ def create_app():
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
-    cors.init_app(app, resources={r"/api/*": {"origins": "http://127.0.0.1:5000", "supports_credentials": True}})
+    cors.init_app(app, resources={r"/api/*": {"origins": "http://127.0.0.1", "supports_credentials": True}})
 
     login_manager.login_view = 'control.login'
     login_manager.login_message = "Please log in to access this page."
