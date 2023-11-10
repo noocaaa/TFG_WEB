@@ -143,3 +143,9 @@ asked_questions/
 *.toc
 
 .vscode
+
+# Ficheros extras a quitar por el despliegue
+ncarrasco@bahia.ugr.es
+docker-compose.yml
+backup.sql
+backup.sql.gz
