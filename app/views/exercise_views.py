@@ -2,7 +2,7 @@ from flask import Blueprint, redirect, url_for, flash, jsonify, request
 from flask_login import current_user, login_required
 
 from app import db
-from app.models import Exercises, StudentProgress, StudentActivity, Theory, Requirement, UserRequirementsCompleted, ModuleRequirementOrder, ExtraExercises
+from app.models import Exercises, StudentProgress, StudentActivity, Theory, Requirement, UserRequirementsCompleted, ModuleRequirementOrder, ExtraExercises, ExerciseRequirement
 
 from sqlalchemy import func
 from datetime import datetime
@@ -157,6 +157,59 @@ def mark_theory_as_read(content_id):
     module_id = content_record.module_id
 
     return redirect(url_for('student.module_exercise', module_id=module_id))
+
+# --- TIEMPO DEL EJERCICIO ---
+
+def obtener_promedio_tiempos(student_id, cantidad_ejercicios=5):
+    subquery = db.session.query(StudentProgress.time_spent)\
+                         .filter_by(student_id=student_id)\
+                         .order_by(StudentProgress.completion_date.desc())\
+                         .limit(cantidad_ejercicios).subquery()
+    
+    promedio_tiempos = db.session.query(func.avg(subquery.c.time_spent)).scalar()
+    
+    return promedio_tiempos or 0
+
+
+def calculo_tiempo(edad, promedio_tiempos):
+    # Establece el tiempo máximo para el más joven y el mínimo para el mayor
+    tiempo_maximo = 30 * 60
+    tiempo_minimo = 10 * 60 
+
+    # Calculo del factor de reducción por año para disminuir gradualmente desde el tiempo máximo al mínimo
+    rango_edad = 18 - 6
+    factor_edad = (tiempo_maximo - tiempo_minimo) / rango_edad
+
+    # Ajuste del tiempo base según la edad
+    if edad < 6:
+        ajuste_edad = 0
+    elif edad > 18:
+        ajuste_edad = factor_edad * rango_edad
+    else:
+        ajuste_edad = factor_edad * (edad - 6)  # Ajuste basado en la edad del estudiante
+
+    tiempo_limite = tiempo_maximo - ajuste_edad
+
+   # Ponderación del ajuste por edad y promedio
+    ponderacion_edad = 0.8  
+    ponderacion_promedio = 0.2
+
+    # Convierte promedio_tiempos a float antes de la operación
+    promedio_tiempos = float(promedio_tiempos)
+
+    # Aplica la ponderación al ajuste del tiempo límite
+    tiempo_limite = (tiempo_limite * ponderacion_edad) + (promedio_tiempos * ponderacion_promedio)
+
+    # Asegúrate de que el tiempo límite no sea menor que el tiempo mínimo posible
+    tiempo_limite = max(tiempo_limite, tiempo_minimo)
+
+    return int(tiempo_limite)
+
+def calcular_tiempo_Estudiante(student_id, edad):
+    # Obtén el promedio de tiempo de los últimos 5 ejercicios
+    promedio_tiempos = obtener_promedio_tiempos(student_id)
+    tiempo_limite = calculo_tiempo(edad, promedio_tiempos)
+    return tiempo_limite
 
 @exercise_blueprint.route('/time_out', methods=['POST'])
 @login_required
@@ -688,25 +741,25 @@ class RequirementVisitor_CPP:
             self.visit(child)
 
 
-def check_requirements(code, language):
+def check_requirements(code, language, required_names):
     if language == "PYTHON":
         tree = ast.parse(code)
         visitor = RequirementVisitor()
         visitor.visit(tree)
-        return visitor.requirements_found
     elif language == "JAVA":
         tree = javalang.parse.parse(code)
         visitor = RequirementVisitor_JAVA()
         for path, node in tree:
             visitor.visit(node)
-        return visitor.requirements_found
     elif language == "CPP":
         index = clang.cindex.Index.create()
         tu = index.parse('tmp.cpp', args=['-std=c++11'],  # Asegúrate de que el estándar de C++ sea el correcto
                         unsaved_files=[('tmp.cpp', code)], options=0)
         visitor = RequirementVisitor_CPP()
         visitor.visit(tu.cursor)
-        return visitor.requirements_found
+
+    # Filtrar los resultados del visitante para los requisitos específicos de este ejercicio
+    return {req: visitor.requirements_found[req] for req in required_names}
 
 # ---- EJERCICIOS ----
 
@@ -853,6 +906,66 @@ def assign_extra_exercises(user_id):
     db.session.commit()
 
 
+# ---- FEEDBACK ----
+
+
+# Funciones para obtener estrellas basadas en los resultados
+def obtener_estrellas_estilo(numero_errores):
+    estrellas = max(5 - ( count_tmp_lines(numero_errores) // 2), 0)
+    return estrellas
+
+def obtener_estrellas_complejidad(complejidad):
+    estrellas = max(5 - (complejidad // 10), 0)
+    return estrellas
+
+def obtener_estrellas_bucles(bucle_infinito):
+    estrellas = 5 if not bucle_infinito else 0
+    return estrellas
+
+# Función de generación de feedback
+def generar_feedback(estilo_problemas, complejidad, bucles_infinitos_detectados):
+    estrellas_estilo = obtener_estrellas_estilo(estilo_problemas)
+    estrellas_complejidad = obtener_estrellas_complejidad(complejidad)
+    estrellas_bucles = obtener_estrellas_bucles(bucles_infinitos_detectados)
+
+    feedback = [
+        f"Estilo del Código: {'✦' * estrellas_estilo + '✧' * (5 - estrellas_estilo)}",
+        f"Complejidad Ciclomática: {'✦' * estrellas_complejidad + '✧' * (5 - estrellas_complejidad)}",
+        f"Detección de Bucles Infinitos: {'✦' * estrellas_bucles + '✧' * (5 - estrellas_bucles)}"
+    ]
+
+    consejos = []
+    # Consejos para mejorar el estilo del código
+    if estilo_problemas:
+        numero_problemas = count_tmp_lines(estilo_problemas)
+        consejo_estilo = "Revisa cómo escribes el código. Es importante que sea claro y ordenado."
+        if numero_problemas > 5:
+            consejo_estilo += " Podrías revisar el código para identificar áreas de mejora."
+        consejos.append(f"Podrías mejorar la claridad de tu código en {numero_problemas} {'aspecto' if numero_problemas == 1 else 'aspectos'}. {consejo_estilo}")
+
+    # Consejos para reducir la complejidad ciclomática
+    if complejidad > 10:
+        consejo_complejidad = "Intenta simplificar tu código. Divide las partes más complejas en secciones más pequeñas y fáciles de entender."
+        consejos.append(f"Tu código podría ser más simple y claro. {consejo_complejidad}")
+
+    # Consejos para evitar bucles infinitos
+    if bucles_infinitos_detectados:
+        consejo_bucles = "Asegúrate de que todos los bucles en tu código puedan terminar. Cada bucle necesita una condición clara para finalizar."
+        consejos.append(f"Es importante evitar bucles que no terminan. {consejo_bucles}")
+
+
+    return feedback, consejos
+
+def check_requirements_fulfillment(requirements_status, required_names):
+    # Contar cuántos requisitos se han cumplido
+    met_requirements_count = sum(requirements_status[req] for req in required_names)
+
+    # Calcular el porcentaje de cumplimiento
+    fulfillment_percentage = (met_requirements_count / len(required_names)) * 100
+
+    # Verificar si se cumple al menos el 45%
+    return fulfillment_percentage >= 45
+
 
 @exercise_blueprint.route('/correct_exercise', methods=['POST'])
 @login_required
@@ -865,28 +978,59 @@ def correct_exercise():
     source_code, language, content_id, start_time, end_time, user_inputs = gather_data()
 
     exercise = Exercises.query.get(content_id)
-    
+   
     time_spent = (end_time - start_time).seconds  
     
     # Comprobamos que la solución es correcta
     status = compile_and_correct(content_id, source_code, language, user_inputs)
 
+    feedback = "None"
+    consejos = "None"
+
     if status == 'completed':
         style_feedback, complexity, loops_detected = all_checkings(source_code, language)
         
-        student_score = calculate_score(style_feedback, complexity, loops_detected)
+        exercise_requirements = ExerciseRequirement.query.filter_by(exercise_id=content_id).all()
+        
+        # Convertir la lista de objetos de requisitos en una lista de IDs de requisitos
+        required_ids = [req.requirement_id for req in exercise_requirements]
 
-        requirements_status = check_requirements(source_code)
-        
-        met_requirements = sum(1 for _, is_met in requirements_status.items() if is_met)
-        
+        requirements_mapping = {
+            4: 'Intro', 
+            5: 'Basic-Operators',
+            6: 'Logical-Operators',
+            7: 'If-Else',
+            8: 'Switch',
+            9: 'While',
+            10: 'For',
+            11: 'Functions-Basics',
+            12: 'Functions-Advanced',
+            13: 'Classes',
+            14: 'Inheritance',
+            15: 'Styles',
+            16: 'Interactivity',
+            17: 'DOM-Basics',
+            18: 'DOM-Advanced',
+            19: 'Lists',
+            20: 'Dictionaries'
+        }
+
+        required_names = [requirements_mapping[req_id] for req_id in required_ids]
+
+        requirements_status = check_requirements(source_code, language, required_names)
+
+        feedback, consejos = generar_feedback(style_feedback, complexity, complexity)
+
+        student_score = calculate_score(style_feedback, complexity, loops_detected)
+                
         # Penalización por requisitos no cumplidos
         for req, is_met in requirements_status.items():
             if not is_met:
                 student_score -= 10
 
         # Si no se cumple al menos el 60% de los requisitos, la solución es inválida.
-        if met_requirements < 0.6 * len(requirements_status):
+        if not check_requirements_fulfillment(requirements_status, required_names):
+            print("LOL")
             student_score = 0
             status = "failed"
         
@@ -914,4 +1058,4 @@ def correct_exercise():
     #Comprobamos si el modulo se ha completado
     module_completed = check_module_completion(exercise)
     
-    return jsonify({"status": status, "module_completed": module_completed})
+    return jsonify({"status": status, "feedback": feedback, "consejos": consejos, "module_completed": module_completed})

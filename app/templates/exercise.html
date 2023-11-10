@@ -179,10 +179,13 @@ Ejercicio
         <input type="hidden" id="exercise-id" value="{{ exercise.id }}"> <!-- para saber el id del ejercicio es -->
         <input type="hidden" id="start-time" value="">
         <input type="hidden" id="end-time" value="">
+        <input type="hidden" id="max_time" value="{{ max_time }}" />
+
     </div>
 
     <div class="alert-requirements">
-        <h3><strong>{{ alert_message }}</strong></h3>
+        <h3><strong>{{ alert_message }}</strong></h3>     
+        <div id="tiempo-restante"><strong>Tiempo restante: <span id="contador">00:00</span></strong></div> 
     </div>
 
     <div class="compiler-section">
@@ -367,8 +370,8 @@ Ejercicio
         var nextContentId = null;
         var moduleId = $("#module-id").val();  // Definir a nivel de script, no dentro de una función
 
-        // Tiempo límite en milisegundos, por ejemplo 10 minutos serían 600000 milisegundos
-        const TIEMPO_LIMITE = 600000; 
+        // Tiempo límite en milisegundos
+        const TIEMPO_LIMITE = parseInt(document.getElementById('max_time').value, 10);
 
         setTimeout(function() {
             let startTime = parseInt($('#start-time').val(), 10);
@@ -426,7 +429,21 @@ Ejercicio
                 },
                 success: function(result) {
                     if (result.status === "completed" || result.status === "under_review") {
-                        alert("¡Ejercicio " + (result.status === "completed" ? "correcto" : "bajo revisión manual") + "!");
+                        let mensaje = "¡Ejercicio " + (result.status === "completed" ? "correcto!" : "bajo revisión manual!") + "\n";
+
+                        mensaje += "\n"
+
+                        if (result.feedback && result.feedback != "None") {
+                            mensaje += result.feedback.join("\n");
+                        }
+
+                        mensaje += "\n"
+                        
+                        if (result.consejos && result.consejos != "None") {
+                            mensaje += "\n" + result.consejos.join("\n");
+                        }
+
+                        alert(mensaje);
 
                         if (result.module_completed === "True") {
                             alert("¡Has completado todos los ejercicios clave de este módulo!");
@@ -453,5 +470,29 @@ Ejercicio
         $(document).on("click", "#nextExercise", function() {
             window.location.href = "/module/" + moduleId + "/exercise";
         });
+
+        // Función para iniciar el contador regresivo
+        function iniciarContador(tiempoEnMilisegundos) {
+            let tiempoRestante = tiempoEnMilisegundos;
+            const contadorElemento = document.getElementById('contador');
+
+            const intervalId = setInterval(function() {
+                const minutos = Math.floor(tiempoRestante / 60000);
+                const segundos = Math.floor((tiempoRestante % 60000) / 1000);
+                contadorElemento.textContent = `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+
+                tiempoRestante -= 1000;
+
+                if (tiempoRestante < 0) {
+                    clearInterval(intervalId);
+                    contadorElemento.textContent = '00:00';
+                    // Aquí puedes añadir cualquier cosa que quieras hacer cuando el tiempo se agote
+                }
+            }, 1000);
+        }
+
+        // Iniciar el contador regresivo con el tiempo límite obtenido del backend
+        iniciarContador(TIEMPO_LIMITE);
+
     </script>
 {% endblock %}
