@@ -79,17 +79,17 @@ def registro():
         # Hash the password using Flask-Bcrypt
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-        new_user = Users(first_name=first_name, last_name=last_name, birth_date=birth_date, city=city, gender=gender, email=email, password=hashed_password, type_user="S", avatar_id=None, current_module_id="7")
+        new_user = Users(first_name=first_name, last_name=last_name, birth_date=birth_date, city=city, gender=gender, email=email, password=hashed_password, type_user="S", avatar_id=None, current_module_id="14")
 
         db.session.add(new_user)
         db.session.commit()
 
-        # Insertamos el módulo con ID 7 para el nuevo usuario
-        new_student_module = StudentModules(student_id=new_user.id, module_id=7, current_exercise_id=None, completed=False)
+        # Insertamos el módulo con ID 14 para el nuevo usuario
+        new_student_module = StudentModules(student_id=new_user.id, module_id=14, current_exercise_id=None, completed=False)
         db.session.add(new_student_module)
         db.session.commit()
 
-        first_exercise = Exercises.query.filter_by(module_id=7).order_by(Exercises.id).first()
+        first_exercise = Exercises.query.filter_by(module_id=14).order_by(Exercises.id).first()
 
         # Verificar si encontramos un ejercicio
         if first_exercise:
@@ -98,7 +98,7 @@ def registro():
             db.session.add(new_student_progress)
             db.session.commit()
 
-        return redirect(url_for('login.html'))
+        return render_template('login.html')
 
     return render_template('registro.html')
 
