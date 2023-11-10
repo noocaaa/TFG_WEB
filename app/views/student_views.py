@@ -4,15 +4,19 @@ from flask_login import current_user, login_required
 from app import db, bcrypt
 from app.models import Exercises, StudentProgress, Module, Question, Notification, ModuleRequirementOrder, ExerciseRequirement
 
-from sqlalchemy import func, text
+from sqlalchemy import text
 
 from datetime import datetime, timedelta
 
 from werkzeug.utils import secure_filename
 
-import os, subprocess, json, uuid, time, re
+import os, uuid
+
+from datetime import date
 
 from app.views.module_views import assign_exercise_to_student, mark_requirement_as_completed, get_current_module_and_next_requirement_for_user, select_exercise_for_user, get_exercise, all_exercises_completed_for_requirement, get_theory, get_next_theory_for_user
+from app.views.exercise_views import calcular_tiempo_Estudiante
+
 
 student_blueprint = Blueprint('student', __name__)
 
@@ -93,6 +97,11 @@ def principal():
     return render_template('principal.html', show_modal=show_modal, user=user, modules_progress=modules_progress)
 
 
+def calcular_edad(fecha_nacimiento):
+    hoy = date.today()
+    edad = hoy.year - fecha_nacimiento.year - ((hoy.month, hoy.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
+    return edad
+
 
 @student_blueprint.route('/module/<int:module_id>/exercise')
 @login_required
@@ -105,6 +114,11 @@ def module_exercise(module_id):
                                     .filter_by(student_id=current_user.id, status='in progress')\
                                     .first()
 
+    age = calcular_edad(user.birth_date)
+    
+    # We put time in miliseconds
+    max_time = calcular_tiempo_Estudiante(user.id, age) * 1000
+
     # If there's an exercise in progress, display it.
     if in_progress_exercise:
         exercise = get_exercise(in_progress_exercise.exercise_id)
@@ -113,7 +127,7 @@ def module_exercise(module_id):
         requirements_str = ', '.join([req.name for req in exercise.requirements])
         alert_message = f'¡Cuidado! Este ejercicio debe contener: {requirements_str} para poder ser valido.'
         
-        return render_template('exercise.html', user=user, exercise=exercise, exercise_language=exercise.language, alert_message=alert_message)
+        return render_template('exercise.html', user=user, exercise=exercise, exercise_language=exercise.language, alert_message=alert_message, max_time = max_time)
 
 
     # Get the current module and next requirement
@@ -142,7 +156,7 @@ def module_exercise(module_id):
             requirements_str = ', '.join([req.name for req in exercise.requirements])
             alert_message = f'¡Cuidado! Este ejercicio debe contener: {requirements_str} para poder ser valido.'
 
-            return render_template('exercise.html', user=user, exercise=exercise, exercise_language=exercise.language, alert_message=alert_message)
+            return render_template('exercise.html', user=user, exercise=exercise, exercise_language=exercise.language, alert_message=alert_message, max_time = max_time)
 
     # Redirect to main if no action is taken.
     return redirect(url_for('student.principal'))
