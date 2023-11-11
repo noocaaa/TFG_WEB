@@ -1,22 +1,33 @@
 \chapter{Despliegue} \label{chap:despliegue}
 
-En este capítulo se va a abordar el despliegue de la aplicación Flask en el servidor de la Universidad de Granada \textit{bahia.ugr.es} \cite{bahia}. Concretamente, el despliegue se llevó a cabo mediante Podman \cite{podman} para los contenedores. A continuación, se detallará el proceso de creación y configuración de las imágenes del contenedor, así como la metodología empleada.
+En este capítulo se va a abordar el despliegue de la aplicación Flask en el servidor de la Universidad de Granada \textit{bahia.ugr.es} \cite{bahia}. Concretamente, el despliegue se llevó a cabo mediante Podman \cite{podman} para la gestión de los contenedores. A continuación, se detallará el proceso de creación y configuración de las imágenes del contenedor, así como la metodología empleada.
 
-\section{Creación y Configuración de las Imágenes de Contenedor}
+\section{Creación y Configuración de las Imágenes}
+
+Las imágenes del contenedor creadas fueron:
 
 \begin{itemize}
-    \item \textbf{Imagen de la aplicación}: Se creó una imagen personalizada para la aplicación Flask, etiquetada como \textit{nooocaaaa/programmingclasses:latest} \cite{dockerhub}. Esta imagen incorpora todas las dependencias necesarias para la ejecución de la aplicación, así como las configuraciones específicas requeridas. La imagen fue construida utilizando Docker \ref{fig:dockerfileapp} y posteriormente subida a Docker Hub, facilitando su distribución y acceso. 
-    \item \textbf{Imagen de la base de datos}:  De forma análoga, se generó una imagen personalizada \ref{fig:dockerfilebbdd} para el servidor de base de datos PostgreSQL, etiquetada como \textit{nooocaaaa/postgres-tfg:latest} \cite{dockerhub2}. Esta imagen está optimizada para integrarse con la aplicación Flask y también está disponible en Docker Hub.
+    \item \textbf{Imagen de la aplicación}: Se creó una imagen personalizada para la aplicación Flask, etiquetada como \texttt{nooocaaaa/programmingclasses: latest} \ref{fig:dockerfileapp}. Esta imagen incorpora todas las dependencias necesarias para la ejecución de la aplicación, así como las configuraciones específicas requeridas. La imagen fue construida utilizando Docker y posteriormente subida a Docker Hub \cite{dockerhub}, facilitando su distribución y posterior acceso. 
+    \item \textbf{Imagen de la base de datos}:  De forma análoga, se generó una imagen personalizadapara el servidor de base de datos PostgreSQL, etiquetada como \texttt{nooocaaaa/postgres-tfg:latest} \ref{fig:dockerfilebbdd}. Esta imagen está optimizada para integrarse con la aplicación Flask y también está disponible en Docker Hub \cite{dockerhub2}.
 \end{itemize}
 
 \section{Utilización de Podman}
 
-A partir de un archivo docker-compose.yml \ref{fig:dockercompose}, testeado en \textit{localhost}, se adapto la configuración para su uso con Podman. De esta manera, se aprovecha la compatibilidad y las ventajas de seguridad de esta herramienta, especialmente en entornos donde no se requieren privilegios de root.
+A partir de un archivo \texttt{docker-compose.yml} \ref{fig:dockercompose}, testeado en \textit{localhost}, se adapto la configuración para su uso con Podman. De esta manera, se aprovechó la compatibilidad y las ventajas de seguridad de esta herramienta, especialmente en entornos donde no se tienen privilegios de root.
 
-En la configuración del fichero \textit{podman-compose.yml} \ref{fig:podmancompose}, se establecieron dos servicios principales: el servicio de la aplicación (flask) y el servicio de la base de datos(db). Cada uno de estos servicios se configuró cuidadosamente para garantizar una integración y operación eficientes.
+En la configuración del fichero \texttt{podman-compose.yml} \ref{fig:podmancompose}, se establecieron dos servicios principales: el servicio de la aplicación (flask) y el servicio de la base de datos (db). Cada uno de estos servicios se configuró cuidadosamente para garantizar una integración y operación eficientes. 
 
-El servicio Flask se configuró con el nombre de contenedor flask\_TFG, utilizando la imagen \textit{nooocaaaa/programmingclasses:latest} anteriormente mencionada. Esta imagen, especialmente diseñada para la aplicación, contiene todas las dependencias y configuraciones necesarias. Para la comunicación con el exterior, se mapeó el puerto 35701 del host al contenedor, proporcionando un punto de acceso a la aplicación. Las variables de entorno se establecieron para configurar la conexión con la base de datos, definir claves secretas y especificar rutas de directorios críticos. Además, se definió una dependencia con el servicio de base de datos para asegurar que la base de datos esté disponible antes del inicio de la aplicación Flask. El comando de ejecución para este servicio fue configurado para iniciar la aplicación Flask.
+Esta configuración facilitó un despliegue coherente y funcional de la aplicación en el entorno de Podman, proporcionando un marco de trabajo estable y confiable para el funcionamiento de la aplicación Flask y su interacción con la base de datos PostgreSQL.
 
-Por otro lado, el servicio de base de datos, etiquetado como db, utilizó la imagen \textit{nooocaaaa/postgres-tfg:latest}, optimizada para trabajar en conjunto con la aplicación Flask. Se expuso el puerto 5432 para permitir la comunicación con la base de datos. Las variables de entorno se configuraron para establecer los parámetros de la base de datos, incluyendo el nombre de la base de datos, el usuario y la contraseña. Para garantizar la persistencia de los datos, se utilizó un volumen, con tal que los datos se mantengan seguros y accesibles incluso después de reiniciar o detener el contenedor.
+\subsection{Contenedor flask\_TFG}
 
-Esta configuración meticulosa del ficherofacilitó un despliegue coherente y funcional de la aplicación en el entorno de Podman, proporcionando un marco de trabajo estable y confiable para el funcionamiento de la aplicación Flask y su interacción con la base de datos PostgreSQL.
+El servicio Flask se configuró con el nombre de contenedor \texttt{flask\_TFG}, utilizando la imagen \texttt{nooocaaaa/programmingclasses:latest} anteriormente mencionada. Esta imagen, especialmente diseñada para la aplicación, contiene todas las dependencias y configuraciones necesarias. 
+
+Se mapeó el puerto \texttt{35701} del host al contenedor, proporcionando un punto de acceso a la aplicación para la comunicación con el exterior. Las variables de entorno se establecieron para configurar la conexión con la base de datos, definir claves secretas y especificar rutas de directorios críticos. Además, se definió una dependencia con el servicio de base de datos para asegurar que la base de datos estuviera disponible antes del inicio de la aplicación Flask. Es más, el comando de ejecución para el contenedor se configuró para iniciar la aplicación Flask.
+
+\subsection{Contenedor db}
+
+Por otro lado, el servicio de base de datos, etiquetado como \texttt{db}, utilizó la imagen \texttt{nooocaaaa/postgres-tfg:latest}, optimizada para trabajar en conjunto con la aplicación Flask.
+
+Se expuso el puerto \texttt{5432} para permitir la comunicación con la base de datos. Las variables de entorno se configuraron para establecer los parámetros de la base de datos, incluyendo el nombre de la base de datos, el usuario y la contraseña. Para garantizar la persistencia de los datos, se utilizó un volumen, con tal que los datos se mantengan seguros y accesibles incluso después de reiniciar o detener el contenedor.
+
