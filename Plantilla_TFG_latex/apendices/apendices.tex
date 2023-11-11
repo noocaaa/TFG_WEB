@@ -46,7 +46,7 @@ En cuanto al software, se han utilizado las siguientes herramientas y plataforma
     \end{itemize}
 \end{itemize}
     
-\chapter{Guion de las pruebas con niños}
+\chapter{Guión de las pruebas con niños}
 
 Este guion tiene como objetivo guiar las pruebas de la plataforma de programación para niños. Se busca evaluar la usabilidad, el interés generado y la eficacia educativa del sistema.
 
@@ -92,5 +92,127 @@ Este guion tiene como objetivo guiar las pruebas de la plataforma de programaci�
     \item Pedir a los niños que proporcionen comentarios.
     \item Analizar los resultados y planificar mejoras para la plataforma.
 \end{itemize}
+
+\chapter{Ficheros usados para el despliegue} \label{podmananddockerfile}
+
+Este apéndice contiene los ficheros clave utilizados para el despliegue de la aplicación, proporcionando una visión detallada de las configuraciones de Podman y Docker. Se incluyen tanto los \texttt{Dockerfiles} para la creación de las imágenes personalizadas de la aplicación y la base de datos, como los archivos \texttt{docker-compose.yml} y \texttt{podman-compose.yml}.
+
+\begin{figure}[H]
+    \centering
+    \begin{lstlisting}[language=bash, caption={Docker-compose de prueba}, label=fig:dockercompose]
+      version: '3'
+      services:
+      flask:
+          container_name: flask_TFG
+          image: nooocaaaa/programmingclasses:latest
+          restart: unless-stopped
+          ports:
+          - "35701:35701"
+          volumes:
+          - ./app:/app
+          - ./run.py:/run.py
+          environment:
+          - SQLALCHEMY_DATABASE_URI=postgresql://noelia:nocavi12@192.168.1.129:5432/mydatabase
+          - SQLALCHEMY_TRACK_MODIFICATIONS=False
+          - SECRET_KEY=fe701b7f09e6ef2e015591155de65a8cf85b160e6a75490a
+          - UPLOAD_FOLDER=/app/asked_questions
+          - STATIC_FOLDER=/app/static
+          - CLANG_LIB=/usr/lib/llvm-10/lib
+          command: bash -c "python run.py"
+    \end{lstlisting}
+\end{figure}
+ 
+\begin{figure}[H]
+    \centering
+    \begin{lstlisting}[language=bash, caption={Dockerfile para la creación de la imagen de la app}, label=fig:dockerfileapp]
+      # Usa una imagen base de Python
+      FROM python:3.8
+      
+      # Instala las herramientas del sistema necesarias
+      RUN apt-get update && apt-get install -y \
+          cppcheck \
+          clang \
+          checkstyle \
+          cppcheck \
+          clang-tools \
+          llvm 
+      
+      # Establece un directorio de trabajo
+      WORKDIR /
+      
+      # Copia el archivo de requerimientos primero para aprovechar la cache de Docker
+      COPY requirements.txt /
+      
+      # Instala las dependencias
+      RUN pip install --no-cache-dir -r requirements.txt
+      
+      # Copia el resto de tu codigo
+      # COPY ./app /app
+      # COPY ./run.py /
+      # COPY ./.env /
+      
+      # # Expone el puerto que usa tu app
+      # EXPOSE 5000
+      
+      # # El comando para arrancar la app
+      # CMD ["flask", "run"]
+    \end{lstlisting}
+  \end{figure}
+
+  \begin{figure}[H]
+    \centering
+    \begin{lstlisting}[language=bash, caption={Dockerfile para la creación de la imagen de la base de datos}, label=fig:dockerfilebbdd]
+      FROM postgres:latest
+  
+      # Copiar el script de backup a /docker-entrypoint-initdb.d
+      COPY backup.sql /docker-entrypoint-initdb.d/
+      
+      # El script de backup se ejecutara automaticamente al iniciar el contenedor
+    \end{lstlisting}
+  \end{figure}
+
+  \begin{figure}[H]
+    \centering
+    \begin{lstlisting}[language=bash, caption={Fichero Podman-compose para desplegar la bbdd y la app en el servidor}, label=fig:podmancompose]
+      version: '3'
+  
+      services:
+      flask:
+          container_name: flask_TFG
+          image: nooocaaaa/programmingclasses:latest
+          restart: unless-stopped
+          ports:
+          - "35701:35701"
+          volumes:
+          - ./app:/app
+          - ./run.py:/run.py
+          environment:
+          - SQLALCHEMY_DATABASE_URI=postgresql://noelia:nocavi12@db:5432/mydatabase
+          - SQLALCHEMY_TRACK_MODIFICATIONS=False
+          - SECRET_KEY=fe701b7f09e6ef2e015591155de65a8cf85b160e6a75490a
+          - UPLOAD_FOLDER=/app/asked_questions
+          - STATIC_FOLDER=/app/static
+          - CLANG_LIB=/usr/lib/llvm-10/lib
+          depends_on:
+          - db
+          command: bash -c "python run.py"
+  
+      db:
+          image: nooocaaaa/postgres-tfg:latest
+          restart: unless-stopped
+          environment:
+          POSTGRES_DB: mydatabase
+          POSTGRES_USER: noelia
+          POSTGRES_PASSWORD: nocavi12
+          ports:
+          - "5432:5432"
+          volumes:
+          - postgres_data:/var/lib/postgresql/data
+  
+      volumes:
+      postgres_data:
+    \end{lstlisting}
+  \end{figure}
+  
 
 \end{appendices}
