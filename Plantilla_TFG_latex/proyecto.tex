@@ -252,7 +252,23 @@ pdfproducer = {pdflatex}
 \usepackage[T1]{fontenc}
 \usepackage{longtable} % para tablas largas
 \usepackage{tabulary}
+\usepackage{listings}
+\usepackage{xcolor} % Para colores personalizados
 
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  frame=single, % Marco alrededor del código
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+  showstringspaces=false, % No mostrar espacios en strings
+  % numbers=left, % Eliminar o comentar para quitar los números de línea
+  numberstyle=\tiny, % Estilo de los números de línea
+  numbersep=5pt, % Distancia de los números de línea al código
+  xleftmargin=0.2cm, % Reducir para aumentar el ancho del recuadro
+  xrightmargin=0.2cm, % Reducir para aumentar el ancho del recuadro
+  captionpos=b % Posición de la leyenda (bottom)
+}
 \begin{document}
 
     % RODGOM - INCLUYO ESTO PARA LA NUMERACIÓN CORRECTA
@@ -295,10 +311,13 @@ pdfproducer = {pdflatex}
     \input{secciones/06_Implementacion}
 
     % Analisis de resultados
-    \input{secciones/07_Resultados}
+    \input{secciones/07_Despliegue}
+
+    % Analisis de resultados
+    \input{secciones/08_Resultados}
 
      % Conclusiones
-    \input{secciones/08_Conclusiones}
+    \input{secciones/09_Conclusiones}
 
     \newpage
     \appendix
