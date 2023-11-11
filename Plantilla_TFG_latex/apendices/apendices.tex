@@ -33,19 +33,49 @@ En cuanto al software, se han utilizado las siguientes herramientas y plataforma
     \item \textbf{Diagrama de flujo y arquitectura}: PlantUML v1.2023.12
     \item \textbf{Mockups}: Wireframe.cc
     \item \textbf{Bibliotecas Python}:
-    \begin{itemize}
-        \item Flask \cite{flask}
-        \item Flask-Login \cite{flask-login}
-        \item Flask-SQLAlchemy \cite{flask-sqlalchemy}
-        \item Flask-CORS \cite{flask-cors}
-        \item Flask-Bcrypt \cite{flask-bcrypt}
-        \item python-dotenv \cite{python-dotenv}
-        \item datetime \cite{datetime}
-        \item werkzeug.utils \cite{werkzeug}
-        \item radon.complexity \cite{radon}
-    \end{itemize}
+    \begin{multicols}{2}
+        \begin{itemize}
+            \item Flask \cite{flask}
+            \item Flask-Login \cite{flask-login}
+            \item Flask-SQLAlchemy \cite{flask-sqlalchemy}
+            \item Flask-CORS \cite{flask-cors}
+            \item Flask-Bcrypt \cite{flask-bcrypt}
+            \item python-dotenv \cite{python-dotenv}
+            \item datetime \cite{datetime}
+            \item werkzeug.utils \cite{werkzeug}
+            \item radon.complexity \cite{radon}
+            \item cpplint \cite{cpplint}
+            \item lizard \cite{lizard}
+            \item javalang \cite{javalang}
+            \item libclang \cite{libclang}
+            \item psycopg2-binary \cite{psycopg2binary}
+        \end{itemize}
+    \end{multicols}
 \end{itemize}
-    
+
+\section{Recursos de Red y Servidores}
+
+Además del hardware y software mencionados, se uso el servidor \textit{bahia.ugr.es} de la Universidad de Granada.
+
+\begin{itemize}
+    \item \textbf{Nombre del Servidor}: \textit{bahia.ugr.es}
+    \item \textbf{Sistema Operativo}: Linux (Fedora)
+    \item \textbf{Acceso}: A través de SSH (Secure Shell)
+    \item \textbf{Usuario}: ncarrasco
+    \item \textbf{Uso}: Despliegue y pruebas.
+\end{itemize}
+
+Para el despliegue de la aplicación y la base de datos, se usaron contendores. 
+
+\begin{itemize}
+    \item \textbf{Herramienta de Contenedores}: Podman
+    \item \textbf{Aplicación Desplegada}: Applicación Flask
+    \item \textbf{Base de Datos Desplegada}: PostgreSQL
+    \item \textbf{Servidor de Despliegue}: \textit{bahia.ugr.es}
+    \item \textbf{Configuración de Contenedores}: Vólumenes
+\end{itemize}
+
+
 \chapter{Guión de las pruebas con niños}
 
 Este guion tiene como objetivo guiar las pruebas de la plataforma de programación para niños. Se busca evaluar la usabilidad, el interés generado y la eficacia educativa del sistema.
