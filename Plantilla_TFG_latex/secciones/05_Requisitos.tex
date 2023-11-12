@@ -1,10 +1,10 @@
 \chapter{Requisitos} \label{chap:requisitos}
 
-En este capítulo, se profundizará en el análisis de requisitos de la plataforma. Se tendrá en cuenta tanto los requisitos funcionales como los no funcionales, siendo este análisis de requisitos uno de los fundamentos para el desarrollo posterior de la plataforma.
+Basado en el análisis presentado anteriormente, este capítulo se dedica a perfilar los requisitos de la plataforma. La evaluación previa ha establecido un fundamento detallar dichos requisitos. Estos serán el eje que dirigirá el proceso de desarrollo, con el propósito de garantizar que la plataforma resultante satisfaga plenamente las expectativas y requisitos de los usuarios finales.
 
 \section{Requisitos Funcionales}
 
-Con tal de garantizar la funcionalidad del programa y la realización de los objetivos establecidos, es esencial hacer una buena definición de los requisitos funcionales. Para facilitar su comprensión, presentaremos estos requisitos en tablas, siguiendo las convenciones de la ingeniería de requisitos y desarrollo de software. La organización de los contenidos es la siguiente:
+Con tal de garantizar la funcionalidad del programa y la realización de los objetivos establecidos, es esencial tener una buena definición de los requisitos funcionales. Para facilitar su comprensión, presentaremos estos requisitos en tablas, siguiendo las convenciones de la ingeniería de requisitos y desarrollo de software. La organización de los contenidos es la siguiente:
 
 \begin{itemize}
     \item \textbf{ID}: Identificador único para cada requisito. Esencial para una fácil referencia y seguimiento.
@@ -243,7 +243,7 @@ Con tal de garantizar la funcionalidad del programa y la realización de los obj
         \hline
         \textbf{Prioridad} & Baja \\
         \hline
-        \textbf{Estado} & Pendiente \\
+        \textbf{Estado} & Completado \\
         \hline
     \end{tabular}
     \caption{Requisito funcional RF-12: Juegos en la web.}
@@ -619,7 +619,7 @@ Con tal de garantizar la funcionalidad del programa y la realización de los obj
 
 \section{Requisitos No Funcionales}
 
-Con tal de asegurar la calidad global del sistema, deberemos tener en cuenta los requisitos funcionales. Por ello, vamos a detallar estos requisitos de manera estructurada siguiendo el mismo formato que con los requisitos funcionales.
+Con tal de asegurar la calidad global del sistema, deberemos tener en cuenta los requisitos no funcionales. Por ello, se van a detallar estos requisitos de manera estructurada siguiendo el mismo formato que con los requisitos funcionales.
 
 \begin{table}[H]
     \centering
@@ -772,4 +772,273 @@ Con tal de asegurar la calidad global del sistema, deberemos tener en cuenta los
     \end{tabular}
     \caption{Requisito no funcional RNF-08: Mantenimiento.}
     \label{table:req-RNF39}
+\end{table}
+
+\section{Requisitos de Información}
+
+Dentro del marco de requisitos esenciales para el desarrollo de la plataforma, los requisitos de información también tienen su papel. Estos requisitos deben definir cómo debe ser recolectada, almacenada, procesada y protegida la información dentro del sistema. 
+
+La organización de los contenidos de los requisitos de información es la siguiente:
+
+\begin{itemize}
+    \item \textbf{ID}: Identificador único para cada requisito. Esencial para una fácil referencia y seguimiento durante todo el ciclo de vida del desarrollo del software.
+    \item \textbf{Nombre}: El nombre del requisito, que se corresponde directamente con cada entidad de la base de datos para facilitar la correlación.
+    \item \textbf{Descripción}: Una explicación del tipo de datos dentro del sistema.
+    \item \textbf{Contenido}: Detalles específicos sobre la información que se almacena, incluyendo formatos, estructuras y cualquier restricción relevante.
+\end{itemize}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RI-01 \\
+        \hline
+        \textbf{Nombre} & Usuario \\
+        \hline
+        \textbf{Descripción} & Datos esenciales de los usuarios para permitir el acceso y la interacción con el sistema. \\
+        \hline
+        \textbf{Contenido} & Información básica del usuario como nombre, apellidos, fecha de nacimiento, contacto y credenciales de acceso. También se incluye información para el seguimiento del progreso educativo y la interacción con el sistema. \\
+        \hline
+    \end{tabular}
+    \caption{Requisito de información RI-01: Usuario.}
+    \label{table:req-RI01}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RI-02 \\
+        \hline
+        \textbf{Nombre} & Teoría \\
+        \hline
+        \textbf{Descripción} &  El sistema almacenará información educativa asociada con los distintos módulos de aprendizaje. \\
+        \hline
+        \textbf{Contenido} & Incluye el contenido textual de la teoría, identificadores de los módulos relacionados y rutas a recursos gráficos. Se debe mantener la integridad referencial con los módulos del curso.  \\
+        \hline
+    \end{tabular}
+    \caption{Requisito de información RI-02: Teoría.}
+    \label{table:req-RI04}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RI-03 \\
+        \hline
+        \textbf{Nombre} & Ejercicios \\
+        \hline
+        \textbf{Descripción} & Conjunto de datos que definen los ejercicios prácticos dentro de los módulos del sistema.  \\
+        \hline
+        \textbf{Contenido} & Información detallada de los ejercicios, como el nombre, contenido descriptivo, soluciones y parámetros de evaluación, así como la identificación de si requieren revisión manual o son ejercicios clave dentro de los módulos.  \\
+        \hline
+    \end{tabular}
+    \caption{Requisito de información RI-03: Ejercicios.}
+    \label{table:req-RI05}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RI-04 \\
+        \hline
+        \textbf{Nombre} & Juegos \\
+        \hline
+        \textbf{Descripción} & Datos relacionados con los juegos disponibles en la plataforma. \\
+        \hline
+        \textbf{Contenido} & Título de cada juego y su costo asociado, que puede utilizarse para transacciones o recompensas dentro del sistema educativo de la plataforma. \\
+        \hline
+    \end{tabular}
+    \caption{Requisito de información RI-04: Juegos.}
+    \label{table:req-RI06}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RI-05 \\
+        \hline
+        \textbf{Nombre} & Progreso del estudiante \\
+        \hline
+        \textbf{Descripción} & Registro detallado del avance de cada estudiante en los ejercicios y módulos del curso. \\
+        \hline
+        \textbf{Contenido} & Información de progreso que incluye el estado del ejercicio (completado, en progreso, etc.), calificaciones, fechas relevantes, código de solución proporcionado por el estudiante, y cualquier comentario del instructor o puntuación de evaluación automática. \\
+        \hline
+    \end{tabular}
+    \caption{Requisito de información RI-05: Progreso del estudiante.}
+    \label{table:req-RI07}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RI-06 \\
+        \hline
+        \textbf{Nombre} & Actividad del estudiante \\
+        \hline
+        \textbf{Descripción} &  Información que captura las interacciones específicas de los estudiantes con los contenidos del curso. \\
+        \hline
+        \textbf{Contenido} & Datos sobre las acciones realizadas por el estudiante dentro de la plataforma, incluyendo si han completado o saltado actividades y el tipo de contenido con el que interactuaron, para proporcionar una visión integral de su compromiso con el material del curso. \\
+        \hline
+    \end{tabular}
+    \caption{Requisito de información RI-06: Actividad del estudiante.}
+    \label{table:req-RI08}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RI-07 \\
+        \hline
+        \textbf{Nombre} & Transacciones de Pagos \\
+        \hline
+        \textbf{Descripción} & Registros de pagos realizados por los usuarios, que detallan la adquisición de los juegos.  \\
+        \hline
+        \textbf{Contenido} & Detalles de cada transacción, incluyendo el usuario que realiza el pago, el juego o servicio adquirido, la cantidad pagada y la fecha del pago. \\
+        \hline
+    \end{tabular}
+    \caption{Requisito de información RI-07: Transacciones de Pagos.}
+    \label{table:req-RI09}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RI-08 \\
+        \hline
+        \textbf{Nombre} & Notificaciones \\
+        \hline
+        \textbf{Descripción} & Captura la información de las notificaciones generadas por el sistema o los profesores para los usuarios. \\
+        \hline
+        \textbf{Contenido} & Datos de las notificaciones como el destinatario, el mensaje específico enviado, la fecha y hora de envío, y un indicador de si la notificación ha sido leída. \\
+        \hline
+    \end{tabular}
+    \caption{Requisito de información RI-08: Notificaciones.}
+    \label{table:req-RI10}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RI-09 \\
+        \hline
+        \textbf{Nombre} & Requisitos \\
+        \hline
+        \textbf{Descripción} & Información relativa a los requisitos educativos que deben ser cumplidos por los estudiantes en el transcurso de su aprendizaje. Estos requisitos son elementos fundamentales que estructuran los módulos y el contenido del curso.  \\
+        \hline
+        \textbf{Contenido} & Datos que incluyen un identificador único y el nombre del requisito, que sirve como referencia para la progresión en los módulos y la vinculación con ejercicios y teoría. \\
+        \hline
+    \end{tabular}
+    \caption{Requisito de información RI-09: Requisitos.}
+    \label{table:req-RI11}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RI-10 \\
+        \hline
+        \textbf{Nombre} & \textit{Path} educativo \\
+        \hline
+        \textbf{Descripción} & Detalles que establecen la secuencia en la que los estudiantes deben cumplir con los requisitos dentro de un módulo específico. Esta secuencia asegura que el proceso de aprendizaje siga una progresión lógica y estructurada.  \\
+        \hline
+        \textbf{Contenido} & Datos que incluyen el identificador del módulo, el identificador del requisito y la posición que ocupa este requisito en la secuencia de aprendizaje del módulo. \\
+        \hline
+    \end{tabular}
+    \caption{Requisito de información RI-10: \textit{Path} educativo.}
+    \label{table:req-RI12}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RI-11 \\
+        \hline
+        \textbf{Nombre} & Módulo \\
+        \hline
+        \textbf{Descripción} & Información relacionada con los módulos que componen la estructura curricular de la plataforma. Cada módulo agrupa una serie de requisitos, que a su vez agrupan ejercicios y teoría para facilitar el aprendizaje en temas específicos de la programación. \\
+        \hline
+        \textbf{Contenido} & Datos que definen cada módulo, incluyendo un identificador único, el nombre del módulo y una descripción que detalla los objetivos y el contenido cubierto.  \\
+        \hline
+    \end{tabular}
+    \caption{Requisito de información RI-11: Módulo.}
+    \label{table:req-RI13}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RI-12 \\
+        \hline
+        \textbf{Nombre} & Preguntas \\
+        \hline
+        \textbf{Descripción} & Registra las interacciones de los estudiantes en forma de preguntas y respuestas dentro de la plataforma, lo que permite un seguimiento de las dudas y facilita la asistencia por parte del cuerpo docente o de otros estudiantes.  \\
+        \hline
+        \textbf{Contenido} & Incluye la identificación del estudiante que realiza la pregunta, el texto de la pregunta, la respuesta proporcionada, fechas de realización y respuesta, y cualquier archivo adjunto relevante para la discusión. \\
+        \hline
+    \end{tabular}
+    \caption{Requisito de información RI-12: Preguntas.}
+    \label{table:req-RI14}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RI-13 \\
+        \hline
+        \textbf{Nombre} & Requisitos completados por el usuario \\
+        \hline
+        \textbf{Descripción} & Contabiliza los requisitos que cada usuario ha completado en los distintos módulos del sistema. Esto permite al sistema y a los instructores monitorear el progreso y asegurar que los estudiantes cumplan con los objetivos educativos establecidos.  \\
+        \hline
+        \textbf{Contenido} & Incluye el identificador del usuario, el requisito completado, el módulo asociado y la fecha de finalización, permitiendo así una gestión efectiva del avance de cada estudiante. \\
+        \hline
+    \end{tabular}
+    \caption{Requisito de información RI-13: Requisitos completados por el usuario.}
+    \label{table:req-RI15}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RI-14 \\
+        \hline
+        \textbf{Nombre} & Requisitos de teoría \\
+        \hline
+        \textbf{Descripción} & Asocia los contenidos teóricos con los requisitos educativos específicos, estableciendo las dependencias que los estudiantes deben cumplir para progresar en el aprendizaje teórico del curso.  \\
+        \hline
+        \textbf{Contenido} & Relaciones entre teorías y requisitos que deben ser completados para acceder a dichos contenidos, asegurando una secuencia lógica de aprendizaje. \\
+        \hline
+    \end{tabular}
+    \caption{Requisito de información RI-14: Requisitos de teoría.}
+    \label{table:req-RI16}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{9.5cm}|}
+        \hline
+        \textbf{ID} & RI-15 \\
+        \hline
+        \textbf{Nombre} & Requisitos de ejercicios\\
+        \hline
+        \textbf{Descripción} & Define las dependencias entre los ejercicios prácticos y los requisitos educativos, indicando qué conocimientos previos son necesarios para abordar cada ejercicio.  \\
+        \hline
+        \textbf{Contenido} & Mapeo de los ejercicios con los requisitos correspondientes, lo que permite al sistema validar la preparación del estudiante antes de intentar resolver un ejercicio. \\
+        \hline
+    \end{tabular}
+    \caption{Requisito de información RI-15: Requisitos de los ejercicios.}
+    \label{table:req-RI17}
 \end{table}
