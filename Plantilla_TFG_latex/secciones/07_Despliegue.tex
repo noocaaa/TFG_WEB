@@ -8,16 +8,16 @@ Las imágenes del contenedor creadas fueron:
 
 \begin{itemize}
     \item \textbf{Imagen de la aplicación}: Se creó una imagen personalizada para la aplicación Flask, etiquetada como \texttt{nooocaaaa/programmingclasses: latest} \ref{fig:dockerfileapp}. Esta imagen incorpora todas las dependencias necesarias para la ejecución de la aplicación, así como las configuraciones específicas requeridas. La imagen fue construida utilizando Docker y posteriormente subida a Docker Hub \cite{dockerhub}, facilitando su distribución y posterior acceso. 
-    \item \textbf{Imagen de la base de datos}:  De forma análoga, se generó una imagen personalizadapara el servidor de base de datos PostgreSQL, etiquetada como \texttt{nooocaaaa/postgres-tfg:latest} \ref{fig:dockerfilebbdd}. Esta imagen está optimizada para integrarse con la aplicación Flask y también está disponible en Docker Hub \cite{dockerhub2}.
+    \item \textbf{Imagen de la base de datos}:  De forma análoga, se generó una imagen personalizada para el servidor de base de datos PostgreSQL, etiquetada como \texttt{nooocaaaa/postgres-tfg:latest} \ref{fig:dockerfilebbdd}. Esta imagen está optimizada para integrarse con la aplicación Flask y también está disponible en Docker Hub \cite{dockerhub2}.
 \end{itemize}
 
 \section{Utilización de Podman}
 
-A partir de un archivo \texttt{docker-compose.yml} \ref{fig:dockercompose}, testeado en \textit{localhost}, se adapto la configuración para su uso con Podman. De esta manera, se aprovechó la compatibilidad y las ventajas de seguridad de esta herramienta, especialmente en entornos donde no se tienen privilegios de root.
+A partir de un archivo \texttt{docker-compose.yml} \ref{fig:dockercompose}, testeado en \textit{localhost}, se adaptó la configuración para su uso con Podman. De esta manera, se aprovechó la compatibilidad y las ventajas de seguridad de esta herramienta, especialmente en entornos donde no se tienen privilegios de root.
 
 En la configuración del fichero \texttt{podman-compose.yml} \ref{fig:podmancompose}, se establecieron dos servicios principales: el servicio de la aplicación (flask) y el servicio de la base de datos (db). Cada uno de estos servicios se configuró cuidadosamente para garantizar una integración y operación eficientes. 
 
-Esta configuración facilitó un despliegue coherente y funcional de la aplicación en el entorno de Podman, proporcionando un marco de trabajo estable y confiable para el funcionamiento de la aplicación Flask y su interacción con la base de datos PostgreSQL.
+Esta configuración facilitó un despliegue coherente y funcional de la aplicación, proporcionando un marco de trabajo estable y confiable para el funcionamiento de la aplicación Flask y su interacción con la base de datos PostgreSQL. Concretamente, la aplicación es accesible a través del siguiente enlace: \href{http://bahia.ugr.es:35701/}{http://bahia.ugr.es:35701/}.
 
 \subsection{Contenedor flask\_TFG}
 

@@ -1,30 +1,32 @@
 \chapter{Planificación} \label{chap:planification}
 
-La planificación es un aspecto importante en cualquier proyecto. Nos permite asegurar una correcta ejecución y el logro de los objetivos establecidos. Por ello, en este capítulo, abordaremos la organización y estructuración del proyecto para con tal de cumplir el objetivo principal. Además, un diagrama de Gantt se incluirá, al final de la sección \ref{fig:gantt_diagram}, para ofrecer una visión detallada del tiempo asignado a cada tarea.
+La planificación es un aspecto importante en cualquier proyecto, debido a que permite asegurar una correcta ejecución y el logro de los objetivos establecidos. Por ello, en este capítulo, se aborda la organización y estructuración del proyecto con el fin de cumplir el objetivo principal. Además, se adjunta un diagrama de Gantt \ref{fig:gantt_diagram} para ofrecer una visión detallada del tiempo asignado a cada tarea.
 
 \section{Fases}
 
 \subsection{Fase Inicial}
 
-En la fase inicial se establecieron las bases y objetivos del proyecto. Se reconoció la necesidad de una plataforma educativa digital que enseñe programación asimismo como sus buenas prácticas. Se llevaron a cabo reuniones preliminares para esbozar las características deseadas y el alcance del proyecto, teniendo siempre en mente la experiencia de usuario y la eficiencia en la corrección y retroalimentación por parte del usuario.
+En la fase inicial se establecieron las bases y objetivos del proyecto. Se reconoció la necesidad de una plataforma educativa digital que enseñase tanto programación como sus buenas prácticas. Se llevaron a cabo reuniones preliminares para esbozar las características deseadas y el alcance del proyecto, teniendo siempre en mente la experiencia de usuario y la eficiencia en la corrección y retroalimentación por parte del usuario.
 
 \subsection{Fase de análisis}
 
-Durante esta etapa se realizó en una exploración profunda y meticulosa de las necesidades y los requerimientos clave para diseñar una plataforma de aprendizaje eficaz. Se buscó conseguir un entorno que proporcionará una buena retroalimentación. Se puso énfasis en un enfoque adaptativo y personalizado, teniendo en cuenta la diversidad de ritmos y estilos de aprendizaje. Sé investigaron tanto las demandas funcionales como las tecnológicas, y se llevó a cabo un análisis de la plataforma Codelearn S.L. con tal de garantizar que las decisiones tomadas fueran adecuadas y eficientes.
+Durante esta etapa se realizó una exploración profunda y meticulosa de las necesidades y los requerimientos clave para diseñar una plataforma de aprendizaje eficaz. Se buscó conseguir un entorno que proporcionará una buena retroalimentación, poniendo énfasis en un enfoque adaptativo y personalizado, teniendo en cuenta la diversidad de ritmos y estilos de aprendizaje. Sé investigaron tanto las demandas funcionales como las tecnológicas, y se realizó un análisis de la plataforma Codelearn S.L. con el fin de garantizar que las decisiones tomadas fueran adecuadas y eficientes.
 
-Antes de adentrarnos en la construcción de la plataforma, fue esencial definir con precisión qué funcionalidades eran fundamentales. A través de reuniones, lecturas e investigación se definieron las siguientes características principales para el sistema:
+Cabe destacar que antes de la construcción de la plataforma, fue esencial definir con precisión qué funcionalidades eran fundamentales. A través de reuniones, lecturas e investigación se definieron las siguientes características principales para el sistema:
 
 \begin{itemize}
     \item Un sistema de corrección automatizada que evalúe tanto la solución como la calidad del código.
     \item Un sistema de retroalimentación que ofrezca comentarios constructivos.
     \item Un camino de ejercicios que se adapte dinámicamente al progreso y habilidades del estudiante.
-    \item Un esquema de progreso visual que motive y guíe a los estudiantes a través de su aprendizaje.
+    \item Un ranking para motivar a los estudiantes durante su aprendizaje.
     \item Una plataforma sencilla y visual, diseñada específicamente para niños, que les permita interactuar con el contenido de manera intuitiva.
-    \item Un compilador en tiempo real que permite la ejecución y prueba de códigos en la plataforma.
+    \item Un compilador que permita la ejecución y prueba de código en la propia web.
     \item Un sistema de soporte y tutoría basado en un mecanismo de preguntas y respuestas para asistir a los estudiantes con dudas específicas.
 \end{itemize}
 
-Con los requisitos y objetivos ya estuvieron claros, se pasó a la elección de tecnologías que se iban a usar. La decisión fue tomada en base la experiencia, ya que de esta manera se conseguía rápidamente la eficiencia. Para el Frontend, se usó HTML, CSS y JavaScript, gracias a que ofrecían unas interfaces de usuario fluidas y dinámicas. Se usó Flask para el Backend, ya que se adapta fácilmente con diversas librerías de Python. Asimismo, para la gestión de la base de datos, se usó por PostgreSQL, ya que garantizaba una estructura robusta y escalable.
+Cuando los requisitos y objetivos ya estuvieron claros, se pasó a la elección de tecnologías que se iban a usar. La decisión fue tomada en base la experiencia, ya que de esta manera se conseguía rápidamente un prototipo manejable. 
+
+Para el Frontend, se decidió el uso de HTML, CSS y JavaScript, debido la posibilidad de creación de interfaces de usuario fluidas y dinámicas. En cambio, para el Backend se usó Flask, por su fácil adaptabilidad con diversas librerías de Python. Para la gestión de la base de datos, se optó por PostgreSQL, ya que garantizaba una estructura robusta y escalable.
 
 \subsection {Fase de desarrollo}
 
@@ -33,29 +35,27 @@ La fase de desarrollo se centró en implementar las características clave ident
 \begin{enumerate}
     \item \textbf{Corrección automatizada de los ejercicios}: Se desarrolló un sistema de corrección automatizada que no solo verifica la solución del ejercicio, sino también la calidad y eficiencia del código. Concretamente, analiza la limpieza del código, la utilización correcta de las estructuras de datos y si existen bucles repetitivos o redundantes. Garantizando que los estudiantes no solo resuelven el problema, sino que también adopten buenas prácticas de codificación.
 
-    \item \textbf{Retroalimentación Personaliza}: Se debe ofrecer un buen \textit{feedback} para que los estudiantes entiendan sus errores. Por ello, se proporcionan comentarios detallados y las sugerencias necesarias. De esta manera, se fortalece la comprensión y se facilita el aprendizaje.
+    \item \textbf{Retroalimentación Personaliza}: Se debe ofrecer un buen \textit{feedback} para que los estudiantes entiendan sus errores. Por ello, se proporcionan comentarios y algunas sugerencias necesarias. De esta manera, se fortalece la comprensión y se facilita el aprendizaje.
 
-    \item \textbf{Caminos de Ejercicios Aleatorio}: Para poder proporcionar una buena experiencia de aprendizaje, el sistema tiene un conjunto de ejercicios basados en requisitos específicos de forma aleatoria. De esta manera, se consigue que cada vez que el estudiante se enfrenta un requisito, se le desafía con un conjunto de ejercicios diferentes, asegurando que los haga por comprensión y no por repetición. Es importante destacar, que si un estudiante no realiza correctamente un ejercicio, el sistema le proporcionará otro diferente.
-    
-    \item \textbf{Esquema de progreso individualizado}: Se realizó un tablero que muestra dónde se sitúa el estudiante y qué le espera a continuación. De esta manera, se consigue una motivación e incentiva el esfuerzo.
+    \item \textbf{Caminos de Ejercicios Aleatorio}: Para poder proporcionar una buena experiencia de aprendizaje, el sistema tiene un conjunto de ejercicios basados en requisitos específicos de forma aleatoria. De esta manera, se consigue que cada vez que el estudiante se enfrenta un requisito, se le desafía con un conjunto de ejercicios diferentes, asegurando que los haga por comprensión y no por repetición. Es importante destacar, que si un estudiante no realiza correctamente un ejercicio, el sistema le proporcionará otro diferente para evitar frustración.
 \end{enumerate}
 
 Cabe destacar que esta fase también implicó una serie de pruebas iterativas y correcciones, permitiendo ajustes y mejoras en tiempo real en función del feedback recibido y las observaciones realizadas.
 
 \subsection{Fase de prueba y corrección}
 
-Tras finalizar la anterior fase, tocó centrarse en el testeo del prototipo y sus respectivos ajustes. A pesar de haber diseñado la página web en base la investigación teórica, se debía validar su usabilidad.
+Tras finalizar la anterior fase, tocó centrarse en el testeo del prototipo y sus respectivos ajustes. A pesar de haber diseñado la página web en base la investigación teórica, se debía validar su usabilidad y efectividad de las funciones realizadas.
 
 Se eligió un grupo de 2-3 estudiantes, para que interactuaran con la plataforma. 
 Pidiéndoles que hicieran varias tareas y que compartieran sus impresiones, dificultades y recomendaciones.
 
-La retroalimentación de estos estudiantes fue clave. A partir de sus comentarios, se pudieron efectuar mejoras importantes en la plataforma. Se solucionaron fallos técnicos y cuestiones de usabilidad, además de optimizar la calidad de la experiencia educativa. Consiguiendo que la plataforma se adaptará a las necesidades y retos de los estudiantes, pudiendo asegurar una experiencia educativa de calidad.
+La retroalimentación de estos estudiantes fue clave. A partir de sus comentarios, se pudieron efectuar mejoras importantes en la plataforma. Se solucionaron fallos técnicos y cuestiones de usabilidad, además de optimizar la calidad de la experiencia educativa. De esta manera, se consiguió que la plataforma se adaptará a las necesidades y retos de los estudiantes mejor, pudiendo asegurar una experiencia educativa de calidad.
 
 \subsection{Elaboración de la memoria}
 
 Durante las fases previas del proyecto, se llevó a cabo una recolección de datos e información pertinente. Al aproximarnos a las etapas finales del desarrollo, dicha información fue estructurada y articulada de manera coherente y sistemática, siendo la creación de la memoria.
 
-El proyecto tuvo inicio a principios de julio, durando cinco meses hasta su finalización. Es importante subrayar que el período previo a julio, aunque incluyó actividades de investigación y lectura, no es considerado crucial para la estructura del proyecto. Esto se debe a que, a pesar de haber realizado dichas tareas, no se le dedicó una cantidad de tiempo significante debido a otras responsabilidades. Por esta razón, se presenta el diagrama de Gantt que refleja el periodo de desarrollo del proyecto:
+El proyecto tuvo inicio a principios de julio, durando cinco meses hasta su finalización. Es importante subrayar que el período previo a julio, aunque incluyó actividades de investigación y lectura, no es considerado crucial para la estructura del proyecto. Esto se debe a que, a pesar de haber realizado dichas tareas, no se le dedicó una cantidad de tiempo significante debido a otras responsabilidades. Por esta razón, se presenta el diagrama de Gantt \ref{fig:gantt_diagram} que refleja el periodo de desarrollo del proyecto:
 
 \begin{figure}[H]
     \centering
@@ -124,8 +124,8 @@ El proyecto tuvo inicio a principios de julio, durando cinco meses hasta su fina
     
     \ganttgroup{Documentación}{2023-10-22}{2023-11-13} \\
     \ganttbar{Redacción documentación}{2023-10-22}{2023-10-31} \\
-    \ganttbar{Revisión y correcciones}{2023-11-04}{2023-11-13}
-    
+    \ganttbar{Revisión y correcciones}{2023-11-04}{2023-11-13} \\
+    \ganttgroup{Despliegue}{2023-11-10}{2023-11-11}
     \end{ganttchart}
     }
     \caption{Diagrama de Gantt con la planificación del TFG}
@@ -134,27 +134,27 @@ El proyecto tuvo inicio a principios de julio, durando cinco meses hasta su fina
 
 \section{Presupuesto}
 
-En esta parte del documento se realiza una descripción de los gastos ocasionados por el proyecto.
+En esta parte del documento se realiza una descripción de los gastos ocasionados por el proyecto, formando el denominado presupuesto \ref{tab:resumen-costes}.
 
 \subsection{Licencias}
 
-Con tal de realizar una buena evaluación del coste de un proyecto, se debe tener en cuenta todos aquellos gastos relacionados con licencias. En este caso, se optó por maximizar el uso de tecnologías \textit{OpenSource} para reducir costos.
+Con tal de realizar una buena evaluación del coste de un proyecto, se tuvieron en cuenta todos aquellos gastos relacionados con licencias. Por ello, se optó por maximizar el uso de tecnologías \textit{OpenSource} para reducir costos.
 
-Para la interfaz de usuario, se usó HTML, CSS y JavaScript. En cuanto al Backend, se seleccionó Flask que también de costo cero. Además, se recurrió a PostgreSQL que no tiene ningún coste ni límite en cuanto a tamaño de la base de datos. Para el control de versiones, se usó Git y GitHub \cite{personalgithub}. Aunque GitHub ofrece planes de pago, dispone de opciones gratuitas. 
+Para la interfaz de usuario, se optó por usar HTML, CSS y JavaScript por su costo cero. En cuanto al Backend, se eligió Flask por el mismo motivo. Además, se recurrió a PostgreSQL que no tiene ningún coste ni límite en cuanto a tamaño de la base de datos. Para el control de versiones, se usó Git y GitHub \cite{personalgithub}. Aunque GitHub ofrece planes de pago, dispone de buenas opciones gratuitas. 
 
-Por lo tanto, el coste de licencias es cero. 
+Por lo tanto, el coste total de las licencias es cero. 
 
 \subsection{Recursos Materiales}
 
-Dentro de la inversión material, es indispensable considerar el equipo informático empleado en el proyecto, en este caso, un ordenador portátil. Comúnmente, estos dispositivos tienen una vida útil estimada que oscila entre los 2 y 4 años. 
+Dentro de la inversión material, es indispensable considerar el equipo informático empleado en el proyecto, en este caso, un ordenador portátil tal como se puede ver en el apéndice \ref{chap:recursos}. Comúnmente, estos dispositivos tienen una vida útil estimada que oscila entre los 2 y 4 años. 
 
 Si asumimos una vida útil intermedia de 3 años para el dispositivo, se estimará una depreciación anual del equipo. Por ello, considerando que el portátil tuvo un precio inicial de 950€, su depreciación anual será de 316,67€. 
 
-Finalmente, tenemos que tener en cuenta que el proyecto se ha desarrollado en una duración aproximada de 5 meses, por ello, el coste asociado al desgaste del portátil durante dicho período es de 132,78€.
+Finalmente, se debe tener en cuenta que el proyecto se ha desarrollado en una duración aproximada de 5 meses, por ello, el coste asociado al desgaste del portátil durante dicho período es de 132,78€.
 
 \subsection{Costes de Personal}
 
-Para el cálculo de costes de personal se ha tenido en cuenta un único empleado: un ingeniero informático. Tomando datos obtenidos de la Seguridad Social para el año 2023 \cite{seg-social}, el salario de dicho ingeniero oscila entre una base mínima de cotización de 1.759,50€ y una base máxima de 4.495,50€ mensuales.
+Para el cálculo de costes de personal se ha tenido en cuenta un único empleado: un ingeniero informático. Tomando los datos obtenidos de la Seguridad Social para el año 2023 \cite{seg-social}, el salario de dicho ingeniero oscila entre una base mínima de cotización de 1.759,50€ y una base máxima de 4.495,50€ mensuales \ref{tab:coste-personal}.
 
 \begin{table}[H]
     \centering
@@ -187,11 +187,13 @@ Adicionalmente, se debería considerar las cotizaciones correspondientes a la em
 
 \subsection{Otros costes}
 
-Este apartado hace alusión a todos aquellos gastos indirectos importantes para la realización del proyecto. Como, por ejemplo, el material de oficina, la conexión a Internet, la electricidad, los gastos de transporte, entre otros.
+Dentro de este apartado se hace alusión a todos aquellos gastos indirectos importantes para la realización del proyecto. Por ejemplo, el material de oficina, la conexión a Internet, la electricidad, los gastos de transporte, entre otros.
 
-Se suele estimar este tipo de costes indirectos como un porcentaje del gasto principal, en este caso, del coste de personal. Siguiendo esta norma, se ha determinado que estos gastos representan aproximadamente el 10\% del gasto total en personal:
+Este tipo de costes indirectos se suele estimar como un porcentaje del gasto principal, en este caso, del coste de personal. Siguiendo esta norma, se ha determinado que estos gastos representan aproximadamente el 10\% del gasto total en personal:
 
-\[ 17.900€ \times 0,10 = 1.790€ \]
+\begin{equation}
+17.900€ \times 0,10 = 1.790€
+\end{equation}
 
 Por lo tanto, se estima un coste adicional de 1.790€ para cubrir lo gastos indirectos asociados al proyecto.
 
