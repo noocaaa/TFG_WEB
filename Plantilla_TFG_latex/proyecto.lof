@@ -1,0 +1,75 @@
+\babel@toc {spanish}{}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Arquitectura básica de un ITS \cite {Butz2006}}}{6}{figure.2.1}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Diagrama de Gantt con la planificación del TFG}}{18}{figure.3.1}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Diagrama de Caso de Uso del sistema}}{24}{figure.4.1}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Diagrama Entidad-Relación del sistema}}{31}{figure.4.2}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Arquitectura de sistema}}{53}{figure.6.1}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Diagrama del modelo de datos}}{55}{figure.6.2}%
+\contentsline {figure}{\numberline {6.3}{\ignorespaces Inicio de Sesión para cualquier usuario.}}{57}{figure.6.3}%
+\contentsline {figure}{\numberline {6.4}{\ignorespaces Registro para cualquier usuario.}}{57}{figure.6.4}%
+\contentsline {figure}{\numberline {6.5}{\ignorespaces Página Principal de la interfaz del estudiante.}}{58}{figure.6.5}%
+\contentsline {figure}{\numberline {6.6}{\ignorespaces Apartado de Juegos de la interfaz del alumno.}}{58}{figure.6.6}%
+\contentsline {figure}{\numberline {6.7}{\ignorespaces Visualización de la teoría para el estudiante.}}{58}{figure.6.7}%
+\contentsline {figure}{\numberline {6.8}{\ignorespaces Apartado de contacto con el profesor.}}{59}{figure.6.8}%
+\contentsline {figure}{\numberline {6.9}{\ignorespaces Apartado de \textit {Ranking} de la interfaz del usuario.}}{59}{figure.6.9}%
+\contentsline {figure}{\numberline {6.10}{\ignorespaces Visualización de los ejercicios para el usuario.}}{59}{figure.6.10}%
+\contentsline {figure}{\numberline {6.11}{\ignorespaces Apartado donde los estudiantes pueden revisar conceptos teóricos.}}{60}{figure.6.11}%
+\contentsline {figure}{\numberline {6.12}{\ignorespaces Apartado de configuración del estudiante.}}{60}{figure.6.12}%
+\contentsline {figure}{\numberline {6.13}{\ignorespaces \textit {Dashboard} principal del profesor.}}{60}{figure.6.13}%
+\contentsline {figure}{\numberline {6.14}{\ignorespaces Pantalla de Estadísticas del profesor.}}{61}{figure.6.14}%
+\contentsline {figure}{\numberline {6.15}{\ignorespaces Pantalla con la lista de corrección de ejercicios.}}{61}{figure.6.15}%
+\contentsline {figure}{\numberline {6.16}{\ignorespaces Panel para facilitar la corrección los ejercicios para el profesor.}}{61}{figure.6.16}%
+\contentsline {figure}{\numberline {6.17}{\ignorespaces Apartado de Configuración del profesor.}}{62}{figure.6.17}%
+\contentsline {figure}{\numberline {6.18}{\ignorespaces Visión general del panel administrativo.}}{62}{figure.6.18}%
+\contentsline {figure}{\numberline {6.19}{\ignorespaces Diagrama de flujo para la selección de ejercicios}}{65}{figure.6.19}%
+\contentsline {figure}{\numberline {6.20}{\ignorespaces Diagrama de flujo para el cálculo del tiempo de un ejercicio}}{66}{figure.6.20}%
+\contentsline {figure}{\numberline {6.21}{\ignorespaces Diagrama de flujo para la corrección de ejercicios}}{67}{figure.6.21}%
+\contentsline {figure}{\numberline {6.22}{\ignorespaces Diagrama de flujo para la comprobación de bucles infinitos}}{69}{figure.6.22}%
+\contentsline {figure}{\numberline {6.23}{\ignorespaces Diagrama de flujo que ilustra cómo se comprueban los requisitos dentro del árbol para Python}}{71}{figure.6.23}%
+\contentsline {figure}{\numberline {6.24}{\ignorespaces Diagrama de flujo que ilustra cómo se calcula la puntuación}}{72}{figure.6.24}%
+\contentsline {figure}{\numberline {6.25}{\ignorespaces Diagrama de flujo que ilustra el cálculo del número extra de ejercicios}}{74}{figure.6.25}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {8.1}{\ignorespaces Resultados gráficos de la prueba de rendimiento con JMeter.}}{81}{figure.8.1}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {D.1}{\ignorespaces Inicio de sesión}}{98}{figure.1.Alph4.1}%
+\contentsline {figure}{\numberline {D.2}{\ignorespaces Registro}}{98}{figure.1.Alph4.2}%
+\contentsline {figure}{\numberline {D.3}{\ignorespaces Elección de avatar}}{99}{figure.1.Alph4.3}%
+\contentsline {figure}{\numberline {D.4}{\ignorespaces Menú Principal}}{99}{figure.1.Alph4.4}%
+\contentsline {figure}{\numberline {D.5}{\ignorespaces Pestaña de Configuración}}{100}{figure.1.Alph4.5}%
+\contentsline {figure}{\numberline {D.6}{\ignorespaces \textit {Ranking}}}{100}{figure.1.Alph4.6}%
+\contentsline {figure}{\numberline {D.7}{\ignorespaces Consulta de teoría}}{100}{figure.1.Alph4.7}%
+\contentsline {figure}{\numberline {D.8}{\ignorespaces Ejemplo del contenido dentro de teoría}}{101}{figure.1.Alph4.8}%
+\contentsline {figure}{\numberline {D.9}{\ignorespaces Pestaña de Juegos}}{101}{figure.1.Alph4.9}%
+\contentsline {figure}{\numberline {D.10}{\ignorespaces Ejemplo de apartado de prueba para Java}}{102}{figure.1.Alph4.10}%
+\contentsline {figure}{\numberline {D.11}{\ignorespaces Consulta de dudas al profesor}}{102}{figure.1.Alph4.11}%
+\contentsline {figure}{\numberline {D.12}{\ignorespaces Notificación de duda resuelta}}{102}{figure.1.Alph4.12}%
+\contentsline {figure}{\numberline {D.13}{\ignorespaces Ejemplo de teoría de Python}}{103}{figure.1.Alph4.13}%
+\contentsline {figure}{\numberline {D.14}{\ignorespaces Parte 1: Ejemplo ejercicio de Python}}{103}{figure.1.Alph4.14}%
+\contentsline {figure}{\numberline {D.15}{\ignorespaces Parte 2: Ejemplo ejercicio de Python}}{103}{figure.1.Alph4.15}%
+\contentsline {figure}{\numberline {D.16}{\ignorespaces Panel Principal del del profesor}}{104}{figure.1.Alph4.16}%
+\contentsline {figure}{\numberline {D.17}{\ignorespaces Listado de usuarios}}{104}{figure.1.Alph4.17}%
+\contentsline {figure}{\numberline {D.18}{\ignorespaces Listado de todos los ejercicios realizados}}{105}{figure.1.Alph4.18}%
+\contentsline {figure}{\numberline {D.19}{\ignorespaces Correcciones ejercicios HTML}}{105}{figure.1.Alph4.19}%
+\contentsline {figure}{\numberline {D.20}{\ignorespaces Resolución de dudas}}{105}{figure.1.Alph4.20}%
+\contentsline {figure}{\numberline {D.21}{\ignorespaces Configuración del profesor}}{106}{figure.1.Alph4.21}%
+\contentsline {figure}{\numberline {D.22}{\ignorespaces Parte 1: Estadísticas}}{106}{figure.1.Alph4.22}%
+\contentsline {figure}{\numberline {D.23}{\ignorespaces Parte 2: Estadísticas}}{106}{figure.1.Alph4.23}%
+\contentsline {figure}{\numberline {D.24}{\ignorespaces Parte 3: Estadísticas}}{107}{figure.1.Alph4.24}%
+\contentsline {figure}{\numberline {D.25}{\ignorespaces Parte 4: Estadísticas}}{107}{figure.1.Alph4.25}%
+\contentsline {figure}{\numberline {D.26}{\ignorespaces Añadir}}{107}{figure.1.Alph4.26}%
+\contentsline {figure}{\numberline {D.27}{\ignorespaces Consultar}}{108}{figure.1.Alph4.27}%
+\contentsline {figure}{\numberline {D.28}{\ignorespaces Editar}}{108}{figure.1.Alph4.28}%
+\contentsline {figure}{\numberline {D.29}{\ignorespaces Eliminar}}{108}{figure.1.Alph4.29}%
+\contentsline {figure}{\numberline {D.30}{\ignorespaces \textit {Path} educativo}}{109}{figure.1.Alph4.30}%
+\addvspace {10\p@ }

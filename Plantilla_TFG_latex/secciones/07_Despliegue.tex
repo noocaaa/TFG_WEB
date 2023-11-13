@@ -1,6 +1,6 @@
 \chapter{Despliegue} \label{chap:despliegue}
 
-En este capítulo se va a abordar el despliegue de la aplicación Flask en el servidor de la Universidad de Granada \textit{bahia.ugr.es} \cite{bahia}. Concretamente, el despliegue se llevó a cabo mediante Podman \cite{podman} para la gestión de los contenedores. A continuación, se detallará el proceso de creación y configuración de las imágenes del contenedor, así como la metodología empleada.
+En este capítulo se va a abordar el despliegue del sistema en el servidor de la Universidad de Granada \textit{bahia.ugr.es} \cite{bahia}. Concretamente, el despliegue se llevó a cabo mediante Podman \cite{podman} para la gestión de los contenedores. A continuación, se detallará el proceso de creación y configuración de las imágenes del contenedor, así como la metodología empleada.
 
 \section{Creación y Configuración de las Imágenes}
 
@@ -13,17 +13,17 @@ Las imágenes del contenedor creadas fueron:
 
 \section{Utilización de Podman}
 
-A partir de un archivo \texttt{docker-compose.yml} \ref{fig:dockercompose}, testeado en \textit{localhost}, se adaptó la configuración para su uso con Podman. De esta manera, se aprovechó la compatibilidad y las ventajas de seguridad de esta herramienta, especialmente en entornos donde no se tienen privilegios de root.
+A partir de un archivo \texttt{docker-compose.yml} \ref{fig:dockercompose}, testeado en \textit{localhost}, se adaptó la configuración para su uso con Podman. De esta manera, se aprovechó la compatibilidad y las ventajas de seguridad de esta herramienta, especialmente en entornos donde no se tienen privilegios de \textit{root}.
 
-En la configuración del fichero \texttt{podman-compose.yml} \ref{fig:podmancompose}, se establecieron dos servicios principales: el servicio de la aplicación (flask) y el servicio de la base de datos (db). Cada uno de estos servicios se configuró cuidadosamente para garantizar una integración y operación eficientes. 
+En la configuración del fichero \texttt{podman-compose.yml} \ref{fig:podmancompose}, se establecieron dos servicios principales: el servicio de la aplicación y el servicio de la base de datos. Cada uno de estos servicios se configuró cuidadosamente para garantizar una integración y operación eficientes. 
 
 Esta configuración facilitó un despliegue coherente y funcional de la aplicación, proporcionando un marco de trabajo estable y confiable para el funcionamiento de la aplicación Flask y su interacción con la base de datos PostgreSQL. Concretamente, la aplicación es accesible a través del siguiente enlace: \href{http://bahia.ugr.es:35701/}{http://bahia.ugr.es:35701/}.
 
 \subsection{Contenedor flask\_TFG}
 
-El servicio Flask se configuró con el nombre de contenedor \texttt{flask\_TFG}, utilizando la imagen \texttt{nooocaaaa/programmingclasses:latest} anteriormente mencionada. Esta imagen, especialmente diseñada para la aplicación, contiene todas las dependencias y configuraciones necesarias. 
+El servicio Flask se configuró con el nombre de contenedor \texttt{flask\_TFG}, utilizando la imagen \texttt{nooocaaaa/programmingclasses:latest} anteriormente mencionada.  
 
-Se mapeó el puerto \texttt{35701} del host al contenedor, proporcionando un punto de acceso a la aplicación para la comunicación con el exterior. Las variables de entorno se establecieron para configurar la conexión con la base de datos, definir claves secretas y especificar rutas de directorios críticos. Además, se definió una dependencia con el servicio de base de datos para asegurar que la base de datos estuviera disponible antes del inicio de la aplicación Flask. Es más, el comando de ejecución para el contenedor se configuró para iniciar la aplicación Flask.
+Se mapeó el puerto \texttt{35701} del \textit{host} al contenedor, proporcionando un punto de acceso a la aplicación para la comunicación con el exterior. Las variables de entorno se establecieron para configurar la conexión con la base de datos, definir claves secretas y especificar rutas de directorios críticos. Además, se definió una dependencia con el servicio de base de datos para asegurar que la base de datos estuviera disponible antes del inicio de la aplicación Flask. Es más, el comando de ejecución para el contenedor se configuró para iniciar la propia aplicación Flask.
 
 \subsection{Contenedor db}
 

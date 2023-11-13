@@ -1,15 +1,17 @@
 \chapter{Pruebas y Resultados} \label{chap:resultadosExperimentales}
 
-Este capítulo se centra en análisis de las pruebas realizadas para evaluar la efectividad y eficiencia del sistema desarrollado. Estas pruebas se clasifican en tres categorías principales. Cada una de estas pruebas juega un papel crucial en la validación del sistema, asegurando que cumple con los requisitos establecidos y proporciona una experiencia de usuario satisfactoria. Los resultados obtenidos no solo demuestran la viabilidad del sistema, sino que también ofrecen insights valiosos para futuras mejoras y ajustes.
+Este capítulo se centra en análisis de las pruebas realizadas para evaluar la efectividad y eficiencia del sistema desarrollado. Estas pruebas se clasifican en tres categorías principales. Cada una de estas pruebas juega un papel crucial en la validación del sistema, asegurando que cumple con los requisitos establecidos y proporciona una experiencia de usuario satisfactoria. Los resultados obtenidos no solo demuestran la viabilidad del sistema, sino que también ofrecen \textit{insights} valiosos para futuras mejoras y ajustes.
 
 \section{Pruebas de Funcionalidad}
 
 Esta sección se centra en las diferentes pruebas de funcionalidad realizadas para garantizar la calidad y el correcto funcionamiento del sistema. Estas pruebas incluyen diferentes tipos de prueba, ya que cada una de ellas dirigida a validar aspectos específicos de la plataforma.
 
 \subsection{Pruebas Unitarias}
+
 Las pruebas unitarias se enfocaron en validar la funcionalidad de los componentes individuales del sistema. Concretamente, se escribieron casos de prueba para cada función y método, cubriendo tanto los escenarios esperados como los casos extremos. Se validaron las salidas de cada componente para garantizar que cumplieran con las especificaciones y requisitos funcionales. Se prestó especial atención a la cobertura de código, buscando lograr un porcentaje alto que garantice la fiabilidad del sistema.
 
 \subsection{Pruebas de Integración}
+
 Las pruebas de integración se centraron en la interacción entre los componentes individuales del sistema para asegurar que funcionaran juntos de manera efectiva.
 
 Se probaron las interfaces y las interacciones entre diferentes módulos y servicios. Se realizaron pruebas de llamadas a APIs, interacción con bases de datos y comunicación entre servicios. Se identificaron y corrigieron problemas de integración, como incompatibilidades y fallos en la transferencia de datos con la ayuda de Postman \cite{postman}. 
@@ -56,7 +58,7 @@ Los resultados de las pruebas mostraron que el sistema era capaz de manejar un t
 
 Los datos recogidos sugieren que la experiencia del usuario se mantendría consistente hasta cierto punto de carga. Sin embargo, se observaron advertencias relacionadas con la gestión de cookies, lo que podría ser un indicador de problemas de configuración en el manejo de sesiones de usuario o en el estado del sistema.
 
-El análisis de los resultados recogidos sugiere que el sistema es robusto y puede manejar cargas de usuarios concurrentes de manera efectiva hasta un punto crítico.
+El análisis de los resultados recogidos sugiere que el sistema es robusto y puede manejar cargas de usuarios concurrentes de manera efectiva hasta un punto crítico. Cumpliendo, de esta manera, el requisito \ref{table:req-RNF38} del tiempo de respuesta establecido en la fase de análisis del proyecto.
 
 \section{Pruebas de Usabilidad}
 

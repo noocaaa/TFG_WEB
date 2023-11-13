@@ -18,7 +18,7 @@ Cabe destacar que antes de la construcción de la plataforma, fue esencial defin
     \item Un sistema de corrección automatizada que evalúe tanto la solución como la calidad del código.
     \item Un sistema de retroalimentación que ofrezca comentarios constructivos.
     \item Un camino de ejercicios que se adapte dinámicamente al progreso y habilidades del estudiante.
-    \item Un ranking para motivar a los estudiantes durante su aprendizaje.
+    \item Un \textit{ranking} para motivar a los estudiantes durante su aprendizaje.
     \item Una plataforma sencilla y visual, diseñada específicamente para niños, que les permita interactuar con el contenido de manera intuitiva.
     \item Un compilador que permita la ejecución y prueba de código en la propia web.
     \item Un sistema de soporte y tutoría basado en un mecanismo de preguntas y respuestas para asistir a los estudiantes con dudas específicas.
@@ -26,7 +26,7 @@ Cabe destacar que antes de la construcción de la plataforma, fue esencial defin
 
 Cuando los requisitos y objetivos ya estuvieron claros, se pasó a la elección de tecnologías que se iban a usar. La decisión fue tomada en base la experiencia, ya que de esta manera se conseguía rápidamente un prototipo manejable. 
 
-Para el Frontend, se decidió el uso de HTML, CSS y JavaScript, debido la posibilidad de creación de interfaces de usuario fluidas y dinámicas. En cambio, para el Backend se usó Flask, por su fácil adaptabilidad con diversas librerías de Python. Para la gestión de la base de datos, se optó por PostgreSQL, ya que garantizaba una estructura robusta y escalable.
+Para el \textit{Frontend}, se decidió el uso de HTML, CSS y JavaScript, debido la posibilidad de creación de interfaces de usuario fluidas y dinámicas. En cambio, para el \textit{Backend} se usó Flask, por su fácil adaptabilidad con diversas librerías de Python. Finalmente, para la gestión de la base de datos, se optó por PostgreSQL, ya que garantizaba una estructura robusta y escalable.
 
 \subsection {Fase de desarrollo}
 
@@ -40,7 +40,7 @@ La fase de desarrollo se centró en implementar las características clave ident
     \item \textbf{Caminos de Ejercicios Aleatorio}: Para poder proporcionar una buena experiencia de aprendizaje, el sistema tiene un conjunto de ejercicios basados en requisitos específicos de forma aleatoria. De esta manera, se consigue que cada vez que el estudiante se enfrenta un requisito, se le desafía con un conjunto de ejercicios diferentes, asegurando que los haga por comprensión y no por repetición. Es importante destacar, que si un estudiante no realiza correctamente un ejercicio, el sistema le proporcionará otro diferente para evitar frustración.
 \end{enumerate}
 
-Cabe destacar que esta fase también implicó una serie de pruebas iterativas y correcciones, permitiendo ajustes y mejoras en tiempo real en función del feedback recibido y las observaciones realizadas.
+Cabe destacar que esta fase también implicó una serie de pruebas iterativas y correcciones, permitiendo ajustes y mejoras en tiempo real en función del \textit{feedback} recibido y las observaciones realizadas.
 
 \subsection{Fase de prueba y corrección}
 
@@ -55,12 +55,12 @@ La retroalimentación de estos estudiantes fue clave. A partir de sus comentario
 
 Durante las fases previas del proyecto, se llevó a cabo una recolección de datos e información pertinente. Al aproximarnos a las etapas finales del desarrollo, dicha información fue estructurada y articulada de manera coherente y sistemática, siendo la creación de la memoria.
 
-El proyecto tuvo inicio a principios de julio, durando cinco meses hasta su finalización. Es importante subrayar que el período previo a julio, aunque incluyó actividades de investigación y lectura, no es considerado crucial para la estructura del proyecto. Esto se debe a que, a pesar de haber realizado dichas tareas, no se le dedicó una cantidad de tiempo significante debido a otras responsabilidades. Por esta razón, se presenta el diagrama de Gantt \ref{fig:gantt_diagram} que refleja el periodo de desarrollo del proyecto:
+El proyecto tuvo inicio a principios de julio, durando cinco meses hasta su finalización. Es importante subrayar que el período previo a julio, aunque incluyó actividades de investigación y lectura, no es considerado crucial para la estructura final del proyecto. Esto se debe a que, a pesar de haber realizado dichas tareas, no se le dedicó una cantidad de tiempo significante debido a otras responsabilidades. Por esta razón, se presenta el diagrama de Gantt \ref{fig:gantt_diagram} que refleja el periodo de desarrollo del proyecto:
 
 \begin{figure}[H]
     \centering
     \scriptsize
-    \resizebox{\textwidth}{!}{%
+    \resizebox{1.1\textwidth}{!}{%
     \begin{ganttchart}[
         hgrid,
         vgrid={*{6}{draw=none}, dotted},
@@ -142,15 +142,27 @@ Con tal de realizar una buena evaluación del coste de un proyecto, se tuvieron 
 
 Para la interfaz de usuario, se optó por usar HTML, CSS y JavaScript por su costo cero. En cuanto al Backend, se eligió Flask por el mismo motivo. Además, se recurrió a PostgreSQL que no tiene ningún coste ni límite en cuanto a tamaño de la base de datos. Para el control de versiones, se usó Git y GitHub \cite{personalgithub}. Aunque GitHub ofrece planes de pago, dispone de buenas opciones gratuitas. 
 
-Por lo tanto, el coste total de las licencias es cero. 
+Por lo tanto, el coste total de las licencias fue cero. 
 
 \subsection{Recursos Materiales}
 
 Dentro de la inversión material, es indispensable considerar el equipo informático empleado en el proyecto, en este caso, un ordenador portátil tal como se puede ver en el apéndice \ref{chap:recursos}. Comúnmente, estos dispositivos tienen una vida útil estimada que oscila entre los 2 y 4 años. 
 
-Si asumimos una vida útil intermedia de 3 años para el dispositivo, se estimará una depreciación anual del equipo. Por ello, considerando que el portátil tuvo un precio inicial de 950€, su depreciación anual será de 316,67€. 
+Si asumimos una vida útil intermedia de 3 años para el dispositivo, se estimará una depreciación anual del equipo. 
 
-Finalmente, se debe tener en cuenta que el proyecto se ha desarrollado en una duración aproximada de 5 meses, por ello, el coste asociado al desgaste del portátil durante dicho período es de 132,78€.
+\begin{equation}
+    \centering
+    \text{Depreciación Anual} = \frac{\text{Coste Inicial}}{\text{Vida Útil}}
+\end{equation}
+
+Por ello, considerando que el portátil tuvo un precio inicial de 950€, su depreciación anual será de 316,67€. Se debe tener en cuenta que el proyecto se ha desarrollado en una duración aproximada de 5 meses, por ello, el coste asociado al desgaste del portátil se debe calcular como:
+
+\begin{equation}
+    \centering
+    \text{Depreciación del Proyecto} = \text{Depreciación Anual} \times \frac{\text{Meses del Proyecto}}{12 \text{ meses}}
+\end{equation}
+
+Por lo tanto, el coste de los recursos materiales durante el período de desarrollo es de 132,78€.
 
 \subsection{Costes de Personal}
 
@@ -183,11 +195,11 @@ Para el cálculo de costes de personal se ha tenido en cuenta un único empleado
 
 Si calculamos el promedio salarial, se obtendría aproximadamente unos 3.127,50€. Como el proyecto tiene una duración de 5 meses, el coste total en salarios sería de 15.637,50€ para el desarrollo completo del proyecto.
 
-Adicionalmente, se debería considerar las cotizaciones correspondientes a la empresa y al trabajador, siendo el coste total para el proyecto de unos 17.900€ aproximadamente. 
+Adicionalmente, se debería considerar las cotizaciones correspondientes a la empresa y al trabajador, siendo el coste total de personal para el proyecto de unos 17.900€ aproximadamente. 
 
 \subsection{Otros costes}
 
-Dentro de este apartado se hace alusión a todos aquellos gastos indirectos importantes para la realización del proyecto. Por ejemplo, el material de oficina, la conexión a Internet, la electricidad, los gastos de transporte, entre otros.
+Dentro de este apartado se debe hacer alusión a todos aquellos gastos indirectos importantes para la realización del proyecto. Por ejemplo, el material de oficina, la conexión a Internet, la electricidad, los gastos de transporte, entre otros.
 
 Este tipo de costes indirectos se suele estimar como un porcentaje del gasto principal, en este caso, del coste de personal. Siguiendo esta norma, se ha determinado que estos gastos representan aproximadamente el 10\% del gasto total en personal:
 
