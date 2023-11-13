@@ -285,13 +285,13 @@ Esta subsección detalla las pautas operativas y limitaciones que rigen la inter
 
 Para garantizar la integridad de la plataforma, se deben abordar aspectos de seguridad y acceso.
 
-\paragraph{Autenticación} La plataforma adopta un sistema de autenticación, concretamente se logra mediante el uso de correo electrónico y contraseña. 
+\paragraph{Autenticación} - La plataforma adopta un sistema de autenticación, concretamente se logra mediante el uso de correo electrónico y contraseña. 
 
-\paragraph{Autorización} Diferentes roles de usuario, como estudiantes, profesores y administradores, tienen niveles de acceso específicos. Por ejemplo, mientras que los profesores pueden corregir ejercicios y resolver dudas, no tienen autorización para modificar el contenido educativo.
+\paragraph{Autorización} - Diferentes roles de usuario, como estudiantes, profesores y administradores, tienen niveles de acceso específicos. Por ejemplo, mientras que los profesores pueden corregir ejercicios y resolver dudas, no tienen autorización para modificar el contenido educativo.
 
-\paragraph{Seguridad de Datos} La protección de los datos es una alta prioridad. Las contraseñas se almacenan de forma segura, empleando técnicas modernas de hash y salting. 
+\paragraph{Seguridad de Datos} - La protección de los datos es una alta prioridad. Las contraseñas se almacenan de forma segura, empleando técnicas modernas de hash y salting. 
 
-\paragraph{Monitorización y Auditoría} Se lleva a cabo una monitorización constante de todas las actividades significativas dentro de la plataforma. Esto no solo permite a los administradores realizar seguimientos detallados, sino que también facilita la identificación y respuesta rápida ante cualquier actividad inusual o sospechosa, mejorando así la seguridad y la eficiencia del sistema.
+\paragraph{Monitorización y Auditoría} - Se lleva a cabo una monitorización constante de todas las actividades significativas dentro de la plataforma. Esto no solo permite a los administradores realizar seguimientos detallados, sino que también facilita la identificación y respuesta rápida ante cualquier actividad inusual o sospechosa, mejorando así la seguridad y la eficiencia del sistema.
 
 \section{Modelado de Datos y Diagrama Entidad-Relación} \label{sec:er}
 
@@ -302,21 +302,21 @@ En este proyecto, entidades como Estudiantes, Módulos, Requisitos, Ejercicios, 
 En el diagrama, se destacan las siguientes entidades clave y sus roles específicos en el sistema:
 
 \begin{itemize}
-    \item \textbf{Users}: Incluyen a estudiantes, profesores y administradores, cada uno interactuando con el sistema de manera única.
-    \item \textbf{Questions}: Representan consultas o dudas planteadas por los estudiantes, vinculadas a ejercicios o teorías específicas.
-    \item \textbf{Exercises}: Tareas individuales que están integradas en un requisito de un módulo concreto, representando desafíos prácticos para los estudiantes.
-    \item \textbf{Theory}: Material didáctico vinculado a cada requisito de un módulo, proporcionando el marco teórico necesario.
-    \item \textbf{Modules}: Agrupan ejercicios y teoría, estructurando el contenido educativo en torno a temas específicos de programación.
-    \item  \textbf{Requirements}: Establecen los objetivos educativos para los módulos, siendo cada requisito un elemento concreto de la programación que se quiere enseñar.
-    \item \textbf{Games}: Actividades de gamificación diseñadas para mejorar la experiencia de aprendizaje y motivar a los estudiantes.
-    \item \textbf{Payments}: Gestionan las transacciones en las que los estudiantes usan puntos acumulados para adquirir juegos.
-    \item \textbf{Notifications}: Gestiona las alertas y mensajes que los estudiantes reciben, vital para la comunicación y el seguimiento del estudiante.
-    \item \textbf{StudentProgress y StudentActivity}: Registra el avance y la actividad de cada estudiante en el sistema, lo que permite un seguimiento personalizable y adaptable de su aprendizaje.
-    \item \textbf{TheoryRequirements y ExerciseRequirements}: Define los requisitos previos para acceder a ciertos ejercicios y materiales teóricos, asegurando una progresión lógica en el aprendizaje.
-    \item \textbf{ExtraExercises}: Si es pertinente, se almacena por estudiante unos ejercicios concretos que debe realizar.
-    \item \textbf{StudentModules}: Relacionan a los estudiantes con los módulos específicos donde se encuentran. 
-    \item \textbf{ModuleRequirementsOrder}: Establecen un orden lógico para los módulos y sus requisitos, garantizando una estructura educativa coherente.
-    \item \textbf{UserRequirementsCompleted}: Registran los requisitos completados por los usuarios.
+    \item \textit{\textbf{Users}}: Incluyen a estudiantes, profesores y administradores, cada uno interactuando con el sistema de manera única.
+    \item \textit{\textbf{Questions}}: Representan consultas o dudas planteadas por los estudiantes, vinculadas a ejercicios o teorías específicas.
+    \item \textit{\textbf{Exercises}}: Tareas individuales que están integradas en un requisito de un módulo concreto, representando desafíos prácticos para los estudiantes.
+    \item \textit{\textbf{Theory}}: Material didáctico vinculado a cada requisito de un módulo, proporcionando el marco teórico necesario.
+    \item \textit{\textbf{Modules}}: Agrupan ejercicios y teoría, estructurando el contenido educativo en torno a temas específicos de programación.
+    \item \textit{\textbf{Requirements}}: Establecen los objetivos educativos para los módulos, siendo cada requisito un elemento concreto de la programación que se quiere enseñar.
+    \item \textit{\textbf{Games}}: Actividades de gamificación diseñadas para mejorar la experiencia de aprendizaje y motivar a los estudiantes.
+    \item \textit{\textbf{Payments}}: Gestionan las transacciones en las que los estudiantes usan puntos acumulados para adquirir juegos.
+    \item \textit{\textbf{Notifications}}: Gestiona las alertas y mensajes que los estudiantes reciben, vital para la comunicación y el seguimiento del estudiante.
+    \item \textit{\textbf{StudentProgress y StudentActivity}}: Registra el avance y la actividad de cada estudiante en el sistema, lo que permite un seguimiento personalizable y adaptable de su aprendizaje.
+    \item \textit{\textbf{TheoryRequirements y ExerciseRequirements}}: Define los requisitos previos para acceder a ciertos ejercicios y materiales teóricos, asegurando una progresión lógica en el aprendizaje.
+    \item \textit{\textbf{ExtraExercises}}: Si es pertinente, se almacena por estudiante unos ejercicios concretos que debe realizar.
+    \item \textit{\textbf{StudentModules}}: Relacionan a los estudiantes con los módulos específicos donde se encuentran. 
+    \item \textit{\textbf{ModuleRequirementsOrder}}: Establecen un orden lógico para los módulos y sus requisitos, garantizando una estructura educativa coherente.
+    \item \textit{\textbf{UserRequirementsCompleted}}: Registran los requisitos completados por los usuarios.
 \end{itemize}
 
 Las relaciones entre estas entidades son esenciales para el funcionamiento eficaz del sistema. Por ejemplo, los módulos están formados por requisitos que contienen ejercicios y teoría, formando un plan de estudios coherente. Los juegos añaden un elemento interactivo y lúdico, mientras que los registros de pagos controlan el uso de puntos para el acceso a estos. Las preguntas, por otro lado, facilitan la interacción directa entre estudiantes y profesores, enriqueciendo el proceso de aprendizaje.
