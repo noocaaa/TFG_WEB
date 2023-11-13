@@ -74,53 +74,52 @@ Para el despliegue de la aplicación y la base de datos, se usaron contendores.
     \item \textbf{Servidor de Despliegue}: \textit{bahia.ugr.es}
     \item \textbf{Configuración de Contenedores}: Vólumenes
 \end{itemize}
-
-
 \chapter{Guion de las pruebas con niños} \label{chap:guion}
 
-Este guion tiene como objetivo mostrar los pasos seguidos para la realización de las pruebas de la plataforma. Concretamente, se busca evaluar la usabilidad, el interés generado y la eficacia educativa del sistema.
+Este guion detalla los procedimientos y pasos seguidos para realizar las pruebas de la plataforma, enfocándose en la evaluación de la usabilidad, el interés generado y la eficacia educativa.
 
 \section{Preparación}
 \begin{itemize}
-    \item Preparar un ambiente tranquilo y sin distracciones.
-    \item Asegurarse de que la plataforma funcione correctamente.
-    \item Tener a mano material para tomar notas.
+    \item Configurar un espacio tranquilo y libre de distracciones para los participantes.
+    \item Verificar el funcionamiento óptimo de la plataforma, incluyendo todas sus funcionalidades y herramientas.
+    \item Preparar materiales para tomar notas detalladas, incluyendo la aplicación de cronómetro del teléfono para registrar tiempos de tarea disimuladamente.
 \end{itemize}
 
 \section{Participantes}
 \begin{itemize}
-    \item Edades entre 7 y 18 años.
-    \item Con y sin experiencia previa en programación.
+    \item Niños y adolescentes de edades comprendidas entre 7 y 18 años.
+    \item Diversidad en experiencia de programación, desde principiantes hasta usuarios con experiencia previa con Scratch.
+    \item En este caso se tiene a 3 niños. La niña de 8 años tiene experiencia previa con Scratch. En cambio, los niños de 12 y 15 años no tienen ninguna. 
 \end{itemize}
 
 \section{Actividades}
 \subsection*{Introducción y Consentimiento}
 \begin{itemize}
-    \item Explicar el objetivo de la prueba.
+    \item Explicar a los participantes y a sus padres o tutores el propósito de las pruebas, asegurando la comprensión y obteniendo consentimiento informado.
 \end{itemize}
 
 \subsection*{Prueba de Usabilidad}
 \begin{itemize}
-    \item Navegar por la plataforma.
-    \item Completar un ejercicio.
-    \item Utilizar las herramientas de ayuda o tutoriales, si están disponibles.
+    \item \textbf{Tarea de Navegación}: Instruir a los participantes para explorar libremente la plataforma durante un tiempo determinado, anotando su facilidad de navegación y escuchando sus comentarios.
+    \item \textbf{Ejercicio Interactivo}: Proponer la realización de un par de ejercicios que se encuentran en el módulo de Python. Mientras se observa su entendimiento y interacción con las herramientas.
+    \item \textbf{Comprensión lectora}: Animar a los participantes a utilizar las ayudas o tutoriales disponibles para completar las tareas, evaluando su accesibilidad, eficacia y expresión.
 \end{itemize}
 
 \subsection*{Prueba de Interés}
 \begin{itemize}
-    \item Observar las reacciones de los niños mientras usan la plataforma.
-    \item Preguntarles qué les gusta y qué no.
+    \item Observar y registrar las reacciones y el nivel de atención de los niños mientras interactúan con la plataforma.
+    \item Realizar preguntas abiertas sobre qué aspectos de la plataforma les gustaron más y cuáles menos.
 \end{itemize}
 
 \subsection*{Prueba de Eficacia Educativa}
 \begin{itemize}
-    \item Evaluar el conocimiento adquirido con un pequeño cuestionario oral.
+    \item Cuestionario oral corto post-actividad que evalía el posible conocimiento adquirido, adaptando las preguntas según la edad y nivel del participante. Por ejemplo, \textit{"Si en vez de decirte que el dragón tiene hambre, es que tiene sueño ¿Qué cambiarías?"}. \textit{"Si Jaimito tiene 10 manzanas, le da 3 a su hermana, 2 a su madre y su abuela le compra 2 más. ¿Cuántas manzanas dices que tiene Juanito? Si quieres puedes usar Python para calcularlo".}
 \end{itemize}
 
 \section{Feedback y Conclusiones}
 \begin{itemize}
-    \item Pedir a los niños que proporcionen comentarios.
-    \item Analizar los resultados y planificar mejoras para la plataforma.
+    \item Solicitar a los niños que proporcionen su opinión y comentarios sobre su experiencia.
+    \item Analizar todos los comentarios recopilados para identificar áreas de mejora y planificar ajustes en la plataforma.
 \end{itemize}
 
 \chapter{Ficheros usados para el despliegue} \label{podmananddockerfile}
@@ -246,11 +245,226 @@ Este apéndice contiene los ficheros clave utilizados para el despliegue de la a
 
 \chapter{Manual de usuario} \label{imagenessistema}
 
-\section{Captura de EScritorio}
+\section {Instalación del proyecto}
 
-\section{Capturas del Profesor}
+Para la instalación del proyecto simplemente se debe clonar el repositorio de github \cite{personalgithub}. Nótese que no es posible replicar completamente el proyecto, ya que la base de datos no está publicada. 
 
-\section{Capturas del Administrador}
+\begin{figure}[H]
+    \centering
+    \begin{lstlisting}
+        git clone https://github.com/noocaaa/TFG\_WEB.git
+        cd TFG_WEB-master
+        pip install -r requirements.txt
+    \end{lstlisting}
+\end{figure}
+
+\section {Uso de la Web}
+
+En este apartado se va a ofrecer una visión rápida sobre cómo utilizar el sistema y cómo quedó el diseño final. 
+
+En la pantalla principal se debe iniciar sesión o registrarse. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/inicio.png}
+    \caption{Inicio de sesión}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/registro.png}
+    \caption{Registro}
+\end{figure}
+
+\subsection {Perfil del Estudiante}
+
+Si el estudiante es la primera vez que accede a la plataforma, le aparecerá un \textit{Pop-Up} para que elija su avatar.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/eleccion.png}
+    \caption{Elección de avatar}
+\end{figure}
+
+Entonces, ya se accedería a la página principal donde se listan los módulos y tiene la barra de navegación lateral. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/principal.png}
+    \caption{Menú Principal}
+\end{figure}
+
+Puede elegir entre configuración, ranking, juegos, biblioteca entre otros.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/configuracion.png}
+    \caption{Pestaña de Configuración}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/ranking.png}
+    \caption{Ranking}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/biblio.png}
+    \caption{Consulta de teoría}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/biblio2.png}
+    \caption{Ejemplo del contenido dentro de teoría}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/juegos.png}
+    \caption{Pestaña de Juegos}
+\end{figure}
+
+Los estudiantes aparte de realizar los ejercicios, pueden probar y ejecutar sus códigos en la sección de "Prueba tu código", es análogo para los otros lenguajes.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/prueba1.png}
+    \caption{Ejemplo de apartado de prueba para Java}
+\end{figure}
+
+Los estudiantes consultan sus dudas en un apartado dedicado a ello, y cuando el tutor la responde aparece la notificación. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/contacto.png}
+    \caption{Consulta de dudas al profesor}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/notificacion.png}
+    \caption{Notificación de duda resuelta}
+\end{figure}
+
+Finalmente, los estudiantes, realizan los módulos que contienen contenidos de teoría y ejercicios con su retroalimentación. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/teoria.png}
+    \caption{Ejemplo de teoría de Python}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/ejercicio1.png}
+    \caption{Parte 1: Ejemplo ejercicio de Python}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/ejercicio2.png}
+    \caption{Parte 2: Ejemplo ejercicio de Python}
+\end{figure}
+
+\subsection {Perfil del Profesor}
+
+El profesor visualiza varías estadísticas y conjuntos de datos. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/panelcontrol.png}
+    \caption{Panel Principal del del profesor}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/listausuarios.png}
+    \caption{Listado de usuarios}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/listaprogresos.png}
+    \caption{Listado de todos los ejercicios realizados}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/correciones.png}
+    \caption{Correcciones ejercicios HTML}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/panelcontestar.png}
+    \caption{Resolución de dudas}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/configuracionprofesor.png}
+    \caption{Configuración del profesor}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/estadistica4.png}
+    \caption{Parte 1: Estadísticas}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/estadistica3.png}
+    \caption{Parte 2: Estadísticas}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/estadistica2.png}
+    \caption{Parte 3: Estadísticas}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/estadistica1.png}
+    \caption{Parte 4: Estadísticas}
+\end{figure}
+
+\subsection {Perfil del Administrador}
+
+El perfil de administrador tiene simplificadas su tarea a gestión de la base de datos. Es por ello, que las acciones que puede hacer son básicas y comunes a las entidades relacionadas con el contenido educativo o profesores.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/añadir.png}
+    \caption{Añadir}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/consultar.png}
+    \caption{Consultar}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/editar.png}
+    \caption{Editar}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/eliminar.png}
+    \caption{Eliminar}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/Manual/ordenglobal.png}
+    \caption{\textit{Path} educativo}
+\end{figure}
 
 
 \end{appendices}
