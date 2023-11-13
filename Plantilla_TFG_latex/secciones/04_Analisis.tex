@@ -1,10 +1,10 @@
 \chapter{Análisis} \label{chap:analisis}
 
-Dentro de este capítulo, se abordan diversos aspectos clave relacionados con la fase de análisis del proyecto. El enfoque principal es el análisis detallado de los usuarios objetivo \ref{sec:usuariosobjetivos}, donde se exploran sus necesidades, expectativas y limitaciones. Este análisis es esencial para comprender en profundidad el contexto y los requerimientos del sistema.
+Dentro de este capítulo, se abordan diversos aspectos clave relacionados con la fase de análisis del proyecto. El enfoque principal es el análisis detallado de los usuarios objetivo (véase apartado \ref{sec:usuariosobjetivos}), donde se exploran sus necesidades, expectativas y limitaciones. Este análisis es esencial para comprender en profundidad el contexto y los requerimientos del sistema.
 
-Además, se presentan los modelos de caso de uso \ref{sec:casodeuso}, que describen las interacciones de los usuarios con el sistema y ayudan a identificar las funcionalidades clave que debe incorporar la solución. 
+Además, se presentan los modelos de caso de uso (véase apartado \ref{sec:casodeuso}), que describen las interacciones de los usuarios con el sistema y ayudan a identificar las funcionalidades clave que debe incorporar la solución. 
 
-Se incluyen igualmente los modelos de comportamiento y el modelado de entidades y relaciones \ref{sec:er}. Estos componentes son cruciales para entender la dinámica del sistema y la estructura de datos que soportará.
+Se incluyen igualmente los modelos de comportamiento y el modelado de entidades y relaciones (véase apartado \ref{sec:er}). Estos componentes son cruciales para entender la dinámica del sistema y la estructura de datos que soportará.
 
 Al final de este capítulo, se habrá ofrecido una visión estructurada de la solución propuesta, sentando las bases para la obtención de los requisitos necesarios y facilitando el proceso de diseño.
 
@@ -14,13 +14,13 @@ El enfoque de la plataforma web está dirigido principalmente a niños entre los
 
 Si tenemos en cuenta la brevedad del período de atención de los niños y su desarrollo cognitivo en curso, se deberán evitar tareas extensas o excesivamente complicadas. Las expectativas y necesidades son diversas, pero comúnmente incluyen una interfaz visualmente atractiva, instrucciones claras y una retroalimentación inmediata tal como especifican Duglas Frye y Elliot Soloway \cite{interfacedesign}. Asimismo, se deben incorporar elementos de gamificación dentro la plataforma con tal mantener el interés y la motivación de los usuarios. 
 
-Finalmente, la plataforma debe ser accesible; es decir, se podrá acceder desde múltiples dispositivos como ordenadores, tablets y smartphones debido a su diseño \textit{Web Responsive}.
+Finalmente, la plataforma debe ser accesible; es decir, se podrá acceder desde múltiples dispositivos como ordenadores, \textit{tablets} y \textit{smartphones}.
 
 \section{Análisis de Requisitos Educativos}
 
 La enseñanza de habilidades de programación dentro de las escuelas está cobrando una gran relevancia \cite{teachingcodingchildren}. Sin embargo, hay una falta de herramientas y enfoques efectivos mucho más allá de herramientas como Scratch \cite{teachingcodingchildren}. Conscientes de esta brecha, se adopta un enfoque fundamentado en evidencia y prácticas académicas sólidas. 
 
-Aunque lenguajes como Scratch y Logo son de los más populares para la educación de niños, se opta por Python, C++, Java y HTML+CSS+JS. Python es conocido por su simplicidad y legibilidad, lo que facilita el aprendizaje para los principiantes \cite{pears2007}. Además, permite una transición fluida a lenguajes más complejos. C++, Java y HTML+CSS+JS, aunque sujetos a debate sobre su idoneidad para principiantes, son cruciales en la industria y la educación. Siendo su relevancia práctica la justificación de su presencia \cite{dewarschonberg}.
+Aunque lenguajes como Scratch y Logo son de los más populares para la educación de niños, se opta por Python, C++, Java y HTML+CSS+JS (véase apéndice \ref{apendiceestructura}). Python es conocido por su simplicidad y legibilidad, lo que facilita el aprendizaje para los principiantes \cite{pears2007}. Además, permite una transición fluida a lenguajes más complejos. C++, Java y HTML+CSS+JS, aunque sujetos a debate sobre su idoneidad para principiantes, son cruciales en la industria y la educación. Siendo su relevancia práctica la justificación de su presencia \cite{dewarschonberg}.
 
 Al ir más allá de los enfoques basados en bloques como Scratch, se busca que los niños aprendan la programación basada en texto, más cercana a la realidad. Los ejercicios se organizan por competencias específicas, permitiendo un aprendizaje adaptable y progresivo. Alineando el enfoque con los resultados de investigaciones sobre el tema \cite{document2010}. 
 
@@ -39,9 +39,9 @@ La interacción con la plataforma se basa en tres tipos de usuarios; estudiantes
 Los actores identificados en el sistema son:
 
 \begin{itemize}
-    \item \textbf{Estudiantes}: Constituyen el grupo principal de usuarios. Su interacción con la plataforma está enfocada en el aprendizaje de programación mediante los recursos educativos disponibles. Los estudiantes tienen acceso a ejercicios, material didáctico, retroalimentación personalizada y un apartado personal para la resolución de dudas.
-    \item \textbf{Profesores}: Actúan como facilitadores del proceso de aprendizaje y brindan apoyo emocional a los estudiantes. Entre sus responsabilidades específicas está la corrección de ejercicios de HTML, que requieren una atención más detallada, así como la resolución de dudas y el seguimiento personalizado de estudiantes, especialmente a aquellos que presentan dificultades o inactividad, para motivarles y guiarles en su proceso educativo.
-    \item \textbf{Administradores}: Son los usuarios con el mayor nivel de control dentro del sistema. Se encargan de la gestión integral del contenido didáctico y de la administración de los profesores. Su rol es esencial para el mantenimiento y la actualización constante de la plataforma.
+    \item \textbf{Estudiantes:} Constituyen el grupo principal de usuarios. Su interacción con la plataforma está enfocada en el aprendizaje de programación mediante los recursos educativos disponibles. Los estudiantes tienen acceso a ejercicios, material didáctico, retroalimentación personalizada y un apartado personal para la resolución de dudas.
+    \item \textbf{Profesores:} Actúan como facilitadores del proceso de aprendizaje y brindan apoyo emocional a los estudiantes. Entre sus responsabilidades específicas está la corrección de ejercicios de HTML, que requieren una atención más detallada, así como la resolución de dudas y el seguimiento personalizado de estudiantes, especialmente a aquellos que presentan dificultades o inactividad, para motivarles y guiarles en su proceso educativo.
+    \item \textbf{Administradores:} Son los usuarios con el mayor nivel de control dentro del sistema. Se encargan de la gestión integral del contenido didáctico y de la administración de los profesores. Su rol es esencial para el mantenimiento y la actualización constante de la plataforma.
 \end{itemize}
 
 
@@ -84,7 +84,7 @@ Los escenarios se centran en aspectos cruciales de la plataforma, enfatizando aq
     \hline
     Descripción & El estudiante resuelve un ejercicio de programación. \\
     \hline
-    Precondiciones & EEstudiante ha iniciado sesión y ha seleccionado un módulo pendiente. \\
+    Precondiciones & Estudiante ha iniciado sesión y ha seleccionado un módulo pendiente. \\
     \hline
     Postcondición & El ejercicio se marca como completado y el estudiante recibe retroalimentación. \\
     \hline
@@ -289,15 +289,15 @@ Para garantizar la integridad de la plataforma, se deben abordar aspectos de seg
 
 \paragraph{Autorización} - Diferentes roles de usuario, como estudiantes, profesores y administradores, tienen niveles de acceso específicos. Por ejemplo, mientras que los profesores pueden corregir ejercicios y resolver dudas, no tienen autorización para modificar el contenido educativo.
 
-\paragraph{Seguridad de Datos} - La protección de los datos es una alta prioridad. Las contraseñas se almacenan de forma segura, empleando técnicas modernas de hash y salting. 
+\paragraph{Seguridad de Datos} - La protección de los datos es una alta prioridad. Las contraseñas se almacenan de forma segura, empleando técnicas modernas de \textit{hash} y \textit{salting}. 
 
-\paragraph{Monitorización y Auditoría} - Se lleva a cabo una monitorización constante de todas las actividades significativas dentro de la plataforma. Esto no solo permite a los administradores realizar seguimientos detallados, sino que también facilita la identificación y respuesta rápida ante cualquier actividad inusual o sospechosa, mejorando así la seguridad y la eficiencia del sistema.
+\paragraph{Monitorización} - Se lleva a cabo una monitorización constante de todas las actividades significativas dentro de la plataforma. Esto no solo permite a los administradores realizar seguimientos detallados, sino que también facilita la identificación y respuesta rápida ante cualquier actividad inusual o sospechosa, mejorando así la seguridad y la eficiencia del sistema.
 
 \section{Modelado de Datos y Diagrama Entidad-Relación} \label{sec:er}
 
 El modelado de datos es fundamental para entender cómo se van a estructurar y relacionar las diferentes entidades dentro de la base de datos. 
 
-En este proyecto, entidades como Estudiantes, Módulos, Requisitos, Ejercicios, Teorías, Preguntas, Juegos interactúan entre sí, formando el núcleo de la lógica operativa y las funcionalidades del sistema. Además, se introducen entidades adicionales que refuerzan y detallan aún más este modelo. El Diagrama Entidad-Relación (ER), presentado en la Figura \ref{fig:er}, proporciona una representación visual detallada de estas interacciones.
+En este proyecto, entidades como Estudiantes, Módulos, Requisitos, Ejercicios, Teorías, Preguntas, Juegos interactúan entre sí, formando el núcleo de la lógica operativa y las funcionalidades del sistema. Además, se introducen entidades adicionales que refuerzan y detallan aún más este modelo. El Diagrama Entidad-Relación (ER), presentado en la Figura \ref{fig:diagramaer}, proporciona una representación visual detallada de estas interacciones.
 
 En el diagrama, se destacan las siguientes entidades clave y sus roles específicos en el sistema:
 
@@ -320,3 +320,10 @@ En el diagrama, se destacan las siguientes entidades clave y sus roles específi
 \end{itemize}
 
 Las relaciones entre estas entidades son esenciales para el funcionamiento eficaz del sistema. Por ejemplo, los módulos están formados por requisitos que contienen ejercicios y teoría, formando un plan de estudios coherente. Los juegos añaden un elemento interactivo y lúdico, mientras que los registros de pagos controlan el uso de puntos para el acceso a estos. Las preguntas, por otro lado, facilitan la interacción directa entre estudiantes y profesores, enriqueciendo el proceso de aprendizaje.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.2\textwidth]{imagenes/Entidad-Relacion.jpeg}
+    \caption{Diagrama Entidad-Relación del sistema}
+    \label{fig:diagramaer}
+\end{figure}

@@ -1,12 +1,12 @@
 \chapter{Estado del Arte y Trabajos Relacionados} \label{chap:stateoftheart}
 
-Dentro de este capítulo se va a presentar todo el conocimiento teórico adquirido para la preparación de la implementación y adaptación del ITS. Concreatamente, el estudio se ha basado en las contribuciones presentadas en las conferencias de la \textit{International Conference on Intelligent Tutoring Systems} de los años 2016 \cite{ITS2016}, 2020 \cite{ITS2020} y 2021 \cite{ITS2021}. Estas ediciones han sido una fuente valiosa de información sobre las últimas tendencias, técnicas y avances en el campo de la tutoría inteligente. 
+Dentro de este capítulo se va a presentar todo el conocimiento teórico adquirido para la preparación de la implementación y adaptación del ITS. Concretamente, el estudio se ha basado en las contribuciones presentadas en las conferencias de la \textit{International Conference on Intelligent Tutoring Systems} de los años 2016 \cite{ITS2016}, 2020 \cite{ITS2020} y 2021 \cite{ITS2021}. Estas ediciones han sido una fuente valiosa de información sobre las últimas tendencias, técnicas y avances en el campo de la tutoría inteligente. 
 
 \section{Definición de los ITS}
 
 Los Sistemas de Tutoría Inteligente (ITS, por sus siglas en inglés) son sistemas computacionales diseñados que proporcionan instrucciones o una retroalimentación inmediata y personalizada a los estudiantes con la mínima o nula intervención humana \cite{Woolf2009}. Estos utilizan técnicas de Inteligencia Artificial para modelar el conocimiento del dominio que se enseña y el proceso de aprendizaje del estudiante \cite{Aleven2016}. A través de estos modelos, los ITS adaptan la presentación del material educativo y los métodos de instrucción a las necesidades individuales de cada estudiante \cite{Nwana1990}.
 
-La principal meta de un ITS es imitar el efecto beneficioso que tiene un tutor humano en el aprendizaje \cite{VanLehn2011}. Para ello, los ITS abarcan diferentes componentes \ref{fig:arqITS} como el modelo del estudiante, el modelo del tutor, el modelo del dominio y el modelo de interfaz \cite{Koedinger1997}. Cada uno de estos modelos trabaja en conjunto para adaptar y personalizar el contenido y la retroalimentación, buscando optimizar el rendimiento académico y el compromiso del estudiante \cite{Durlach2008}.
+La principal meta de un ITS es imitar el efecto beneficioso que tiene un tutor humano en el aprendizaje \cite{VanLehn2011}. Para ello, los ITS abarcan diferentes componentes (véase figura \ref{fig:arqITS}) como el modelo del estudiante, el modelo del tutor, el modelo del dominio y el modelo de interfaz \cite{Koedinger1997}. Cada uno de estos modelos trabaja en conjunto para adaptar y personalizar el contenido y la retroalimentación, buscando optimizar el rendimiento académico y el compromiso del estudiante \cite{Durlach2008}.
 
 Una de las ventajas de los ITS es su habilidad para ofrecer una enseñanza adaptativa y escalable \cite{Murray2003}. En contextos educativos donde la enseñanza uno a uno no es práctica o factible, los ITS representan una solución viable para ofrecer instrucción personalizada a un gran número de estudiantes \cite{Graesser2009}.
 
@@ -23,7 +23,7 @@ La idea de ser capaces de utilizar la tecnología para personalizar y mejorar la
 
 Los ITS nacieron en la década de 1970, con la idea de que la tecnología podía ser utilizada para simular la tutoría humana. Estos primeros sistemas, limitados por la capacidad computacional de entonces, se centraban en unos conocimientos muy específicos, como podían ser la geometría o el álgebra. Utilizaban una lógica básica y simple para ofrecer retroalimentación y una guía basada en las respuestas de los estudiantes. A pesar de su simplicidad, fueron representación de un gran paso hacia la individualización del aprendizaje.
 
-Con el progreso en la investigación de la Inteligencia Artificial (IA) en la década de 1980, se comenzó a incorporar técnicas más avanzadas. Estos sistemas no solo eran capaces de evaluar las respuestas de los estudiantes, sino también de comprender parcialmente el proceso de pensamiento detrás de esas respuestas. Así, el feedback proporcionado se volvía más personalizado y adaptativo, reflejando mejor las necesidades individuales de cada alumno.
+Con el progreso en la investigación de la Inteligencia Artificial (IA) en la década de 1980, se comenzó a incorporar técnicas más avanzadas. Estos sistemas no solo eran capaces de evaluar las respuestas de los estudiantes, sino también de comprender parcialmente el proceso de pensamiento detrás de esas respuestas. Así, el \textit{feedback} proporcionado se volvía más personalizado y adaptativo, reflejando mejor las necesidades individuales de cada alumno.
 
 La siguiente década trajo consigo una mayor comprensión de la importancia de la interacción humano-computadora en los procesos educativos. Donde se desarrollaron unas interfaces más intuitivas y amigables para el usuario. Estos sistemas comenzaron a ofrecer unos mejores entornos de aprendizaje, incorporando multimedia, simulaciones y otros recursos interactivos. Con la idea de crear un entorno donde el estudiante no solo recibiera retroalimentación, sino que también pudiera explorar y aprender de una manera más autónoma.
 
@@ -33,11 +33,13 @@ El potencial de los ITS sigue siendo muy amplio. Con la constante evolución de 
 
 \section{Aplicaciones actuales de los ITS}
 
-La relevancia actual de los ITS se extiende a una variedad de dominios. Aprovechando técnicas de aprendizaje automático, estos sistemas pueden reconocer patrones en el comportamiento del usuario y adaptarse en función a ello. A su vez, mediante el análisis semántico, comprenden de manera profunda las respuestas de los estudiantes, garantizando una retroalimentación más precisa y relevante. Además, algunos ITS modernos están incorporando Realidad Virtual y Aumentada, ofreciendo entornos de aprendizaje inmersivos que permiten interacciones novedosas y atractivas con el contenido. A continuación, exploraremos algunas de las aplicaciones más prominentes de estos sistemas en el contexto actual.
+La relevancia actual de los ITS se extiende a una variedad de dominios. Aprovechando técnicas de aprendizaje automático, estos sistemas pueden reconocer patrones en el comportamiento del usuario y adaptarse en función a ello. A su vez, mediante el análisis semántico, comprenden de manera profunda las respuestas de los estudiantes, garantizando una retroalimentación más precisa y relevante. 
+
+Además, algunos ITS modernos están incorporando Realidad Virtual y Aumentada, ofreciendo entornos de aprendizaje inmersivos que permiten interacciones novedosas y atractivas con el contenido. A continuación, exploraremos algunas de las aplicaciones más prominentes de estos sistemas en el contexto actual.
 
 \subsection{Educación K-12}
 
-Los ITS se han establecido como herramientas fundamentales para complementar el aprendizaje tradicional dentro del ámbito escolar, ya sea en la educación primaria o en la eduación secundaria. Sistemas como \textit{Dreambox} \cite{dreambox} para matemáticas o \textit{Fast Forword} \cite{fastforword} para la lectura, utilizan técnicas de tutorización inteligente que adaptan el contenido a las necesidades individuales de cada estudiante, permitiendo una educación más personalizada.
+Los ITS se han establecido como herramientas fundamentales para complementar el aprendizaje tradicional dentro del ámbito escolar, ya sea en la educación primaria o en la educación secundaria. Sistemas como \textit{Dreambox} \cite{dreambox} para matemáticas o \textit{Fast Forword} \cite{fastforword} para la lectura, utilizan técnicas de tutorización inteligente que adaptan el contenido a las necesidades individuales de cada estudiante, permitiendo una educación más personalizada.
 
 \subsection{Educación Superior}
 
@@ -132,29 +134,26 @@ En resumen, los ITS tienen un camino fascinante por delante. Sin embargo, es cru
 
 \section{Comparativa de las plataformas de programación}
 
-\begin{table}[h]
-    \centering
+En el campo de la enseñanza de la programación, diversas plataformas han integrado Sistemas de Tutoría Inteligente (ITS) de maneras innovadoras. 
 
-    \begin{tabulary}{1.2\textwidth}{|L|L|L|L|L|L|L|}
-        \toprule
-        \textbf{Plataforma} & \textbf{Edad} & \textbf{Enfoque} & \textbf{Coste} & \textbf{ITS} & \textbf{Funcionamiento} & \textbf{Lenguajes} \\
-        \midrule
-        Codecademy & Adolescentes y adultos & Interactivo & De pago & Sí & Web & Python, Java \\
-        \midrule
-        Codewars & Adolescentes y adultos & Desafíos & Gratuito & No & Web & Python, Ruby \\
-        \midrule
-        edX & Adolescentes y adultos & Cursos universitarios & De pago y gratuito & Sí & Web & Python, Java \\
-        \midrule
-        Coursera & Adolescentes y adultos & Variedad de cursos & De pago y gratuito & Sí & Web y App & Python, C++ \\
-        \midrule
-        JetBrains Academy & Adolescentes y adultos & Proyectos prácticos & De pago & No & Web & Java, Kotlin \\
-        \midrule
-        Codelearn & Niños & Intro a programación y robótica & De pago & Sí & Web & Logo, Scratch, Python \\
-        \midrule
-        Code.org & Niños y adolescentes & Amplia gama de actividades & Gratuito & Sí & Web & Blockly, JavaScript \\
-        \bottomrule
-    \end{tabulary}
+A continuación, se presenta un análisis comparativo de algunas de estas plataformas, destacando aspectos clave como su enfoque pedagógico, coste, funcionalidades, y la manera en que incorporan ITS en sus metodologías.
+
+\begin{enumerate}
+    \item \textbf{Codecademy:} Aunque Codecademy no utiliza ITS de forma explícita, su enfoque de aprendizaje interactivo en la programación para adolescentes y adultos es notable. A través de su plataforma, los usuarios aprenden la sintaxis de lenguajes como Python y Java mediante ejercicios interactivos en el navegador. Este enfoque fomenta la autonomía del aprendiz, pero carece de la personalización y la guía que caracteriza a los ITS tradicionales.
     
-    \caption{Comparativa de plataformas actuales para la enseñanza de programación}
-    \label{tab:comparativa}
-\end{table}
+    \item \textbf{Codewars:} Esta plataforma adopta un modelo basado en desafíos, donde la comunidad contribuye con ejercicios de codificación. Al no haber evidencia de la integración de un ITS, parece enfocarse más en el aprendizaje colaborativo y la práctica, en lugar de la tutorización personalizada.
+
+    \item \textbf{edX:} Ofrece una experiencia de aprendizaje personalizada con cursos universitarios en lenguajes como Python y Java, gracias a su integración de los ITS. La retroalimentación automática y la evaluación por pares en edX facilitan una adaptabilidad y personalización que son características claves de los ITS.
+    
+    \item \textbf{Coursera:} Similar a edX, Coursera emplea ITS para proporcionar una experiencia educativa personalizada y diversa en cursos que incluyen Python y C++. La plataforma destaca por su capacidad de adaptarse a distintos estilos de aprendizaje y por el soporte ofrecido por tutores
+    
+    \item \textbf{JetBrains Academy:}  Con un enfoque en proyectos prácticos, proporciona una experiencia de aprendizaje más manual y avanzada en Java y Kotlin. Aunque no utiliza ITS, la plataforma es ideal para estudiantes que buscan una inmersión más profunda en la programación.
+    
+    \item \textbf{Codelearn S.L.:} Orientada a un público infantil, Codelearn introduce conceptos de programación y robótica. Aunque no se especifica un ITS, la plataforma ofrece retroalimentación automática basada en la compilación del código y un camino educativo estructurado, lo que permite un aprendizaje adaptativo y progresivo.
+    
+    \item \textbf{Code.org:} Diseñada para niños y adolescentes, integra elementos de ITS proporcionando retroalimentación automática y gamificada. La plataforma facilita un aprendizaje interactivo y adaptativo en lenguajes como Blockly y JavaScript, adecuado para principiantes.
+\end{enumerate}
+
+Esta comparativa revela una notable diversidad en la aplicación de tecnologías educativas en el campo de la programación. Plataformas como edX y Coursera demuestran cómo los ITS pueden personalizar y adaptar efectivamente la experiencia de aprendizaje. Por otro lado, plataformas como Codecademy y Codewars, aunque no utilizan ITS, ofrecen métodos alternativos valiosos que promueven la autonomía y el aprendizaje práctico.
+
+Esta diversidad indica que la integración efectiva de la tecnología en la educación en programación no se limita a un solo enfoque. Más bien, abarca un espectro de metodologías, cada una con sus propias fortalezas y limitaciones, pero todas orientadas a mejorar la experiencia de aprendizaje. Así, el futuro de la educación en programación será una combinación de enfoques tanto tradicionales como emergentes, reflejando la evolución constante de las tecnologías educativas y las necesidades cambiantes de los estudiantes.
